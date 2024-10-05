@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,4 +40,10 @@ Route::middleware(['auth', 'user'])->group(function () {
 // Admin dashboard (protected with middleware)
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/home', [HomeController::class, 'adminIndex'])->name('admin/home');
+    Route::get('admin/profile', [HomeController::class, 'profileSettings'])->name('profile.settings');
+    Route::put('admin/profile', [ProfileController::class, 'profileUpdate'])->name('profile.update');
+    Route::post('/profile/update-picture', [ProfileController::class, 'profileUpdate'])->name('profile.update_picture');
+    Route::get('admin/security', [HomeController::class, 'securitySettings'])->name('security.settings');
+    Route::put('profile/update', [ProfileController::Class, 'securityUpdate'])->name('security.update');
+    Route::put('profile/security/update', [ProfileController::class, 'changePassword'])->name('changePassword.update');
 });

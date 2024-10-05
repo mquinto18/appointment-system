@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -12,6 +12,15 @@ class HomeController extends Controller
     }
 
     public function adminIndex(){
-        return view('dashboard');
+        $totalUsers = User::count();
+        return view('dashboard', compact('totalUsers'));
+    }
+
+    public function profileSettings(){
+        return view('components.profile');
+    }
+
+    public function securitySettings(){
+        return view('components.security');
     }
 }

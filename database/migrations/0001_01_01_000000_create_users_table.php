@@ -17,7 +17,12 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('type')->default(false); //add type boolean Users: 0=>User, 1=>Admin, 2=>Manager
+            $table->string('type')->default(false); // 0 => User, 1 => Admin, 2 => Manager
+            $table->date('date_of_birth')->nullable(); // Adding date_of_birth column
+            $table->string('gender')->nullable(); // Adding gender column
+            $table->string('phone_number')->nullable(); // Adding phone_number column
+            $table->string('address')->nullable(); // Adding address column
+            $table->string('profile_picture')->nullable(); // Adding profile_picture column
             $table->rememberToken();
             $table->timestamps();
         });
