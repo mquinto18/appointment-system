@@ -69,4 +69,36 @@ class AdminController extends Controller
             return redirect()->back()->with('success', 'Admin deleted successfully.');
         }
     }   
+
+   
+
+    public function adminEdit($id){
+        // Find the specific admin by ID
+        $admin = User::findOrFail($id);
+    
+        // Pass the admin details to the view
+        return view('components.adminEdit', compact('admin'));
+    }
+
+    public function adminUpdate(Request $request, $id){
+        $admin = User::findOrFail($id);
+    
+        // Validate the incoming request data
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone_number' => 'nullable|string|max:20',
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|string',
+            'address' => 'nullable|string',
+        ]);
+    
+        // Update the admin details
+        $admin->update($request->all());
+    
+        // Redirect back with success message
+        notify()->success('Admin updated successfully!');
+        return redirect()->route('admin')->with('success', 'Admin updated successfully.');  
+    }
 }
+

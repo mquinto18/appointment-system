@@ -10,14 +10,14 @@
 <div class='w-full h-32 mt-5 rounded-lg' style="background: linear-gradient(to bottom, #0074C8, #151A5C);"></div>
 
 <div class='mx-10 -mt-16'>
-    <div class='flex justify-between mb-2'>
-        <span class='text-[20px] text-white font-medium'>All Admins | {{$totalAdmins}} </span>
-        <div class='bg-white px-3 py-2 rounded-md cursor-pointer' data-bs-toggle="modal" data-bs-target="#addAdminModal">
-            <i class="fa-solid fa-plus" style="color: #0074CB;"></i>
-            <!-- Button trigger modal -->
-            <a href="#" class='font-medium no-underline text-black' >Add new admin</a>
+        <div class='flex justify-between mb-2'>
+            <span class='text-[20px] text-white font-medium'>All Admins | {{$totalAdmins}} </span>
+            <div class='bg-white px-3 py-2 rounded-md cursor-pointer' data-bs-toggle="modal" data-bs-target="#addAdminModal">
+                <i class="fa-solid fa-plus" style="color: #0074CB;"></i>
+                <!-- Button trigger modal -->
+                <a href="#" class='font-medium no-underline text-black' >Add new admin</a>
+            </div>
         </div>
-    </div>
     <div class='bg-white w-full rounded-lg shadow-md p-8'>
         <div class="overflow-x-auto">
             <!-- Search bar -->
@@ -74,9 +74,9 @@
                                     </div>
                                 </div>
                                 <!-- Edit Action -->
-                                <div class='relative group'>
+                                <div class='relative group cursor-pointer'>
                                     <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md'>
-                                        <a href="" class="text-blue-600">
+                                        <a href="{{ route('admin.edit', $admin->id) }}" class="text-blue-600">
                                             <i class="fa-regular fa-pen-to-square"></i>
                                         </a>
                                     </div>
@@ -195,7 +195,11 @@
         </form>
         </div>
     </div>
-    </div>
+    </div>  
+
+    
+
+
 
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteAdminModal" tabindex="-1" aria-labelledby="deleteAdminModalLabel" aria-hidden="true">
@@ -220,82 +224,7 @@
         </div>
     </div>
 
-    <!-- Edit Admin Modal -->
-<div class="modal fade" id="editAdminModal" tabindex="-1" aria-labelledby="editAdminModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editAdminModalLabel">Edit Admin</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="editAdminForm" method="POST" action="">
-                @csrf
-                @method('PUT')
-                <div class="modal-body">
-                    <div class="row">
-                        <!-- Admin Name -->
-                        <div class="mb-3 col-md-4">
-                            <label for="editAdminName" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="editAdminName" name="name" required>
-                        </div>
-
-                        <!-- Admin Email -->
-                        <div class="mb-3 col-md-4">
-                            <label for="editAdminEmail" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="editAdminEmail" name="email" required>
-                        </div>
-
-                        <!-- Admin Password -->
-                        <div class="mb-3 col-md-4">
-                            <label for="editAdminPassword" class="form-label">Password</label>
-                            <div class="input-group">
-                                <input type="password" class="form-control" id="editAdminPassword" name="password">
-                                <button type="button" class="btn btn-outline-secondary" id="editGeneratePasswordBtn">Generate</button>
-                                <button type="button" class="btn btn-outline-secondary" id="editTogglePasswordBtn"><i class="fa-solid fa-eye"></i></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <!-- Date of Birth -->
-                        <div class="mb-3 col-md-4">
-                            <label for="editAdminDOB" class="form-label">Date of Birth</label>
-                            <input type="date" class="form-control" id="editAdminDOB" name="date_of_birth">
-                        </div>
-
-                        <!-- Admin Gender -->
-                        <div class="mb-3 col-md-4">
-                            <label for="editAdminGender" class="form-label">Gender</label>
-                            <select class="form-select" id="editAdminGender" name="gender">
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-
-                        <!-- Admin Phone Number -->
-                        <div class="mb-3 col-md-4">
-                            <label for="editAdminPhone" class="form-label">Phone Number</label>
-                            <input type="text" class="form-control" id="editAdminPhone" name="phone_number">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <!-- Admin Address -->
-                        <div class="mb-3 col-md-4">
-                            <label for="editAdminAddress" class="form-label">Address</label>
-                            <textarea class="form-control" id="editAdminAddress" name="address" rows="3"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Update Admin</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
+    
     <script>
         function openDeleteModal(adminName, deleteUrl) {
             // Set the admin name and form action dynamically

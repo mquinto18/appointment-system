@@ -61,5 +61,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get("admin/adminAcc", [AdminController::class, 'adminAcc'])->name('admin');
     Route::post("admin/adminAcc/save", [AdminController::class, 'adminSave'])->name('admin.save');
     Route::delete('admin/adminAcc/destroy/{id}', [AdminController::class, 'adminDestroy'])->name('admin.delete');
-
+    Route::get('admin/adminAcc/edit{id}', [AdminController::class, 'adminEdit'])->name('admin.edit');
+    Route::put('admin/adminAcc/update{id}', [AdminController::class, 'adminUpdate'])->name('admin.update');
 });
