@@ -26,6 +26,7 @@ class User extends Authenticatable
         'address',
         'type',
         'profile_picture', // Add this line for profile picture
+        'created_at'
     ];
 
     /**

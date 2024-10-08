@@ -64,6 +64,7 @@
                     <th class="py-3 px-4 border-b">Consulting Doctor</th>
                     <th class="py-3 px-4 border-b">Date</th>
                     <th class="py-3 px-4 border-b">Time</th>
+                    <th class="py-3 px-4 border-b">Status</th>
                     <th class="py-3 px-4 border-b">Actions</th>
                 </tr>
             </thead>
@@ -77,53 +78,48 @@
                     <td class="py-3 px-4 border-b">Dr. Smith</td>
                     <td class="py-3 px-4 border-b">2024-10-05</td>
                     <td class="py-3 px-4 border-b">10:00 AM</td>
-                    <td class="py-3 px-4 border-b">
-                        <a href="#" class="text-blue-600">Edit</a> |
-                        <a href="#" class="text-red-600" onclick="event.preventDefault(); confirm('Are you sure you want to delete this appointment?');">Delete</a>
+                    <td class="py-3 px-4 border-b text-yellow-500 font-medium">Pending</td>
+                    <td class="py-3 px-4 border-b flex gap-2">
+                        <div class='relative group'>
+                            <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md'>
+                                <a href="#" class="text-blue-600">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            </div>
+                            <!-- Tooltip for 'View' -->
+                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded-md py-1 px-2">
+                                View
+                            </div>
+                        </div>
+                        
+                        <div class='relative group'>
+                            <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md'>
+                                <a href="#" class="text-blue-600">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </a>
+                            </div>
+                            <!-- Tooltip for 'Edit' -->
+                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded-md py-1 px-2">
+                                Edit
+                            </div>
+                        </div>
+                        
+                        <div class='relative group'>
+                            <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md'>
+                                <a href="#" class="text-blue-600" onclick="event.preventDefault(); confirm('Are you sure you want to delete this appointment?');">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                            </div>
+                            <!-- Tooltip for 'Delete' -->
+                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded-md py-1 px-2">
+                                Delete
+                            </div>
+                        </div>
                     </td>
                 </tr>
-                <tr class="hover:bg-gray-100">
-                    <td class="py-3 px-4 border-b">2</td>
-                    <td class="py-3 px-4 border-b">Jane Smith</td>
-                    <td class="py-3 px-4 border-b">28</td>
-                    <td class="py-3 px-4 border-b">jane@example.com</td>
-                    <td class="py-3 px-4 border-b">Follow-up</td>
-                    <td class="py-3 px-4 border-b">Dr. Jones</td>
-                    <td class="py-3 px-4 border-b">2024-10-05</td>
-                    <td class="py-3 px-4 border-b">11:30 AM</td>
-                    <td class="py-3 px-4 border-b">
-                        <a href="#" class="text-blue-600">Edit</a> |
-                        <a href="#" class="text-red-600" onclick="event.preventDefault(); confirm('Are you sure you want to delete this appointment?');">Delete</a>
-                    </td>
-                </tr>
-                <tr class="hover:bg-gray-100">
-                    <td class="py-3 px-4 border-b">3</td>
-                    <td class="py-3 px-4 border-b">Michael Johnson</td>
-                    <td class="py-3 px-4 border-b">45</td>
-                    <td class="py-3 px-4 border-b">michael@example.com</td>
-                    <td class="py-3 px-4 border-b">Initial Consultation</td>
-                    <td class="py-3 px-4 border-b">Dr. Brown</td>
-                    <td class="py-3 px-4 border-b">2024-10-05</td>
-                    <td class="py-3 px-4 border-b">2:00 PM</td>
-                    <td class="py-3 px-4 border-b">
-                        <a href="#" class="text-blue-600">Edit</a> |
-                        <a href="#" class="text-red-600" onclick="event.preventDefault(); confirm('Are you sure you want to delete this appointment?');">Delete</a>
-                    </td>
-                </tr>
-                <tr class="hover:bg-gray-100">
-                    <td class="py-3 px-4 border-b">4</td>
-                    <td class="py-3 px-4 border-b">Emily Davis</td>
-                    <td class="py-3 px-4 border-b">50</td>
-                    <td class="py-3 px-4 border-b">emily@example.com</td>
-                    <td class="py-3 px-4 border-b">Routine Check-up</td>
-                    <td class="py-3 px-4 border-b">Dr. Wilson</td>
-                    <td class="py-3 px-4 border-b">2024-10-05</td>
-                    <td class="py-3 px-4 border-b">3:15 PM</td>
-                    <td class="py-3 px-4 border-b">
-                        <a href="#" class="text-blue-600">Edit</a> |
-                        <a href="#" class="text-red-600" onclick="event.preventDefault(); confirm('Are you sure you want to delete this appointment?');">Delete</a>
-                    </td>
-                </tr>
+               
+                
+                
             </tbody>
         </table>
     </div>

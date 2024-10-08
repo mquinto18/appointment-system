@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Profile Settings')
+@section('title', 'Security Settings')
 
 @section('contents')
 
@@ -34,12 +34,13 @@
                 </form>
             </div>
 
-            <div class='mt-5'>
+            <div class='mt-5 border-b pb-5'>
                 <form method="POST" action="{{ route('changePassword.update') }}">
                     @csrf  
                     @method('PUT') 
 
                     <!-- Current Password -->
+                    <h1 class="font-bold mb-4">Change Password</h1>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Current Password</label>
                         <input type="password" name="current_password" class="mt-1 block w-[500px] p-2 border border-gray-300 rounded-md @error('current_password') border-red-500 @enderror"/>
@@ -69,6 +70,20 @@
                     <!-- Save Button -->
                     <div class="mt-5">
                         <button type="submit" class="bg-[#0074C8] text-white font-medium px-5 py-2 rounded-md">Save</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class='mt-5'>
+                <form method="POST" action="{{ route('account.delete') }}" onsubmit="return confirm('Are you sure you want to delete your account?');">
+                    @csrf  
+                    @method('DELETE') 
+                    <h1 class="font-bold mb-4">Delete Account</h1>
+                    <p class='text-gray-700 w-[550px]'>Once your account is deleted, all of its resources and data will be 
+                        permanently deleted. Before deleting your account, please download 
+                        any data or information that you wish to retain.</p>
+                    <div class="mt-5">
+                        <button type="submit" class="bg-[#EF2626] text-white font-medium px-5 py-2 rounded-md">Delete Account</button>
                     </div>
                 </form>
             </div>

@@ -85,4 +85,12 @@ class ProfileController extends Controller
         notify()->success('Password Changed successfully!');
         return redirect()->back()->with('success', 'Password updated successfully!');
     }
+
+    public function accountDelete(Request $request){
+        $user = Auth::user();
+        $user->delete();
+
+        Auth::logout();
+        return redirect('/')->with('success', 'Your account has been deleted successfully.');
+    }
 }
