@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('phone_number')->nullable(); // Adding phone_number column
             $table->string('address')->nullable(); // Adding address column
             $table->string('profile_picture')->nullable(); // Adding profile_picture column
+            $table->string('status')->default('active'); // Adding status column with default value 'active'
             $table->rememberToken();
             $table->timestamps();
         });

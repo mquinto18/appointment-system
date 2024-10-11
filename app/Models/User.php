@@ -20,12 +20,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'date_of_birth',  // Add this line
-        'gender',         // Add this line
-        'phone_number',   // Add this line
+        'date_of_birth',     // Already added
+        'gender',            // Already added
+        'phone_number',      // Already added
         'address',
         'type',
-        'profile_picture', // Add this line for profile picture
+        'profile_picture',   // Already added for profile picture
+        'status',            // Add this line for status
         'created_at'
     ];
 

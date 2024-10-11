@@ -8,30 +8,29 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class AdminController extends Controller
+class UserController extends Controller
 {
-    public function adminAcc(Request $request)
-    {
+    public function userAcc(Request $request){
+
         // Fetch the search input from the request (if any)
-        $search = $request->input('search');
+        $searchUser = $request->input('searchUser');
 
         // Fetch the admins with pagination (5 per page) and apply search if necessary
-        $admins = User::where('type', '1') // Assuming 'type' 1 is Admin
-                    ->when($search, function ($query, $search) {
-                        return $query->where('name', 'like', "%{$search}%")
-                                    ->orWhere('email', 'like', "%{$search}%");
+        $users = User::where('type', '0') // Assuming 'type' 1 is Admin
+                    ->when($searchUser, function ($query, $searchUser) {
+                        return $query->where('name', 'like', "%{$searchUser}%")
+                                    ->orWhere('email', 'like', "%{$searchUser}%");
                     })
                     ->paginate(5);
 
         // Count total admins (for the header)
-        $totalAdmins = User::where('type', '1')->count();
+        $totalUsers = User::where('type', '0')->count();
 
         // Pass the paginated admins and total count to the view
-        return view('components.admin', compact('admins', 'totalAdmins', 'search'));
+        return view('components.user', compact('users', 'totalUsers', 'searchUser'));
     }
 
-    public function adminSave(Request $request){
-
+    public function userSave(Request $request){
         Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email|max:255', // Ensure this matches your database table
@@ -40,7 +39,6 @@ class AdminController extends Controller
             'gender' => 'required|string|in:male,female,other',
             'phone_number' => 'required|string|max:15',
             'address' => 'required|string|max:500',
-            'status'  => 'required|in:active,inactive',
         ])->validate();
  
         User::create([
@@ -51,39 +49,23 @@ class AdminController extends Controller
             'gender' => $request->gender,
             'phone_number' => $request->phone_number,
             'address' => $request->address,
-            'type' => "1",
-            'status'  => $request->status,
+            'type' => "0"
         ]);
 
-        notify()->success('Admin added successfully!');
-        return redirect()->back()->with('success', 'Admin added successfully.');
+        notify()->success('User added successfully!');
+        return redirect()->back()->with('success', 'User added successfully.');
     }
 
-    public function adminDestroy($id){
-        $user = User::findOrFail($id)->delete();
-
-        if($user){
-            session()->flash('success', 'Deleted Successfully');
-            notify()->success('Admin deleted successfully!');
-            return redirect()->back()->with('success', 'Admin deleted successfully.');
-        }else{
-            session()->flash('error', 'Error Delete');
-            return redirect()->back()->with('success', 'Deleted successfully.');
-        }
-    }   
-
-   
-
-    public function adminEdit($id){
+    public function userEdit($id){
         // Find the specific admin by ID
-        $admin = User::findOrFail($id);
+        $user = User::findOrFail($id);
     
         // Pass the admin details to the view
-        return view('components.adminEdit', compact('admin'));
+        return view('components.userEdit', compact('user'));
     }
 
-    public function adminUpdate(Request $request, $id){
-        $admin = User::findOrFail($id);
+    public function userUpdate(Request $request, $id){
+        $user = User::findOrFail($id);
     
         // Validate the incoming request data
         $request->validate([
@@ -96,11 +78,10 @@ class AdminController extends Controller
         ]);
     
         // Update the admin details
-        $admin->update($request->all());
+        $user->update($request->all());
     
         // Redirect back with success message
-        notify()->success('Admin updated successfully!');
-        return redirect()->route('admin')->with('success', 'Admin updated successfully.');  
+        notify()->success('User updated successfully!');
+        return redirect()->route('user')->with('success', 'User updated successfully.'); 
     }
 }
-
