@@ -62,8 +62,8 @@
                             <!-- Dropdown for System User -->
                             <div id="system-user-dropdown" class="hidden relative w-full text-left rounded-md mt-1 space-y-1 px-2 py-1">
                                 <a href="{{ route('admin') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white"><li>Admin</li></a>
-                                <a href="/admin/user/user" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white"><li>User</li></a>
-                                <a href="/admin/user/doctor" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white"><li>Doctor</li></a>
+                                <a href="{{ route('user') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white"><li>User</li></a>
+                                <a href="{{ route('doctor') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white"><li>Doctor</li></a>
                             </div>
                         </div>
 
@@ -78,8 +78,8 @@
                             </a>
                             <!-- Dropdown for Appointment -->
                             <div id="appointment-dropdown" class="hidden relative w-full text-left rounded-md mt-1 space-y-1 px-2 py-1">
-                                <a href="/admin/appointment/emergency" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white"><li>Emergency</li></a>
-                                <a href="/admin/appointment/total" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white"><li>Total Appointment</li></a>
+                                <a href="{{ route('appointment') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white"><li>Total Appointment</li></a>
+                                <a href="/admin/appointment/total" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white"><li>Emergency</li></a>
                             </div>
                         </div>
 
@@ -144,12 +144,12 @@
             function setActive(link) {
                 document.querySelectorAll('.nav-link').forEach(item => {
                     item.classList.remove('active');
-                    item.querySelector('div').classList.remove('bg-[#0074C8]', 'text-white');
+                    item.querySelector('div').classList.remove('', 'text-white');
                 });
 
                 // Add active class to the clicked link
                 link.classList.add('active');
-                link.querySelector('div').classList.add('bg-[#0074C8]', 'text-white');
+                link.querySelector('div').classList.add('', 'text-white');
 
                 // Store the active link's href in localStorage
                 localStorage.setItem('activeLink', link.getAttribute('href'));

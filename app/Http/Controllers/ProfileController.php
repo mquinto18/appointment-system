@@ -17,6 +17,7 @@ class ProfileController extends Controller
             'address'         => 'nullable|string|max:255',
             'gender'          => 'nullable|in:male,female',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max for profile picture
+            'status'          => 'required|in:active,inactive', // Add status validation
         ]);
 
         // Get the authenticated user
@@ -46,6 +47,7 @@ class ProfileController extends Controller
             'phone_number'  => $request->phone_number,
             'address'       => $request->address,
             'gender'        => $request->gender,
+            'status'        => $request->status, // Update the status field
         ]);
 
         // Redirect back with a success message

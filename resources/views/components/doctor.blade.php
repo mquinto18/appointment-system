@@ -1,24 +1,25 @@
 @extends('layouts.app')
 
-@section('title', 'Admin')
+@section('title', 'Doctor')
 
 @section('contents')
 
 <div>
-    <h1 class='font-medium text-2xl ml-3'>Administrator</h1>
+    <h1 class='font-medium text-2xl ml-3'>Doctor</h1>
 </div>
 <div class='w-full h-32 mt-5 rounded-lg' style="background: linear-gradient(to bottom, #0074C8, #151A5C);"></div>
 
-<div class='mx-10 -mt-16'>
-        <div class='flex justify-between mb-2'>
-            <span class='text-[20px] text-white font-medium'>All Admins | {{$totalAdmins}} </span>
+<div class='mx-10 -m-16'>
+    <div class='flex justify-between mb-2'>
+            <span class='text-[20px] text-white font-medium'>All Doctor | {{$totalDoctors}} </span>
             <div class='bg-white px-3 py-2 rounded-md cursor-pointer' data-bs-toggle="modal" data-bs-target="#addAdminModal">
                 <i class="fa-solid fa-plus" style="color: #0074CB;"></i>
                 <!-- Button trigger modal -->
-                <a href="#" class='font-medium no-underline text-black' >Add new admin</a>
+                <a href="#" class='font-medium no-underline text-black' >Add new doctor</a>
             </div>
         </div>
-    <div class='bg-white w-full rounded-lg shadow-md p-8'>
+
+        <div class='bg-white w-full rounded-lg shadow-md p-8'>
         <div class="overflow-x-auto">
             <!-- Search bar -->
             <div class="flex justify-between items-center mb-4">
@@ -31,14 +32,14 @@
                 <div class="flex items-center">
                     <!-- Search form -->
                     <form method="GET" action="">
-                        <input type="text" name="search" value="{{ request('search') }}" class="border border-gray-300 p-2 rounded" placeholder="Search">
+                        <input type="text" name="searchDoctor" value="{{ request('searchDoctor') }}" class="border border-gray-300 p-2 rounded" placeholder="Search">
                         <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Search</button>
                     </form>
                 </div>
             </div>
             
             <!-- Check if there are admins -->
-            @if($admins->count() > 0)
+            @if($doctors->count() > 0)
                 <!-- Table -->
                 <table id='myTable' class="min-w-full bg-white border mt-3">
                     <thead>
@@ -54,47 +55,56 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($admins as $admin)
+                        @foreach ($doctors as $doctor)
                         <tr class="hover:bg-gray-100">
-                            <td class="py-3 px-4 border-b">{{ $loop->iteration + ($admins->currentPage() - 1) * $admins->perPage() }}</td>
-                            <td class="py-3 px-4 border-b">{{ $admin->name }}</td>
-                            <td class="py-3 px-4 border-b">{{ $admin->email }}</td>
-                            <td class="py-3 px-4 border-b">{{ ucfirst($admin->gender) }}</td>
+                            <td class="py-3 px-4 border-b">{{ $loop->iteration + ($doctors->currentPage() - 1) * $doctors->perPage() }}</td>
+                            <td class="py-3 px-4 border-b">{{ $doctor->name }}</td>
+                            <td class="py-3 px-4 border-b">{{ $doctor->email }}</td>
+                            <td class="py-3 px-4 border-b">{{ ucfirst($doctor->gender) }}</td>
                             <td class="py-3 px-4 border-b">
-                                @if($admin->type == 0)
+                                @if($doctor->type == 0)
                                     User
-                                @elseif($admin->type == 1)
+                                @elseif($doctor->type == 1)
                                     Admin
-                                @elseif($admin->type == 2)
+                                @elseif($doctor->type == 2)
                                     Doctor
                                 @endif
                             </td>
-                            <td class="py-3 px-4 border-b">{{ $admin->created_at->format('F d, Y') }}</td>
+                            <td class="py-3 px-4 border-b">{{ $doctor->created_at->format('F d, Y') }}</td>
                             <td class="py-3 px-4 border-b">
                                 <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center
-                                    @if(strtolower($admin->status) == 'active')
+                                    @if(strtolower($doctor->status) == 'active')
                                         bg-green-100 border-green-700
                                     @else
                                         bg-red-100 border-red-700
                                     @endif">
                                     
                                     <i class="fa-solid fa-circle fa-2xs" style="color: 
-                                    @if(strtolower($admin->status) == 'active') 
+                                    @if(strtolower($doctor->status) == 'active') 
                                         #2ba13f
                                     @else 
                                         #ff0000
                                     @endif;"></i>
                                     
-                                    {{ strtoupper($admin->status) }}
+                                    {{ strtoupper($doctor->status) }}
                                 </div>
                             </td>
                             <td class="py-3 px-4 border-b flex gap-2">
                                 <!-- View Action -->
-                                
+                                <div class='relative group cursor-pointer'>
+                                    <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md'>
+                                        <a href="#" onclick="openViewModal({{ $doctor }})" class="text-blue-600">
+                                            <i class="fa-solid fa-eye" style="color: #0074cb;"></i>
+                                        </a>
+                                    </div>
+                                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded-md py-1 px-2">
+                                        View    
+                                    </div>
+                                </div>
                                 <!-- Edit Action -->
                                 <div class='relative group cursor-pointer'>
                                     <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md'>
-                                        <a href="{{ route('admin.edit', $admin->id) }}" class="text-blue-600">
+                                        <a href="{{ route('doctor.edit', $doctor->id) }}" class="text-blue-600">
                                             <i class="fa-regular fa-pen-to-square"></i>
                                         </a>
                                     </div>
@@ -104,16 +114,13 @@
                                 </div>
                                 <!-- Delete Action -->
                                 <div class='relative group'>
-                                    <button type="button" class='bg-white py-1 px-2 border border-[#0074CB] rounded-md text-blue-600' onclick="openDeleteModal('{{ $admin->name }}', '{{ route('admin.delete', $admin->id) }}')">
+                                    <button type="button" class='bg-white py-1 px-2 border border-[#0074CB] rounded-md text-blue-600' onclick="openDeleteModal('{{ $doctor->name }}', '{{ route('admin.delete', $doctor->id) }}')">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                     <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded-md py-1 px-2">
                                         Delete
                                     </div>
                                 </div>
-                            </td>
-                            <td>
-                                <i class="fa-solid fa-ellipsis-vertical"></i>   
                             </td>
                         </tr>
                         @endforeach
@@ -122,12 +129,12 @@
                 
                 <!-- Pagination -->
                 <div class="mt-4">
-                    {{ $admins->appends(['search' => request('search')])->links() }}
+                    {{ $doctors->appends(['searchDoctor' => request('searchDoctor')])->links() }}
                 </div>
             @else
                 <!-- If no admins found -->
                 <div class="text-center text-gray-500">
-                    <p>No admins found.</p>
+                    <p>No doctors found.</p>
                 </div>
             @endif
 
@@ -140,10 +147,10 @@
     <div class="modal-dialog modal-dialog-centered" style="max-width: 900px;">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="addAdminModalLabel">Add New Admin</h5>
+            <h5 class="modal-title" id="addAdminModalLabel">Add New Doctor</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form method="POST" action="{{ route('admin.save') }}">
+        <form method="POST" action="{{ route('doctor.save') }}">
             @csrf
             <div class="modal-body">
             <div class="row">
@@ -205,13 +212,13 @@
                 <div class="mb-3 col-md-4">
                 <label for="adminRole" class="form-label">Role</label>
                 <select class="form-select" id="adminRole" name="type" disabled>
-                    <option value="1" selected>Admin</option>
+                    <option value="2" selected>Doctor</option>
                 </select>
                 </div>
             </div>
             </div>
             <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save Admin</button>
+            <button type="submit" class="btn btn-primary">Save Doctor</button>
             </div>
         </form>
         </div>
@@ -245,8 +252,7 @@
         </div>
     </div>
 
-
-         <!-- View Admin Modal -->
+        <!-- View Admin Modal -->
 <div class="modal fade" id="viewAdminModal" tabindex="-1" aria-labelledby="viewAdminModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">

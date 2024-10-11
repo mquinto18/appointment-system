@@ -74,6 +74,20 @@
                 </select>
             </div>
 
+            <div>
+            <label class="block text-sm font-medium text-gray-700">Status</label>
+            <div class='flex gap-4'>
+                <label>
+                    <input type="radio" name="status" value="active" {{ Auth::user()->status == 'active' ? 'checked' : '' }}>
+                    <span>Active</span>
+                </label>
+                <label>
+                    <input type="radio" name="status" value="inactive" {{ Auth::user()->status == 'inactive' ? 'checked' : '' }}>
+                    <span>Inactive</span>
+                </label>
+            </div>
+        </div>
+
             <div class="col-span-3 mt-10">
                 <div class="flex justify-end">
                     <button type="submit" class="bg-[#0074C8] text-white font-medium px-5 py-2 rounded-md">Update</button>
