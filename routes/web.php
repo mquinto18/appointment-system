@@ -89,7 +89,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('admin/appointments/pending', [AppointmentController::class, 'pending'])->name('appointments.pending');
     Route::get('admin/appointments/approved', [AppointmentController::class, 'approved'])->name('appointments.approved');
-    Route::get('admin/appointments/completed', [AppointmentController::class, 'completed'])->name('appointments.completed');
-    Route::get('admin/appointments/rejected', [AppointmentController::class, 'rejected'])->name('appointments.rejected');
-    Route::get('admin/appointments/canceled', [AppointmentController::class, 'canceled'])->name('appointments.canceled');
+    Route::get('admin/appointments/completed', [AppointmentController::class, 'completedAppoint'])->name('appointments.completed');
+    Route::get('admin/appointments/rejected', [AppointmentController::class, 'rejectedAppoint'])->name('appointments.rejected');
+    Route::get('admin/appointments/canceled', [AppointmentController::class, 'canceledAppoint'])->name('appointments.canceled');
+
+    Route::get('admin/appointments/edit/{id}', [AppointmentController::class, 'appointmentEdit'])->name('appointments.edit');
+    Route::put('admin/appointments/update/{id}', [AppointmentController::class, 'appointmentUpdate'])->name('appointments.update');
+    Route::delete('admin/appointments/delete/{id}', [AppointmentController::class, 'appointmentDelete'])->name('appointments.destroy');
+
 }); 
