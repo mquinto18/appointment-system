@@ -112,9 +112,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>
-                                <i class="fa-solid fa-ellipsis-vertical"></i>   
-                            </td>
+                           
                         </tr>
                         @endforeach
                     </tbody>
