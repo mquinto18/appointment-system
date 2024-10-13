@@ -202,6 +202,12 @@
             </div>
             <div class="modal-body">
                 <div class="row">
+                    <!-- Transaction Number -->
+                    <div class="col-md-4 mb-3">
+                        <strong>Transaction Number:</strong>
+                        <input type="text" class="form-control" id="viewTransactionNumber" readonly>
+                    </div>
+
                     <!-- Patient Name -->
                     <div class="col-md-4 mb-3">
                         <strong>Patient Name:</strong>
@@ -293,6 +299,7 @@
         </div>
     </div>
 </div>
+
 
 
 
@@ -417,6 +424,7 @@
     </div>
     <script>
         function openViewModal(appointment) {
+    document.getElementById('viewTransactionNumber').value = appointment.transaction_number; // Set transaction number
     document.getElementById('viewPatientName').value = appointment.first_name + ' ' + appointment.last_name;
     document.getElementById('viewDoctor').value = appointment.doctor;
     document.getElementById('viewAppointmentDate').value = new Date(appointment.appointment_date).toLocaleDateString();
