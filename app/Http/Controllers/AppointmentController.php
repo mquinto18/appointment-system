@@ -236,4 +236,8 @@ class AppointmentController extends Controller
             // Pass the appointments data and total count to the view
             return view('appointment.appointmentRejected', compact('appointments', 'totalAppointments', 'search'));
         }
+
+        public function emergency(){
+            return view('appointment.emergency');
+        }
     }

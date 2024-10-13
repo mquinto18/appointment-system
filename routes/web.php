@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\InvoiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,4 +98,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('admin/appointments/update/{id}', [AppointmentController::class, 'appointmentUpdate'])->name('appointments.update');
     Route::delete('admin/appointments/delete/{id}', [AppointmentController::class, 'appointmentDelete'])->name('appointments.destroy');
 
+    Route::get('admin/appointment/emergency', [AppointmentController::class, 'emergency'])->name('emergency');
+
+
+    Route::get('admin/invoice', [InvoiceController::class, 'invoice'])->name('invoice');
+    Route::get('admin/invoice/print/{id}', [InvoiceController::class, 'invoicePrint'])->name('invoince.print');
 }); 

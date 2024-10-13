@@ -5,13 +5,13 @@
 @section('contents')
 
 <div>
-    <h1 class='font-medium text-2xl ml-3'>Administrator</h1>
+    <h1 class='font-medium text-2xl ml-3'>Medical Billing Invoice</h1>
 </div>
 <div class='w-full h-32 mt-5 rounded-lg' style="background: linear-gradient(to bottom, #0074C8, #151A5C);"></div>   
 
 <div class='mx-10 -mt-16'>  
     <div class='flex justify-between mb-2'>
-        <span class='text-[20px] text-white font-medium'>All Pendings | {{ $totalAppointments }}</span>
+        <span class='text-[20px] text-white font-medium'>All Completed | {{ $totalAppointments }}</span>
         <div class='bg-white px-3 py-2 rounded-md cursor-pointer' data-bs-toggle="modal" data-bs-target="#addAdminModal">
             <i class="fa-solid fa-plus" style="color: #0074CB;"></i>
             <a href="#" class='font-medium no-underline text-black'>Add appointment</a>
@@ -21,7 +21,6 @@
     <div class='bg-white w-full rounded-lg shadow-md p-8'>
     <div class="overflow-x-auto">
        
-        @include('appointment.navigation')
         <div class='flex justify-between items-center mb-4'>
             <div>
                 <!-- Records per page dropdown (optional, not implemented in the controller yet) -->
@@ -56,7 +55,7 @@
                         <th class="py-3 px-4 border-b">Appointment Time</th>
                         <th class="py-3 px-4 border-b">Status</th>
                         <th class="py-3 px-4 border-b">Actions</th>
-                        <th class="py-3 px-4 border-b"></th>
+                       
                     </tr>
                 </thead>
                 <tbody>
@@ -82,78 +81,51 @@
                                     {{ strtoupper($appointment->status) }}
                                 </div>
                             </td>
-                            <td class="py-3 px-4 border-b">
-                                <!-- Approve Action -->
-                               <div class='flex gap-2'>
-                               <form action="{{ route('appointments.approve', $appointment->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="relative group cursor-pointer" 
-                                        @if($appointment->status === 'approved' || $appointment->status === 'completed') disabled @endif>
-                                        <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
-                                            @if($appointment->status === 'approved' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
-                                            <i class="fa-solid fa-thumbs-up" style="color: #3bce54;"></i>
-                                        </div>
-                                    </button>
-                                </form>
-                                
-                                <!-- Complete Action -->
-                                <form action="{{ route('appointments.complete', $appointment->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="relative group cursor-pointer" 
-                                        @if($appointment->status === 'completed') disabled @endif>
-                                        <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
-                                            @if($appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
-                                            <i class="fa-solid fa-check-to-slot" style="color: #0074cb;"></i>
-                                        </div>
-                                    </button>
-                                </form>
-
-                                <!-- Reject Action -->
-                                <form action="{{ route('appointments.reject', $appointment->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="relative group cursor-pointer" 
-                                        @if($appointment->status === 'rejected' || $appointment->status === 'completed') disabled @endif>
-                                        <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
-                                            @if($appointment->status === 'rejected' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
-                                            <i class="fa-solid fa-thumbs-down" style="color: #d02525;"></i>
-                                        </div>
-                                    </button>
-                                </form>
-                               </div>
-                            </td>
-                            <td class="cursor-pointer relative">
-                                <!-- Ellipsis Icon -->
-                                <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"></i>   
-
-                                <!-- Dropdown Menu -->
-                                <ul class="dropdown-menu font-medium absolute right-0 z-10 hidden text-left bg-white shadow-lg rounded-lg w-40" aria-labelledby="dropdownMenuButton">
-                                    <!-- Edit Option -->
-                                    <a href="{{ route('appointments.edit', $appointment->id) }}" class="block">
-                                        <div class="px-4 py-2 flex items-center hover:bg-gray-100">
-                                            <i class="fa-regular fa-pen-to-square mr-2 text-gray-600"></i>
-                                            <span class="text-sm">Edit</span>
-                                        </div>
-                                    </a>
-                                    <!-- View Option -->
-                                    <a href="#" onclick="openViewModal({{ $appointment }})" class="block">
-                                        <li class="px-4 py-2 flex items-center hover:bg-gray-100">
-                                            <i class="fa-regular fa-eye mr-2 text-gray-600"></i>
-                                            <span class="text-sm">View</span>
-                                        </li>
-                                    </a>
-                                    <!-- Delete Option -->
-                                    <div class="px-4 py-2 flex items-center hover:bg-gray-100">
-                                        <form action="#" method="POST" class="flex items-center w-full" onsubmit="return false;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <i class="fa-regular fa-trash-can mr-2 text-gray-600"></i>
-                                            <button type="button" onclick="openDeleteModal('{{ $appointment->first_name }} {{ $appointment->last_name }}', '{{ route('appointments.destroy', $appointment->id) }}')" class="text-sm">
-                                                Delete
-                                            </button>
-                                        </form>
+                            <td class="py-3 px-4 flex justify-center gap-5 items-center border-b">
+                                <div class='relative group cursor-pointer'>
+                                    <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md'>
+                                        <a href="{{ route('invoince.print', $appointment->id) }}" class="text-blue-600">
+                                            <i class="fa-solid fa-print" style="color: #0074cb;"></i>
+                                        </a>
                                     </div>
-                                </ul>
+                                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded-md py-1 px-2">
+                                        Invoice
+                                    </div>
+                                </div>
+
+                                <div class='cursor-pointer'>
+                                <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"></i>   
+                                    <!-- Dropdown Menu -->
+                                    <ul class="dropdown-menu font-medium absolute right-0 z-10 hidden text-left bg-white shadow-lg rounded-lg w-40" aria-labelledby="dropdownMenuButton">
+                                        <!-- Edit Option -->
+                                        <a href="{{ route('appointments.edit', $appointment->id) }}" class="block">
+                                            <div class="px-4 py-2 flex items-center hover:bg-gray-100">
+                                                <i class="fa-regular fa-pen-to-square mr-2 text-gray-600"></i>
+                                                <span class="text-sm">Edit</span>
+                                            </div>
+                                        </a>
+                                        <!-- View Option -->
+                                        <a href="#" onclick="openViewModal({{ $appointment }})" class="block">
+                                            <li class="px-4 py-2 flex items-center hover:bg-gray-100">
+                                                <i class="fa-regular fa-eye mr-2 text-gray-600"></i>
+                                                <span class="text-sm">View</span>
+                                            </li>
+                                        </a>
+                                        <!-- Delete Option -->
+                                        <div class="px-4 py-2 flex items-center hover:bg-gray-100">
+                                            <form action="#" method="POST" class="flex items-center w-full" onsubmit="return false;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <i class="fa-regular fa-trash-can mr-2 text-gray-600"></i>
+                                                <button type="button" onclick="openDeleteModal('{{ $appointment->first_name }} {{ $appointment->last_name }}', '{{ route('appointments.destroy', $appointment->id) }}')" class="text-sm">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </ul>
+                                </div>
                             </td>
+                            
    
                         </tr>
                     @endforeach
@@ -202,10 +174,6 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <strong>Transaction Number:</strong>
-                        <input type="text" class="form-control" id="viewTransactionNumber" readonly>
-                    </div>
                     <!-- Patient Name -->
                     <div class="col-md-4 mb-3">
                         <strong>Patient Name:</strong>
@@ -421,7 +389,6 @@
     </div>
     <script>
         function openViewModal(appointment) {
-            document.getElementById('viewTransactionNumber').value = appointment.transaction_number; 
     document.getElementById('viewPatientName').value = appointment.first_name + ' ' + appointment.last_name;
     document.getElementById('viewDoctor').value = appointment.doctor;
     document.getElementById('viewAppointmentDate').value = new Date(appointment.appointment_date).toLocaleDateString();
