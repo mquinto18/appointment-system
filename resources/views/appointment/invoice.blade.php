@@ -12,10 +12,6 @@
 <div class='mx-10 -mt-16'>  
     <div class='flex justify-between mb-2'>
         <span class='text-[20px] text-white font-medium'>All Completed | {{ $totalAppointments }}</span>
-        <div class='bg-white px-3 py-2 rounded-md cursor-pointer' data-bs-toggle="modal" data-bs-target="#addAdminModal">
-            <i class="fa-solid fa-plus" style="color: #0074CB;"></i>
-            <a href="#" class='font-medium no-underline text-black'>Add appointment</a>
-        </div>
     </div>
 
     <div class='bg-white w-full rounded-lg shadow-md p-8'>
@@ -81,7 +77,8 @@
                                     {{ strtoupper($appointment->status) }}
                                 </div>
                             </td>
-                            <td class="py-3 px-4 flex justify-center gap-5 items-center border-b">
+                            <td class="py-3 px-4  gap-5 border-b">
+                                <div class='flex justify-center items-center gap-3'>
                                 <div class='relative group cursor-pointer'>
                                     <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md'>
                                         <a href="{{ route('invoince.print', $appointment->id) }}" class="text-blue-600">
@@ -123,6 +120,7 @@
                                             </form>
                                         </div>
                                     </ul>
+                                </div>
                                 </div>
                             </td>
                             

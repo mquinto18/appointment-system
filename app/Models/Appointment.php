@@ -29,7 +29,13 @@ class Appointment extends Model
         'contact_number',
         'email_address',
         'complete_address',
+        'amount',
         'status',
         'notes',
+        'description', // Add this if you want to store the invoice description
+        'qty', // If you want to save quantity
+        // Add other fields as necessary
     ];
+
+
 }

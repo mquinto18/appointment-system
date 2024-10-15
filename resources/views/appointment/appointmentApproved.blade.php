@@ -202,7 +202,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                <div class="col-md-4 mb-3">
+                    <div class="col-md-4 mb-3">
                         <strong>Transaction Number:</strong>
                         <input type="text" class="form-control" id="viewTransactionNumber" readonly>
                     </div>
@@ -357,7 +357,12 @@
                         <!-- Additional Information -->
                         <div class="col-md-4 mb-3">
                             <label for="additional" class="form-label">Additional Information</label>
-                            <input type="text" class="form-control" id="additional" name="additional">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="additional" name="additional" value="Medical Certificate">
+                                <label class="form-check-label" for="additional">
+                                    Medical Certificate
+                                </label>
+                            </div>
                         </div>
 
                         <!-- Doctor -->

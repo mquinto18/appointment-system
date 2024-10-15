@@ -34,41 +34,50 @@ class AppointmentController extends Controller
     }
 
     public function appointmentSave(Request $request)
-    {
-        // Automatically generate a unique transaction number
-        $transactionNumber = 'TRX-' . strtoupper(Str::random(10));
+{
+    // Automatically generate a unique transaction number
+    $transactionNumber = 'TRX-' . strtoupper(Str::random(10));
 
-        // Create a new appointment instance
-        $appointment = new Appointment();
+    // Create a new appointment instance
+    $appointment = new Appointment();
 
-        // Fill the fields with data from the request
-        $appointment->transaction_number = $transactionNumber;
-        $appointment->first_name = $request->input('first_name');
-        $appointment->last_name = $request->input('last_name');
-        $appointment->date_of_birth = $request->input('date_of_birth');
-        $appointment->appointment_date = $request->input('appointment_date');
-        $appointment->appointment_time = $request->input('appointment_time');
-        $appointment->visit_type = $request->input('visit_type');
-        $appointment->additional = $request->input('additional');
-        $appointment->doctor = $request->input('doctor');
-        $appointment->gender = $request->input('gender');
-        $appointment->marital_status = $request->input('marital_status');
-        $appointment->contact_number = $request->input('contact_number');
-        $appointment->email_address = $request->input('email_address');
-        $appointment->complete_address = $request->input('complete_address');
-        
-        // Automatically set the status to 'Pending'
-        $appointment->status = 'Pending';
-        
-        $appointment->notes = $request->input('notes');
+    // Fill the fields with data from the request
+    $appointment->transaction_number = $transactionNumber;
+    $appointment->first_name = $request->input('first_name');
+    $appointment->last_name = $request->input('last_name');
+    $appointment->date_of_birth = $request->input('date_of_birth');
+    $appointment->appointment_date = $request->input('appointment_date');
+    $appointment->appointment_time = $request->input('appointment_time');
+    $appointment->visit_type = $request->input('visit_type');
+    $appointment->additional = $request->input('additional');
+    $appointment->doctor = $request->input('doctor');
+    $appointment->gender = $request->input('gender');
+    $appointment->marital_status = $request->input('marital_status');
+    $appointment->contact_number = $request->input('contact_number');
+    $appointment->email_address = $request->input('email_address');
+    $appointment->complete_address = $request->input('complete_address');
+    
+    // Automatically set the status to 'Pending'
+    $appointment->status = 'Pending';
+    $appointment->notes = $request->input('notes');
 
-        // Save the appointment to the database
-        $appointment->save();
+    // Define the mapping of visit types to amounts
+   
 
-        // Redirect back with a success message
-        notify()->success('Appointment added successfully!');
-        return redirect()->back()->with('success', 'Appointment successfully added!');
-    }
+    // Get the visit type from the requests
+    $visitType = $request->input('visit_type');
+
+    // Set the amount based on the visit type
+ 
+
+    // Save the appointment to the database
+    $appointment->save();
+
+    // Redirect back with a success message
+    notify()->success('Appointment added successfully!');
+    return redirect()->back()->with('success', 'Appointment successfully added!');
+}
+
 
 
     // Approve appointment
