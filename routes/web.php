@@ -103,4 +103,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('admin/invoice', [InvoiceController::class, 'invoice'])->name('invoice');
     Route::get('admin/invoice/print/{id}', [InvoiceController::class, 'invoicePrint'])->name('invoince.print');
+    Route::put('admin/invoice/save/{id}', [InvoiceController::class, 'invoiceSave'])->name('invoice.items');
+    Route::get('admin/invoice/generate/{id}', [InvoiceController::class, 'printInvoice'])->name('invoice.print');
+
 }); 

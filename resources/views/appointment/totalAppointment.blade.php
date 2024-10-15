@@ -352,15 +352,24 @@
                         <div class="col-md-4 mb-3">
                             <label for="visitType" class="form-label">Visit Type</label>
                             <select class="form-select" id="visitType" name="visit_type" required>
-                                <option value="Consultation">Consultation</option>
-                                <option value="Follow-up">Follow-up</option>
+                                <option value="Medical Consultation">Medical Consultation</option>
+                                <option value="Pediatric Consultation">Pediatric Consultation</option>
+                                <option value="Pediatric Ears, Nose and Throat">Pediatric Ears, Nose and Throat</option>
+                                <option value="Adult Ears, Nose and Throat">Adult Ears, Nose and Throat</option>
+                                <option value="Minor Suturing">Minor Suturing</option>
+                                <option value="Wound Dressing">Wound Dressing</option>
                             </select>
                         </div>
 
                         <!-- Additional Information -->
                         <div class="col-md-4 mb-3">
                             <label for="additional" class="form-label">Additional Information</label>
-                            <input type="text" class="form-control" id="additional" name="additional">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="additional" name="additional" value="Medical Certificate">
+                                <label class="form-check-label" for="additional">
+                                    Medical Certificate
+                                </label>
+                            </div>
                         </div>
 
                         <!-- Doctor -->
