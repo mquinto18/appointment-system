@@ -5,7 +5,7 @@
 @section('contents')
 
 <div>
-    <h1 class='font-medium text-2xl ml-3'>Medical Billing Invoice</h1>
+    <h1 class='font-medium text-2xl ml-3'>Medical Certificate</h1>
 </div>
 <div class='w-full h-32 mt-5 rounded-lg' style="background: linear-gradient(to bottom, #0074C8, #151A5C);"></div>   
 
@@ -78,12 +78,12 @@
                                 <div class='flex justify-center items-center gap-3'>
                                 <div class='relative group cursor-pointer'>
                                     <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md'>
-                                        <a href="{{ route('invoince.print', $appointment->id) }}" class="text-blue-600">
+                                        <a href="{{ route('medicalcert.print', $appointment->id) }}" class="text-blue-600">
                                             <i class="fa-solid fa-print" style="color: #0074cb;"></i>
                                         </a>
                                     </div>
                                     <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded-md py-1 px-2">
-                                        Invoice
+                                        Generate Medical Certificate
                                     </div>
                                 </div>
 
