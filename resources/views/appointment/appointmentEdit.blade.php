@@ -60,8 +60,12 @@
 
                 <div class="mb-4">
                     <label for="additional" class="form-label font-medium text-gray-700 block mb-2">Additional Information</label>
-                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="additional" name="additional" value="{{ old('additional', $appointment->additional) }}">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="medicalCertificate" name="additional" value="Medical Certificate" {{ old('additional', $appointment->additional) == 'Medical Certificate' ? 'checked' : '' }}>
+                        <label class="form-check-label" for="medicalCertificate">Medical Certificate</label>
+                    </div>
                 </div>
+
 
                 <div class="mb-4">
                     <label for="doctor" class="form-label font-medium text-gray-700 block mb-2">Doctor</label>

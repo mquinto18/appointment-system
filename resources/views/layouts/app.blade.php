@@ -109,7 +109,7 @@
                     </div>
                 </a>
 
-                <a href="" class="group nav-link">
+                <a href="{{ route('medicalcert') }}" class="group nav-link {{ Request::routeIs('medicalcert') ? 'bg-[#0074C8] text-white' : '' }}">
                     <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8]">
                         <i class="fa-solid fa-file-invoice"></i>
                         <span class="text-[15px] ml-4 font-bold">Medical Certificate</span>

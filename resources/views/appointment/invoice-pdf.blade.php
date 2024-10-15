@@ -17,7 +17,10 @@
             margin: auto;
         }
         .header {
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            
+            align-items: center;
             margin-bottom: 30px;
         }
         .header img {
@@ -29,6 +32,7 @@
             margin: 0;
             color: #0074C8;
             text-transform: uppercase;
+            text-align: right;
         }
         .sub-header {
             border-top: 4px solid #0074C8;
@@ -79,7 +83,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{ asset('images/logo.png') }}" alt="" class='w-[65px]'>
+            <img src="{{ asset('images/logo.png') }}" alt="Clinic Logo" class="w-[65px]">
             <h1>Medical Billing Invoice</h1>
         </div>
 
