@@ -34,6 +34,10 @@ class Appointment extends Model
         'notes',
         'description', // Add this if you want to store the invoice description
         'qty', // If you want to save quantity
+        'drugname',
+        'dosage',
+        'doctorqty',
+        'diagnosis',
         // Add other fields as necessary
     ];
 

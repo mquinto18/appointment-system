@@ -87,15 +87,12 @@
                     <div id="appointment-dropdown" class="relative w-full text-left rounded-md mt-1 space-y-1 px-2 py-1 {{ Request::is('admin/appointments/*') ? '' : 'hidden' }}">
                         <a href="{{ route('appointment') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('appointment') ? 'bg-[#0074C8] text-white' : '' }}">
                             <li>Total Appointment</li>
-                        </a>
-                        <a href="{{ route('emergency') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('emergency') ? 'bg-[#0074C8] text-white' : '' }}">
-                            <li>Emergency</li>
-                        </a>
+                        </a>    
                     </div>
                 </div>
 
                 <!-- Other Navigation Links -->
-                <a href="" class="group nav-link">
+                <a href="{{ route('prescription') }}" class="group nav-link {{ Request::routeIs('prescription') ? 'bg-[#0074C8] text-white' : '' }}">
                     <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8]">
                         <i class="fa-solid fa-prescription"></i>
                         <span class="text-[15px] ml-4 font-bold">Prescription</span>

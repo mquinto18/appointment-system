@@ -32,6 +32,10 @@ return new class extends Migration
             $table->text('notes')->nullable(); // Additional notes, optional
             $table->json('descriptions')->nullable(); // Store multiple invoice descriptions as JSON
             $table->json('qty')->nullable(); // Store multiple quantities as JSON
+            $table->json('drugname')->nullable(); // Store multiple quantities as JSON
+            $table->json('dosage')->nullable(); // Store multiple quantities as JSON
+            $table->json('doctorqty')->nullable(); // Store multiple quantities as JSON
+            $table->text('diagnosis')->nullable(); 
             $table->timestamps(); // Laravel's created_at and updated_at columns
         });        
 
