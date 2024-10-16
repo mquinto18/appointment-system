@@ -70,7 +70,7 @@
     <p>This is to certify that the above-named patient was evaluated with the following findings.</p>
 
     <div class="info">
-        <strong>Diagnosis:</strong> _________________________<br>
+        <strong>Diagnosis:</strong> {{ $diagnosis }}<br>
         <strong>Remarks:</strong> _________________________<br>
     </div>
 

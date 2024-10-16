@@ -10,6 +10,7 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MedicalController;
+use App\Http\Controllers\PrescriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,5 +110,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('admin/medicalcert', [MedicalController::class, 'medicalcert'])->name('medicalcert');
     Route::get('admin/medicalcert/print/{id}', [MedicalController::class, 'medicalcertPrint'])->name('medicalcert.print');
+
+    Route::get('admin/prescription', [PrescriptionController::class, 'prescription'])->name('prescription');
+    Route::get('admin/prescription/print/{id}', [PrescriptionController::class, 'prescriptionPrint'])->name('prescription.print');
+    Route::put('admin/prescription/save/{id}', [PrescriptionController::class, 'prescriptionSave'])->name('prescription.items');
+   
 
 }); 

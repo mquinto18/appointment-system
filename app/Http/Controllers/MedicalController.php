@@ -50,6 +50,7 @@ class MedicalController extends Controller
             'age' => $age,
             'gender' => $appointment->gender,
             'address' => $appointment->complete_address,
+            'diagnosis' => $appointment->diagnosis,
         ];
     
         // Load the view and generate the PDF
