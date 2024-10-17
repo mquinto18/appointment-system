@@ -28,21 +28,21 @@
                 <h1 class='font-medium text-[18px]'>Total Appointments</h1>
                 <i class="fa-regular fa-calendar-days text-[50px]" style="color: #0074cb;"></i>
             </div>
-            <h1 class='font-bold text-[40px]'>57</h1>
+            <h1 class='font-bold text-[40px]'>{{ $totalAppointment }}</h1>
         </div>
         <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
             <div class='flex justify-between'>
-                <h1 class='font-medium text-[18px]'>Total Doctors</h1>
-                <i class="fa-solid fa-user-doctor text-[50px]" style="color: #0074cb;"></i>
-            </div>
-            <h1 class='font-bold text-[40px]'>57</h1>
-        </div>
-        <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
-            <div class='flex justify-between'>
-                <h1 class='font-medium text-[18px]'>Completed</h1>
+                <h1 class='font-medium text-[18px]'>Total Completed</h1>
                 <i class="fa-solid fa-check-to-slot text-[50px]" style="color: #0074cb;"></i>
             </div>
-            <h1 class='font-bold text-[40px]'>57</h1>
+            <h1 class='font-bold text-[40px]'>{{ $totalCompleted }}</h1>
+        </div>
+        <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
+            <div class='flex justify-between'>
+                <h1 class='font-medium text-[18px]'>Total Earning</h1>
+                <i class="fa-solid fa-peso-sign text-[50px]" style="color: #0074cb;"></i>
+            </div>
+            <h1 class='font-bold text-[40px]'>{{ $totalAmount }}</h1>
         </div>
         
     </div>
@@ -56,78 +56,90 @@
         <table class="min-w-full bg-white border mt-3">
             <thead>
                 <tr class="text-left">
-                    <th class="py-3 px-4 border-b">ID</th>
-                    <th class="py-3 px-4 border-b">Patient Name</th>
-                    <th class="py-3 px-4 border-b">Age</th>
-                    <th class="py-3 px-4 border-b">Email</th>
-                    <th class="py-3 px-4 border-b">Visit Type</th>
-                    <th class="py-3 px-4 border-b">Consulting Doctor</th>
-                    <th class="py-3 px-4 border-b">Date</th>
-                    <th class="py-3 px-4 border-b">Time</th>
-                    <th class="py-3 px-4 border-b">Status</th>
-                    <th class="py-3 px-4 border-b">Actions</th>
-                </tr>
+                        <th class="py-3 px-4 border-b">ID</th>
+                        <th class="py-3 px-4 border-b">Patient Name</th>
+                        <th class="py-3 px-4 border-b">Visit Type</th>
+                        <th class="py-3 px-4 border-b">Doctor</th>
+                        <th class="py-3 px-4 border-b">Appointment Date</th>
+                        <th class="py-3 px-4 border-b">Appointment Time</th>
+                        <th class="py-3 px-4 border-b">Status</th>
+                        <th class="py-3 px-4 border-b">Actions</th>
+                        
+                    </tr>
             </thead>
             <tbody>
-                <tr class="hover:bg-gray-100">
-                    <td class="py-3 px-4 border-b">1</td>
-                    <td class="py-3 px-4 border-b">John Doe</td>
-                    <td class="py-3 px-4 border-b">30</td>
-                    <td class="py-3 px-4 border-b">john@example.com</td>
-                    <td class="py-3 px-4 border-b">Check-up</td>
-                    <td class="py-3 px-4 border-b">Dr. Smith</td>
-                    <td class="py-3 px-4 border-b">2024-10-05</td>
-                    <td class="py-3 px-4 border-b">10:00 AM</td>
-                    <td class="py-3 px-4 border-b text-yellow-500 font-medium">Pending</td>
-                    <td class="py-3 px-4 border-b flex gap-2">
-                        <div class='relative group'>
-                            <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md'>
-                                <a href="#" class="text-blue-600">
-                                    <i class="fa-solid fa-eye"></i>
-                                </a>
-                            </div>
-                            <!-- Tooltip for 'View' -->
-                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded-md py-1 px-2">
-                                View
-                            </div>
-                        </div>
-                        
-                        <div class='relative group'>
-                            <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md'>
-                                <a href="#" class="text-blue-600">
-                                    <i class="fa-regular fa-pen-to-square"></i>
-                                </a>
-                            </div>
-                            <!-- Tooltip for 'Edit' -->
-                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded-md py-1 px-2">
-                                Edit
-                            </div>
-                        </div>
-                        
-                        <div class='relative group'>
-                            <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md'>
-                                <a href="#" class="text-blue-600" onclick="event.preventDefault(); confirm('Are you sure you want to delete this appointment?');">
-                                    <i class="fa-solid fa-trash"></i>
-                                </a>
-                            </div>
-                            <!-- Tooltip for 'Delete' -->
-                            <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded-md py-1 px-2">
-                                Delete
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-               
-                
-                
-            </tbody>
-        </table>
+                    @foreach ($appointments as $appointment)
+                        <tr>
+                            <td class="py-3 px-4 border-b">{{ $loop->iteration + ($appointments->currentPage() - 1) * $appointments->perPage() }}</td>
+                            <td class="py-3 px-4 border-b">{{ $appointment->first_name }} {{ $appointment->last_name }}</td>
+                            <td class="py-3 px-4 border-b">{{ $appointment->visit_type }}</td>
+                            <td class="py-3 px-4 border-b">{{ $appointment->doctor }}</td>
+                            <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
+                            <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}</td>
+                            <td class="py-3 px-4 border-b">
+                                <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
+                                    @if($appointment->status === 'pending') bg-orange-100 border-orange-700 
+                                    @elseif($appointment->status === 'approved') bg-green-100 border-green-700 
+                                    @elseif($appointment->status === 'rejected') bg-red-100 border-red-700 
+                                    @elseif($appointment->status === 'completed') bg-blue-100 border-blue-700 @endif">
+                                    <i class="fa-solid fa-circle fa-2xs" 
+                                        @if($appointment->status === 'pending') style="color: #c05621" 
+                                        @elseif($appointment->status === 'approved') style="color: #38a169" 
+                                        @elseif($appointment->status === 'rejected') style="color: #e53e3e" 
+                                        @elseif($appointment->status === 'completed') style="color: #3182ce" @endif></i>
+                                    {{ strtoupper($appointment->status) }}
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 border-b">
+                                <!-- Approve Action -->
+                               <div class='flex gap-2'>
+                               <form action="{{ route('appointments.approve', $appointment->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="relative group cursor-pointer" 
+                                        @if($appointment->status === 'approved' || $appointment->status === 'completed') disabled @endif>
+                                        <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
+                                            @if($appointment->status === 'approved' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
+                                            <i class="fa-solid fa-thumbs-up" style="color: #3bce54;"></i>
+                                        </div>
+                                    </button>
+                                </form>
+                                
+                                <!-- Complete Action -->
+                                <form action="{{ route('appointments.complete', $appointment->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="relative group cursor-pointer" 
+                                        @if($appointment->status === 'completed') disabled @endif>
+                                        <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
+                                            @if($appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
+                                            <i class="fa-solid fa-check-to-slot" style="color: #0074cb;"></i>
+                                        </div>
+                                    </button>
+                                </form>
+
+                                <!-- Reject Action -->
+                                <form action="{{ route('appointments.reject', $appointment->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="relative group cursor-pointer" 
+                                        @if($appointment->status === 'rejected' || $appointment->status === 'completed') disabled @endif>
+                                        <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
+                                            @if($appointment->status === 'rejected' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
+                                            <i class="fa-solid fa-thumbs-down" style="color: #d02525;"></i>
+                                        </div>
+                                    </button>
+                                </form>
+                               </div>
+                            </td>
+
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+            <!-- Pagination Links -->
+            <div class="mt-4">
+                {{ $appointments->links() }}
+            </div>
+        </div>
     </div>
 </div>
-
-
-   
-</div>
-
-
 @endsection

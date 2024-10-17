@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Carbon\Carbon;
 use App\Models\Prescription;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Appointment;
@@ -74,6 +75,28 @@ class PrescriptionController extends Controller
     $drugname = json_decode($appointment->drugname) ?? [];
     $dosage = json_decode($appointment->dosage) ?? [];
     $doctorqty = json_decode($appointment->doctorqty) ?? [];
-    }
 
+    $first_name = $appointment->first_name;
+    $last_name = $appointment->last_name;
+    $appointment_date = $appointment->appointment_date;
+    $complete_address = $appointment->complete_address;
+    $date_of_birth = $appointment->date_of_birth;
+    $age = Carbon::parse($date_of_birth)->age;
+
+    $data = [
+        'first_name' => $first_name,
+        'last_name' => $last_name,
+        'date_of_birth' => $date_of_birth,
+        'age' => $age,
+        'appointment_date' => $appointment_date,
+        'complete_address' => $complete_address,
+        'drugname' => $drugname,
+        'dosage' => $dosage,
+        'doctorqty' => $doctorqty
+    ];
+    
+    $pdf = Pdf::loadView('appointment.prescription-pdf', $data);
+    return $pdf->download('prescription_' . $appointment->id . '.pdf');
+
+    }
 }
