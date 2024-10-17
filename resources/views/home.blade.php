@@ -3,5 +3,5 @@
 @section('title', 'Home')
 
 @section('contents')
-home
+homeee
 @endsection

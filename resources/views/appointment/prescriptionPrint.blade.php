@@ -201,7 +201,7 @@
 
                             <div class="mt-3 w-full flex gap-2">
                                 <button type="submit" class="block w-full rounded-md bg-[#0074C8] text-white px-3 py-2">Save</button>
-                                <a href="{{ route('prescription.print', $appointment->id) }}" class="block w-full rounded-md bg-[#0074C8] text-white text-center px-3 py-2">Print</a>
+                                <a href="{{ route('prescription.generate', $appointment->id) }}" class="block w-full rounded-md bg-[#0074C8] text-white text-center px-3 py-2">Print</a>
                             </div>
                         </form>
 

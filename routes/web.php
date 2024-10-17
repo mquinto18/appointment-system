@@ -114,6 +114,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/prescription', [PrescriptionController::class, 'prescription'])->name('prescription');
     Route::get('admin/prescription/print/{id}', [PrescriptionController::class, 'prescriptionPrint'])->name('prescription.print');
     Route::put('admin/prescription/save/{id}', [PrescriptionController::class, 'prescriptionSave'])->name('prescription.items');
-   
+    Route::get('admin/prescription/generate/{id}', [PrescriptionController::class, 'printPrescription'])->name('prescription.generate');
 
 }); 
