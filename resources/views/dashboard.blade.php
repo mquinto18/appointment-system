@@ -182,81 +182,77 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-   document.addEventListener('DOMContentLoaded', function() {
-    // Earnings data and labels
-    const earningsData = @json(array_values($monthlyEarnings));
-    let earningsLabels = @json(array_keys($monthlyEarnings));  // Labels in 'm-d-y' format
-    
-    // Ensure 5 days are displayed, format as 'm-d-y'
-    const currentDate = new Date();
-    let fiveDays = [];
-    
-    for (let i = 4; i >= 0; i--) {
-        const day = new Date();
-        day.setDate(currentDate.getDate() - i);
+    document.addEventListener('DOMContentLoaded', function() {
+        // Earnings data and labels
+        const earningsData = @json(array_values($monthlyEarnings));
+        const earningsLabels = @json(array_keys($monthlyEarnings));  // Labels in 'm-d-y' format
         
-        // Format the date as 'm-d-y' to match earningsLabels format
-        const formattedDate = ('0' + (day.getMonth() + 1)).slice(-2) + '-' + 
-                              ('0' + day.getDate()).slice(-2) + '-' + 
-                              day.getFullYear().toString().slice(-2);
-        fiveDays.push(formattedDate);
-    }
-    
-    // Fill missing data points with 0 if no earnings for a day
-    let earningsDataWithFiveDays = fiveDays.map(day => {
-        const index = earningsLabels.indexOf(day);
-        return index !== -1 ? earningsData[index] : 0;
-    });
+        // Ensure 5 days are displayed, format as 'm-d-y'
+        const currentDate = new Date();
+        let fiveDays = [];
+        
+        for (let i = 4; i >= 0; i--) {
+            const day = new Date();
+            day.setDate(currentDate.getDate() - i);
+            
+            // Format the date as 'm-d-y' to match earningsLabels format
+            const formattedDate = ('0' + (day.getMonth() + 1)).slice(-2) + '-' + 
+                                  ('0' + day.getDate()).slice(-2) + '-' + 
+                                  day.getFullYear().toString().slice(-2);
+            fiveDays.push(formattedDate);
+        }
+        
+        // Fill missing data points with 0 if no earnings for a day
+        let earningsDataWithFiveDays = fiveDays.map(day => {
+            const index = earningsLabels.indexOf(day);
+            return index !== -1 ? earningsData[index] : 0;
+        });
 
-    // Create the earnings chart
-    const ctxEarnings = document.getElementById('earningsChart').getContext('2d');
-    const earningsChart = new Chart(ctxEarnings, {
-        type: 'line',
-        data: {
-            labels: fiveDays,  // Display the last 5 days
-            datasets: [{
-                label: 'Total Earnings (₱)',
-                data: earningsDataWithFiveDays,  // Total earnings mapped to 5 days
-                borderColor: '#0074cb',
-                backgroundColor: 'rgba(0, 116, 200, 0.2)',
-                borderWidth: 2,
-                tension: 0.3,
-                spanGaps: true
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return '₱' + value.toLocaleString();
+        // Create the earnings chart
+        const ctxEarnings = document.getElementById('earningsChart').getContext('2d');
+        const earningsChart = new Chart(ctxEarnings, {
+            type: 'line',
+            data: {
+                labels: fiveDays,  // Display the last 5 days
+                datasets: [{
+                    label: 'Total Earnings (₱)',
+                    data: earningsDataWithFiveDays,  // Total earnings mapped to 5 days
+                    borderColor: '#0074cb',
+                    backgroundColor: 'rgba(0, 116, 200, 0.2)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    spanGaps: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₱' + value.toLocaleString();
+                            }
                         }
+                    },
+                    x: {
+                        type: 'category',
+                        labels: fiveDays,  // Ensure the x-axis shows the last 5 days
                     }
                 },
-                x: {
-                    type: 'category',
-                    labels: fiveDays,  // Ensure the x-axis shows the last 5 days
-                }
-            },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return '₱' + tooltipItem.raw.toLocaleString();
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return '₱' + tooltipItem.raw.toLocaleString();
+                            }
                         }
                     }
                 }
             }
-        }
-    });
+        });
 
-
-
-
-        // Status Data
         // Status Data
         const statusCounts = @json($statusCounts);
 
@@ -289,5 +285,6 @@
         });
     });
 </script>
+
 
 @endsection
