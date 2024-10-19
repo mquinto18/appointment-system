@@ -64,10 +64,7 @@ class HomeController extends Controller
         return view('dashboard', compact('totalUsers', 'totalAppointment', 'totalAmount', 'totalCompleted', 'appointments','appointmentsAll', 'monthlyEarnings', 'statusCounts'));
     }
     
-    
-    
-    
-    
+
 
     public function profileSettings(){
         return view('components.profile');
