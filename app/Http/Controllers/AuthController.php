@@ -52,15 +52,20 @@ class AuthController extends Controller
         }
 
         $request->session()->regenerate();
- 
-        if (auth()->user()->type == '1') {
+
+        // Redirect based on user type
+        if (auth()->user()->type == 1) {
+            // Admin
             return redirect()->route('admin/home');
+        } elseif (auth()->user()->type == 2) {
+            // Doctor
+            return redirect()->route('doctor/home');
         } else {
+            // Regular user
             return redirect()->route('home');
         }
-         
-        return redirect()->route('dashboard');
     }
+
 
     public function logout(Request $request)
     {
