@@ -2,7 +2,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;  
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;  
 
@@ -21,6 +21,7 @@ class ProfileController extends Controller
         ]);
 
         // Get the authenticated user
+         /** @var User $user */
         $user = Auth::user();
 
         // Check if a profile picture is being uploaded
@@ -57,6 +58,7 @@ class ProfileController extends Controller
 
 
     public function securityUpdate(Request $request){
+         /** @var User $user */
         $user = Auth::user();
 
         $request->validate([
@@ -80,6 +82,7 @@ class ProfileController extends Controller
         ]);
 
          // Update password
+          /** @var User $user */
         $user = Auth::user();
         $user->password = Hash::make($request->new_password);
         $user->save();
@@ -89,6 +92,7 @@ class ProfileController extends Controller
     }
 
     public function accountDelete(Request $request){
+        /** @var User $user */
         $user = Auth::user();
         $user->delete();
 

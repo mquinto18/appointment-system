@@ -11,6 +11,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MedicalController;
 use App\Http\Controllers\PrescriptionController;
+use Illuminate\Support\Facades\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,7 +61,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('admin/profile', [ProfileController::class, 'profileUpdate'])->name('profile.update');
     Route::post('/profile/update-picture', [ProfileController::class, 'profileUpdate'])->name('profile.update_picture');
     Route::get('admin/security', [HomeController::class, 'securitySettings'])->name('security.settings');
-    Route::put('profile/update', [ProfileController::Class, 'securityUpdate'])->name('security.update');
+    Route::put('profile/update', [ProfileController::class, 'securityUpdate'])->name('security.update');
     Route::put('profile/security/update', [ProfileController::class, 'changePassword'])->name('changePassword.update');
     Route::delete('profile/security/delete', [ProfileController::class, 'accountDelete'])->name('account.delete');
 

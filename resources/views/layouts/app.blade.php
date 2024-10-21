@@ -24,11 +24,19 @@
             <div class="flex justify-center items-center gap-3">
 
                 <!-- Dropdown Notification -->
-                <div class="relative inline-block">
+                <div x-data="{ notifyShow: false }" class="relative inline-block ml-3 group">
                     <button x-on:click="notifyShow = !notifyShow" class="bg-white shadow-md px-3 py-2 rounded focus:outline-none">
                         <i class="fa-solid fa-bell text-xl"></i>
                     </button>
-                    <div x-show="notifyShow" class="absolute right-0 mt-2 w-72 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" tabindex="-1">
+                    <!-- Notifications dropdown -->
+                    <div x-show="notifyShow" x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 transform scale-95"
+                        x-transition:enter-end="opacity-100 transform scale-100"
+                        x-transition:leave="transition ease-in duration-75"
+                        x-transition:leave-start="opacity-100 transform scale-100"
+                        x-transition:leave-end="opacity-0 transform scale-95"
+                        x-cloak class="absolute right-0 mt-2 z-10 w-72 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        role="menu" aria-orientation="vertical" tabindex="-1">
                         <div class="py-2 px-4 text-sm text-gray-700">
                             <a href="{{ route('appointments.pending') }}" class="flex justify-between items-center border-b py-2 border-b-gray-300">
                                 <div class="flex justify-center items-center gap-3">
@@ -39,12 +47,16 @@
                                     </div>
                                 </div>
                             </a>
-
-
                         </div>
                     </div>
                     <div class="absolute top-[-5px] right-[-5px] bg-red-600 rounded-full h-5 w-5 flex items-center justify-center">
                         <span class="text-white text-xs">20</span>
+                    </div>
+
+                    <!-- Popup on hover (below the button) -->
+                    <div class="absolute top-full mt-2 hidden group-hover:block bg-black text-white text-xs rounded py-1 px-3 z-10">
+                        Notifications
+                        <div class="absolute left-1/2 transform -translate-x-1/2 -top-2 border-8 border-transparent border-b-black"></div>
                     </div>
                 </div>
 
