@@ -1,4 +1,4 @@
-@extends('layouts.user');
+@extends('layouts.user')
 
 @section('title', 'Home')
 
@@ -10,7 +10,7 @@
         <div class="absolute inset-0 flex flex-col gap-4 justify-center items-center w-[700px] mx-auto text-white">
             <h2 class=" text-center text-2xl md:text-3xl lg:text-5xl font-semibold">Book your Appointment, whether in-person or online</h2>
             <span class="text-center text-[13px] w-[600px] font-medium">We provide personalized, top-quality healthcare in our modern facility. From comprehensive medical care to preventive services, our expert team is here to ensure your well-being and comfort.</span>
-            <a href="" class="bg-[#0074CB] py-2 px-7 font-medium rounded-full">
+            <a href="{{ route('appointment.user') }}" class="bg-[#0074CB] py-2 px-7 font-medium rounded-full">
                 <button>Set Appointment</button>
             </a>
         </div>

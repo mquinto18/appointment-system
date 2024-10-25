@@ -11,6 +11,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MedicalController;
 use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\AppointmentSlotController;
 use Illuminate\Support\Facades\Request;
 
 /*
@@ -52,6 +53,21 @@ Route::controller(AuthController::class)->group(function () {
 // User dashboard (protected with middleware)
 Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
+
+    Route::get('/dashboard/appointment', [HomeController::class, 'patient_appointment'])->name('appointment.user');
+    Route::post('/dashboard/appointment/store', [HomeController::class, 'patientStore'])->name('appointment.store');
+
+    Route::get('/dashboard/appointment/patientDetails', [HomeController::class, 'patientDetails'])->name('patient.details');
+
+    Route::post('/dashboard/appointment/storePatient', [HomeController::class, 'storePatientDetails'])->name('appointments.storePatientDetails');
+    Route::get('/dashboard/appointment/confirmDetails', [HomeController::class, 'confirmDetails'])->name('appointments.confirmDetails');
+    
+
+
+
+
+
+    Route::get('/available-slots', [AppointmentSlotController::class, 'getAvailableSlots']);
 });
 
 // Admin dashboard (protected with middleware)
