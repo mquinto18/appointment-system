@@ -162,7 +162,7 @@
         </nav>
 
         
-            <div class="">
+            <div class="">  
                 <div>@yield('contents')</div>
                 @yield('scripts')
             </div>

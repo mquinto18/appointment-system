@@ -37,7 +37,7 @@
                                     <span class="text-xl font-medium">Afternoon</span>
                                 </div>
                                 <div class="p-8 text-center flex flex-col gap-4">
-                                    @foreach (['12:00 PM', '12:30 PM', '1:00 PM', '1:30 PM', '2:00 PM', '2:30 PM'] as $time)
+                                    @foreach (['1:00 PM', '1:30 PM', '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM'] as $time)
                                         <div class="time-slot py-2 cursor-pointer transition duration-200 text-[20px] rounded-md" onclick="setTime('{{ $time }}', this)">{{ $time }}</div>
                                     @endforeach
                                 </div>
