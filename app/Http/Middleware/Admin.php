@@ -23,6 +23,6 @@ class Admin
         }
 
         // Redirect or abort if the user is not of type 1 (admin)
-        return redirect()->route('dashboard')->withErrors('You do not have access to this resource.');
+        return redirect()->route('home')->withErrors('You do not have access to this resource.');
     }
 }

@@ -61,6 +61,7 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     Route::post('/dashboard/appointment/storePatient', [HomeController::class, 'storePatientDetails'])->name('appointments.storePatientDetails');
     Route::get('/dashboard/appointment/confirmDetails', [HomeController::class, 'confirmDetails'])->name('appointments.confirmDetails');
+    Route::post('/dashboard/appointment/appointment-confirm', [HomeController::class, 'appointConfirm'])->name('appointments.confirm');
     
 
 

@@ -115,13 +115,13 @@ class HomeController extends Controller
         $date = session('appointment_date');
         $time = session('appointment_time');
         $doctorId = session('appointment_doctor');
-    
+
         // Optionally retrieve the doctor's information if needed
         $doctor = User::find($doctorId); // Assuming the doctor is in the users table
-    
+
         // Get doctor's name (or any other information you need)
         $doctorName = $doctor ? $doctor->name : 'Doctor not found'; // Adjust 'name' to the correct column name in your users table
-    
+
         return view('patient.patientDetails', compact('date', 'time', 'doctorName'));
     }
 
@@ -162,7 +162,7 @@ class HomeController extends Controller
                 'appointment_doctor' => $doctorName, // Store appointment doctor ID
             ]
         ]);
-       
+
         // Redirect to the next step (adjust the route as necessary)
         return redirect()->route('appointments.confirmDetails'); // Define this route in your web.php
     }
@@ -178,5 +178,45 @@ class HomeController extends Controller
 
 
         return view('patient.confirm-appointment', compact('patientDetails', 'date', 'time', 'doctorName'));
+    }
+
+    public function appointConfirm(Request $request)
+    {
+        // Retrieve the patient details from the session
+        $patientDetails = session('patient_details');
+
+        // Generate a unique transaction number
+        $transactionNumber = 'TRX-' . strtoupper(Str::random(10));
+
+        // Convert appointment time to 24-hour format
+        $appointmentTime = Carbon::createFromFormat('g:i A', $patientDetails['appointment_time'])->format('H:i:s');
+
+        // Create a new Appointment instance and fill it with session data
+        $appointment = new Appointment([
+            'transaction_number' => $transactionNumber,
+            'first_name' => $patientDetails['first_name'],
+            'last_name' => $patientDetails['last_name'],
+            'date_of_birth' => $patientDetails['birthday'],
+            'appointment_date' => $patientDetails['appointment_date'],
+            'appointment_time' => $appointmentTime, // Use the formatted time
+            'visit_type' => $patientDetails['visit_type'],
+            'doctor' => $patientDetails['appointment_doctor'],
+            'additional' => $patientDetails['medical_certificate'],
+            'gender' => $patientDetails['gender'],
+            'contact_number' => $patientDetails['mobile_number'],
+            'email_address' => $patientDetails['email'],
+            'complete_address' => $patientDetails['address'],
+            'status' => 'pending', // Default status
+            // Add any additional fields as needed
+        ]);
+
+        // Save the appointment to the database
+        $appointment->save();
+
+        // Clear the session data
+        session()->forget('patient_details');
+
+        // Redirect to a success page or confirmation view
+        return redirect()->back()->with('message', 'Please wait for a notification once your appointment has been approved.');
     }
 }
