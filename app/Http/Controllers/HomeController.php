@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Appointment;
 use Carbon\Carbon;
+use App\Models\AppointmentSlot;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str; // Import the Str class
@@ -95,20 +96,23 @@ class HomeController extends Controller
         $validatedData = $request->validate([
             'selected_date' => 'required|date',
             'selected_time' => 'required|string',
-            'selected_doctor' => 'required|integer',
+            'selected_doctor' => 'required|integer', // Keep this to validate the ID
         ]);
 
-        // Save data to session or database
+        // Retrieve the doctor's name from the database
+        $doctor = User::find($validatedData['selected_doctor']);
+        $doctorName = $doctor ? $doctor->name : 'Doctor not found'; // Get doctor's name
+
+        // Save data to session
         session([
             'appointment_date' => $validatedData['selected_date'],
             'appointment_time' => $validatedData['selected_time'],
-            'appointment_doctor' => $validatedData['selected_doctor'],
+            'appointment_doctor' => $doctorName, // Store the doctor's name
         ]);
 
         // Redirect to patient details
         return redirect()->route('patient.details');
     }
-
     public function patientDetails()
     {
         // You can retrieve session data or any additional data here
@@ -143,7 +147,7 @@ class HomeController extends Controller
         // Retrieve appointment details from the session
         $date = session('appointment_date');
         $time = session('appointment_time');
-        $doctorName = session('appointment_doctor');
+        $doctorName = session('appointment_doctor'); // This is now the doctor's name
 
         // Store patient details and appointment details in the session
         session([
@@ -159,7 +163,7 @@ class HomeController extends Controller
                 'medical_certificate' => $request->has('medical_certificate') ? 'Medical Certificate' : null, // Store as true/false
                 'appointment_date' => $date, // Store appointment date
                 'appointment_time' => $time, // Store appointment time
-                'appointment_doctor' => $doctorName, // Store appointment doctor ID
+                'appointment_doctor' => $doctorName, // Store appointment doctor's name
             ]
         ]);
 
@@ -168,55 +172,73 @@ class HomeController extends Controller
     }
 
 
+
     public function confirmDetails()
     {
-
         $patientDetails = session('patient_details');
         $date = $patientDetails['appointment_date'] ?? '';
         $time = $patientDetails['appointment_time'] ?? '';
-        $doctorName = $patientDetails['appointment_doctor'] ?? '';
-
+        $doctorName = $patientDetails['appointment_doctor'] ?? ''; // This will now contain the doctor's name
 
         return view('patient.confirm-appointment', compact('patientDetails', 'date', 'time', 'doctorName'));
     }
-
     public function appointConfirm(Request $request)
     {
         // Retrieve the patient details from the session
         $patientDetails = session('patient_details');
+        $appointmentDate = $patientDetails['appointment_date'];
 
-        // Generate a unique transaction number
-        $transactionNumber = 'TRX-' . strtoupper(Str::random(10));
+        // Find the slot for the specified appointment date
+        $slot = AppointmentSlot::firstOrCreate(
+            ['appointment_date' => $appointmentDate],
+            ['total_slots' => 2] // Ensure there are always 2 total slots
+        );
 
-        // Convert appointment time to 24-hour format
-        $appointmentTime = Carbon::createFromFormat('g:i A', $patientDetails['appointment_time'])->format('H:i:s');
+        // Check if there are available slots
+        if ($slot->booked_slots < $slot->total_slots) {
+            // Generate a unique transaction number
+            $transactionNumber = 'TRX-' . strtoupper(Str::random(10));
 
-        // Create a new Appointment instance and fill it with session data
-        $appointment = new Appointment([
-            'transaction_number' => $transactionNumber,
-            'first_name' => $patientDetails['first_name'],
-            'last_name' => $patientDetails['last_name'],
-            'date_of_birth' => $patientDetails['birthday'],
-            'appointment_date' => $patientDetails['appointment_date'],
-            'appointment_time' => $appointmentTime, // Use the formatted time
-            'visit_type' => $patientDetails['visit_type'],
-            'doctor' => $patientDetails['appointment_doctor'],
-            'additional' => $patientDetails['medical_certificate'],
-            'gender' => $patientDetails['gender'],
-            'contact_number' => $patientDetails['mobile_number'],
-            'email_address' => $patientDetails['email'],
-            'complete_address' => $patientDetails['address'],
-            'status' => 'pending', // Default status
-            // Add any additional fields as needed
-        ]);
+            // Convert appointment time to 24-hour format
+            $appointmentTime = Carbon::createFromFormat('g:i A', $patientDetails['appointment_time'])->format('H:i:s');
 
-        // Save the appointment to the database
-        $appointment->save();
+            // Create a new Appointment instance
+            $appointment = new Appointment([
+                'transaction_number' => $transactionNumber,
+                'first_name' => $patientDetails['first_name'],
+                'last_name' => $patientDetails['last_name'],
+                'date_of_birth' => $patientDetails['birthday'],
+                'appointment_date' => $appointmentDate,
+                'appointment_time' => $appointmentTime,
+                'visit_type' => $patientDetails['visit_type'],
+                'doctor' => $patientDetails['appointment_doctor'], // This is now the doctor's name
+                'additional' => $patientDetails['medical_certificate'],
+                'gender' => $patientDetails['gender'],
+                'contact_number' => $patientDetails['mobile_number'],
+                'email_address' => $patientDetails['email'],
+                'complete_address' => $patientDetails['address'],
+                'status' => 'pending',
+            ]);
 
-        // Clear the session data
-        session()->forget('patient_details');
+            // Save the appointment to the database
+            $appointment->save();
 
-        // Redirect to a success page or confirmation view
-        return redirect()->back()->with('message', 'Please wait for a notification once your appointment has been approved.');
+            // Increment booked slots
+            $slot->increment('booked_slots');
+
+            // Clear the session data
+            session()->forget('patient_details');
+
+            // Redirect to a success page or confirmation view
+            return redirect()->back()->with('message', 'Please wait for a notification once your appointment has been approved.');
+        } else {
+            // No slots available, show an error message
+            return redirect()->back()->with('error', 'This date is fully booked. Please select a different date.');
+        }
+    }
+
+
+    public function appointmentBooked(){
+        return view('patient.appointment-booked');
     }
 }

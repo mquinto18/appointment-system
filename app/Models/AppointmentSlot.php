@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentSlot extends Model
 {
@@ -15,16 +16,53 @@ class AppointmentSlot extends Model
         'booked_slots',
     ];
 
-    // Example of a method to check availability
-    public function isAvailable()
+    /**
+     * Check if there are available slots for booking.
+     */
+    public function isAvailable(): bool
     {
         return $this->booked_slots < $this->total_slots;
     }
 
-    // If you later decide to add a relationship
-    // public function appointments()
-    // {
-    //     return $this->hasMany(Appointment::class);
-    // }
-}
+    /**
+     * Book a slot if available. Returns true on success, false on failure.
+     */
+    public function bookSlot(): bool
+    {
+        if ($this->isAvailable()) {
+            $this->increment('booked_slots');
+            return true;
+        }
+        
+        return false;
+    }
 
+    /**
+     * Release a booked slot.
+     */
+    public function releaseSlot(): bool
+    {
+        if ($this->booked_slots > 0) {
+            $this->decrement('booked_slots');
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Scope a query to only include available slots.
+     */
+    public function scopeAvailable($query)
+    {
+        return $query->whereColumn('booked_slots', '<', 'total_slots');
+    }
+
+    /**
+     * Relationship to appointments (if you have an appointments table).
+     */
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+}

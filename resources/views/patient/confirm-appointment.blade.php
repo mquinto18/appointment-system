@@ -76,11 +76,11 @@
         <i class="fa-solid fa-check-to-slot my-5 text-6xl" style="color: #07cc62;"></i> <!-- Increased size -->
         <h2 class="text-[25px] mb-4 text-center font-bold">Confirmed!</h2>
         <p class="text-center">{{ session('message') }}</p>
-        
+
         <!-- Close button with 'X' icon -->
-        <button id="closeModal" class="absolute top-3 right-3 text-xl text-gray-600 hover:text-gray-800">
+        <a href="{{ route('appointments.booked') }}" class="absolute top-3 right-3 text-xl text-gray-600 hover:text-gray-800">
             <i class="fa-solid fa-xmark"></i> <!-- 'X' icon -->
-        </button>
+        </a>
     </div>
 </div>
 
@@ -88,7 +88,7 @@
 
 <script>
     // Function to close the modal
-    document.getElementById('closeModal').addEventListener('click', function () {
+    document.getElementById('closeModal').addEventListener('click', function() {
         const modal = document.getElementById('confirmationModal');
         modal.classList.add('hidden'); // Hide the modal on close
     });

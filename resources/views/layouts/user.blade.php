@@ -18,7 +18,7 @@
 <body class="bg-gray-100">
     <div class=''>
         <nav class="bg-[#0074C8]">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex items-center">
                         <div class="flex justify-center items-center gap-3 py-5 px-3 leading-4">
@@ -42,7 +42,7 @@
                             <!-- Dropdown Appintment -->
                             <!-- Dropdown Notification -->
                             <div class="relative group">
-                                <a href="">
+                                <a  href="{{ route('appointments.booked') }}">
                                     <button class="bg-white shadow-md px-3 py-2 rounded focus:outline-none">
                                         <i class="fa-solid fa-calendar-check text-xl"></i>
                                     </button>
