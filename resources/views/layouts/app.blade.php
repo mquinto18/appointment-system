@@ -53,11 +53,6 @@
                         <span class="text-white text-xs">20</span>
                     </div>
 
-                    <!-- Popup on hover (below the button) -->
-                    <div class="absolute top-full mt-2 hidden group-hover:block bg-black text-white text-xs rounded py-1 px-3 z-10">
-                        Notifications
-                        <div class="absolute left-1/2 transform -translate-x-1/2 -top-2 border-8 border-transparent border-b-black"></div>
-                    </div>
                 </div>
 
                 <button x-on:click="show = !show" type="button" class="inline-flex items-center px-3 py-1 bg-white shadow-md text-sm leading-4 font-medium rounded-md hover:text-gray-700 focus:outline-none transition ease-in-out duration-150" id="user-menu-button" aria-expanded="false" aria-haspopup="true">

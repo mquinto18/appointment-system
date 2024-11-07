@@ -63,12 +63,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/dashboard/appointment/confirmDetails', [HomeController::class, 'confirmDetails'])->name('appointments.confirmDetails');
     Route::post('/dashboard/appointment/appointment-confirm', [HomeController::class, 'appointConfirm'])->name('appointments.confirm');
     Route::get('/dashboard/appointment/appointment-booked', [HomeController::class, 'appointmentBooked'])->name('appointments.booked');
-
-    
-
-
-
-
+    Route::get('/dashboard/appointment/appointment-cancelled', [HomeController::class, 'appointmentCancel'])->name('appointments.cancel');
 
     Route::get('/available-slots', [AppointmentSlotController::class, 'getAvailableSlots']);
 });

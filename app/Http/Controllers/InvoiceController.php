@@ -39,7 +39,7 @@ class InvoiceController extends Controller
 
     public function invoiceSave(Request $request, $id)
 {
-    \Log::info($request->all()); // Log all incoming request data
+
 
     $validatedData = $request->validate([
         'amount' => 'array',
@@ -52,10 +52,7 @@ class InvoiceController extends Controller
 
 
     
-    // Check if arrays are populated
-    \Log::info('Amount:', $validatedData['amount'] ?? []);
-    \Log::info('Descriptions:', $validatedData['descriptions'] ?? []);
-    \Log::info('Quantities:', $validatedData['qty'] ?? []);
+
 
     $appointment = Appointment::findOrFail($id);
     $appointment->amount = json_encode($validatedData['amount']); // Sum total amount
