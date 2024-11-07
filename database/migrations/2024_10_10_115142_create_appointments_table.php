@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('appointments', function (Blueprint $table) {
             $table->id(); // Primary key
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Add user_id as a foreign key
             $table->string('transaction_number')->unique(); // Unique transaction number
             $table->string('first_name'); // Patient's first name
             $table->string('last_name'); // Patient's last name
@@ -32,12 +33,13 @@ return new class extends Migration
             $table->text('notes')->nullable(); // Additional notes, optional
             $table->json('descriptions')->nullable(); // Store multiple invoice descriptions as JSON
             $table->json('qty')->nullable(); // Store multiple quantities as JSON
-            $table->json('drugname')->nullable(); // Store multiple quantities as JSON
-            $table->json('dosage')->nullable(); // Store multiple quantities as JSON
-            $table->json('doctorqty')->nullable(); // Store multiple quantities as JSON
+            $table->json('drugname')->nullable(); // Store multiple drug names as JSON
+            $table->json('dosage')->nullable(); // Store multiple dosages as JSON
+            $table->json('doctorqty')->nullable(); // Store multiple doctor quantities as JSON
             $table->text('diagnosis')->nullable(); 
             $table->timestamps(); // Laravel's created_at and updated_at columns
-        });        
+        });
+        
 
     }
 

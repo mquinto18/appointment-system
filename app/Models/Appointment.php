@@ -38,8 +38,10 @@ class Appointment extends Model
         'dosage',
         'doctorqty',
         'diagnosis',
+        'user_id', // Added user_id to the fillable fields
         // Add other fields as necessary
     ];
+    
 
 
 }
