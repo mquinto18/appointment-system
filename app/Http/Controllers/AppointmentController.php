@@ -245,6 +245,27 @@ class AppointmentController extends Controller
             // Pass the appointments data and total count to the view
             return view('appointment.appointmentRejected', compact('appointments', 'totalAppointments', 'search'));
         }
+        public function canceledAppoint(Request $request){
+            
+            $search = $request->input('search');
+
+            // Query appointments with search functionality
+            $appointments = Appointment::where('status', 'cancelled') // Only retrieve pending appointments
+                ->where(function($query) use ($search) {
+                    if ($search) {
+                        $query->where('first_name', 'like', '%' . $search . '%')
+                                ->orWhere('last_name', 'like', '%' . $search . '%')
+                                ->orWhere('doctor', 'like', '%' . $search . '%')
+                                ->orWhere('visit_type', 'like', '%' . $search . '%');
+                    }
+                })
+                ->paginate(10); // Pagination with 10 rows per page
+    
+            $totalAppointments = Appointment::where('status', 'rejected')->count(); // Count total number of pending appointments
+    
+            // Pass the appointments data and total count to the view
+            return view('appointment.appointmentRejected', compact('appointments', 'totalAppointments', 'search'));
+        }
 
         public function emergency(){
             return view('appointment.emergency');
