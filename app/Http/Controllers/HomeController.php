@@ -16,15 +16,13 @@ class HomeController extends Controller
     {
         return view('home');
     }
-    
-   
 
     public function adminIndex()
     {
-        
+
         $totalUsers = User::count();
         $totalAppointment = Appointment::count();
-        
+
 
 
         $appointments = Appointment::whereDate('appointment_date', Carbon::today())->paginate(3);
@@ -192,21 +190,21 @@ class HomeController extends Controller
         // Retrieve the patient details from the session
         $patientDetails = session('patient_details');
         $appointmentDate = $patientDetails['appointment_date'];
-    
+
         // Find the slot for the specified appointment date
         $slot = AppointmentSlot::firstOrCreate(
             ['appointment_date' => $appointmentDate],
             ['total_slots' => 2] // Ensure there are always 2 total slots
         );
-    
+
         // Check if there are available slots
         if ($slot->booked_slots < $slot->total_slots) {
             // Generate a unique transaction number
             $transactionNumber = 'TRX-' . strtoupper(Str::random(10));
-    
+
             // Convert appointment time to 24-hour format
             $appointmentTime = Carbon::createFromFormat('g:i A', $patientDetails['appointment_time'])->format('H:i:s');
-    
+
             // Create a new Appointment instance
             $appointment = new Appointment([
                 'transaction_number' => $transactionNumber,
@@ -225,16 +223,16 @@ class HomeController extends Controller
                 'status' => 'pending',
                 'user_id' => auth()->id(), // Set the user_id to the currently authenticated user's ID
             ]);
-    
+
             // Save the appointment to the database
             $appointment->save();
-    
+
             // Increment booked slots
             $slot->increment('booked_slots');
-    
+
             // Clear the session data
             session()->forget('patient_details');
-    
+
             // Redirect to a success page or confirmation view
             return redirect()->back()->with('message', 'Please wait for a notification once your appointment has been approved.');
         } else {
@@ -242,16 +240,25 @@ class HomeController extends Controller
             return redirect()->back()->with('error', 'This date is fully booked. Please select a different date.');
         }
     }
-    
 
-   public function appointmentBooked()
-{
-    // Retrieve the currently authenticated user's appointments, sorted by created_at in descending order
-    $appointments = Appointment::where('user_id', auth()->id())
-                               ->orderBy('created_at', 'desc') // Sort by created_at in descending order
-                               ->get();
-    
-    return view('patient.appointment-booked', compact('appointments'));
-}
 
+    public function appointmentBooked()
+    {
+        // Retrieve the currently authenticated user's appointments, sorted by created_at in descending order
+        $appointments = Appointment::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc') // Sort by created_at in descending order
+            ->get();
+
+        return view('patient.appointment-booked', compact('appointments'));
+    }
+
+
+    public function appointmentCancel($id){
+        $appointment = Appointment::findOrFail($id);
+        $appointment->status = 'cancelled';
+        $appointment->save();
+
+        notify()->success('Appointment Cancelled!');
+        return redirect()->back()->with('success', 'Appointment cancelled successfully.');
+    }
 }
