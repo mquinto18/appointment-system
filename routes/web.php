@@ -64,6 +64,11 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/dashboard/appointment/appointment-confirm', [HomeController::class, 'appointConfirm'])->name('appointments.confirm');
     Route::get('/dashboard/appointment/appointment-booked', [HomeController::class, 'appointmentBooked'])->name('appointments.booked');
     Route::post('/dashboard/appointment/appointment-cancelled/{id}', [HomeController::class, 'appointmentCancel'])->name('appointments.cancel');
+    Route::delete('/dashboard/appointment/appointment-deleted/{id}', [HomeController::class, 'appointmentDelete'])->name('appointments.delete');
+    Route::get('/dashboard/appointment/appointment-qrcode/{id}', [HomeController::class, 'appointmentQrcode'])->name('appointments.downloadQR');
+    
+    
+
 
     Route::get('/available-slots', [AppointmentSlotController::class, 'getAvailableSlots']);
 });

@@ -40,7 +40,7 @@ class PrescriptionController extends Controller
 
     public function prescriptionSave(Request $request, $id)
 {
-    \Log::info($request->all()); // Log all incoming request data
+
 
     // Validate the incoming request data
     $validatedData = $request->validate([
