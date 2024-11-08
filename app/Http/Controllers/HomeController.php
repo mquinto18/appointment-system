@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Appointment;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 use Carbon\Carbon;
 use App\Models\AppointmentSlot;
 use Illuminate\Support\Facades\DB;
@@ -253,7 +255,8 @@ class HomeController extends Controller
     }
 
 
-    public function appointmentCancel($id){
+    public function appointmentCancel($id)
+    {
         $appointment = Appointment::findOrFail($id);
         $appointment->status = 'cancelled';
         $appointment->save();
@@ -261,4 +264,31 @@ class HomeController extends Controller
         notify()->success('Appointment Cancelled!');
         return redirect()->back()->with('success', 'Appointment cancelled successfully.');
     }
+
+    public function appointmentDelete($id)
+    {
+        $appointment = Appointment::find($id);
+        $appointment->delete();
+
+        notify()->success('Appointment deleted successfully!');
+        return redirect()->route('appointments.booked')->with('success', 'Appointment deleted successfully!');
+    }
+
+    public function appointmentQrcode($id)
+    {
+        // Find the appointment by ID
+        $appointmentqr = Appointment::findOrFail($id);  // Changed variable name to appointmentqr
+
+        // Generate QR code using a unique field, e.g., appointment transaction number
+        $qrCode = new QrCode($appointmentqr->transaction_number); // Using appointmentqr instead of appointments
+        $writer = new PngWriter();
+
+        // Write the QR code to a string (PNG format)
+        $qrCodeImage = $writer->write($qrCode);
+
+        // Return the QR code as a response (image/png)
+        return response($qrCodeImage->getString())
+            ->header('Content-Type', 'image/png');
+    }
+
 }
