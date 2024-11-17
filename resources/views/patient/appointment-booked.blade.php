@@ -5,8 +5,13 @@
 @section('contents')
 <div class='max-w-[1600px] mx-auto mt-10'>
     <div class="bg-white rounded-md shadow-lg">
-        <div class="py-5 px-5 md:px-10">
-            <h1 class="font-medium text-2xl border-b pb-3">Booked Appointments</h1>
+        <div class="py-5 px-5 md:px-10 ">
+            <div class="border-b pb-3 flex justify-between">
+                <h1 class="font-medium text-2xl ">Booked Appointments</h1>
+                <a href="{{ route('appointment.user') }}" class="bg-[#0074CB] py-2 px-7 text-white font-medium rounded-full">
+                    <button>Set Appointment</button>
+                </a>
+            </div>
 
             <div class="flex flex-wrap justify-center items-center gap-4 md:gap-10 my-7">
                 <div class="flex items-center gap-3">
@@ -131,12 +136,33 @@
                         </form>
                         @elseif(strtolower($appointment->status) === 'completed')
                         <!-- Show the Rate button if the appointment is completed -->
-                        <form method="GET" action="" class="w-full">
-                            @csrf
-                            <button type="submit" class="w-full h-12 bg-[#F2F2F2] text-black font-semibold hover:bg-gray-300  transition duration-200">
-                                Rate
-                            </button>
-                        </form>
+                        <!-- Show both Rate and Delete buttons if the appointment is completed -->
+                        <div class="{{ $appointment->additional === 'Medical Certificate' ? 'w-1/2' : 'w-full' }}">
+                            <form method="GET" action="" class="w-full">
+                                @csrf
+                                <button type="button"
+                                    id="rateButton"
+                                    onclick="toggleRateModal(true, {{ $appointment->id }})"
+                                    class="w-full border h-12 bg-[#F2F2F2] text-black font-semibold hover:bg-gray-300 transition duration-200"
+                                    @if($appointment->rating) disabled @endif>
+                                    Rate
+                                </button>
+                            </form>
+                        </div>
+
+                        @if($appointment->additional === 'Medical Certificate')
+                        <div class="w-1/2">
+                            <form method="GET" action="{{ route('medicalcert.download', $appointment->id) }}" class="w-full">
+                                @csrf
+                                <button type="submit" id="downloadButton" class="w-full h-12 bg-[#F2F2F2] border text-black font-semibold hover:bg-gray-300 transition duration-200">
+                                    Download Medical Certificate
+                                </button>
+                            </form>
+                        </div>
+                        @endif
+
+
+
                         @else
                         <!-- Show the Cancel button if the appointment is not cancelled, rejected, or completed -->
                         <button type="button" class="w-full h-12 bg-[#F2F2F2] border text-black font-semibold flex items-center justify-center hover:bg-gray-300  transition duration-200" onclick="toggleModal(true, {{ $appointment->id }})">
@@ -147,7 +173,7 @@
                         @if(strtolower($appointment->status) === 'approved')
                         <!-- Form to trigger the modal -->
                         <button type="button" class="w-full h-12 bg-[#F2F2F2] cursor-pointer border text-black font-semibold hover:bg-gray-300 transition duration-200" onclick="showQRCodeModal({{ $appointment->id }})">
-                            Download QR
+                            View QR
                         </button>
                         @endif
 
@@ -162,23 +188,26 @@
 </div>
 
 <!-- QR Code Modal -->
-<div id="qrCodeModal" class="modal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-10">
-    <div class="modal-dialog bg-[#0074C8] rounded-lg w-[90%] sm:w-[450px] shadow-lg">
+<div id="qrCodeModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+    <div class="modal-dialog bg-[#0074C8] rounded-lg w-[90%] sm:w-[450px] shadow-lg relative">
+        <!-- Close button (using &times;) -->
+        <button onclick="toggleQRCodeModal(false)" class="absolute top-2 right-4 text-[30px] text-white">
+            &times;
+        </button>
+
         <div class="modal-content text-center">
             <div class="modal-body mb-5 px-10 py-5">
                 <h5 class="text-[17px] text-white font-semibold mb-3 py-3">Please show this QR code upon arrival.</h5>
-
 
                 <div class="bg-white font-semibold py-5 rounded-2xl">
                     <div class="pb-2">
                         <span class="text-[20px]">Clinic Details</span><br>
                     </div>
                     <div class="font-normal text-[15px]">
-                        <span>St. Benedict Medical Clinic & Pharmacy</span></span><br>
+                        <span>St. Benedict Medical Clinic & Pharmacy</span><br>
                         <span>Contact: <span class="font-medium">+1 (555) 123-4567</span></span><br>
                         <span>Address: <span class="font-medium">123 Wellness Avenue, Suite 101</span></span><br>
                     </div>
-
 
                     <div class="flex justify-between items-center">
                         <div class="h-16 w-16 ml-[-30px] bg-[#0074C8] rounded-full"></div>
@@ -187,20 +216,28 @@
                     </div>
 
                     <div id="qrCodeImage" class="my-4">
-
                         <!-- QR code will be inserted here -->
                     </div>
                 </div>
             </div>
-            <div class="flex justify-center border-t border-gray-200">
-                <button type="button" class="w-full py-4 bg-[#F2F2F2] font-semibold hover:bg-gray-300 rounded-br-md" onclick="toggleQRCodeModal(false)">Close</button>
-            </div>
+
+            <!-- Update the "Close" button to "Download QR" -->
+            <form action="{{ route('appointments.downloadQRPdf', ':id') }}" method="GET">
+                @csrf
+                <div class="flex justify-center border-t border-gray-200">
+                    <button type="submit" class="w-full py-4 bg-[#F2F2F2] font-semibold hover:bg-gray-300 rounded-br-md">
+                        Download QR as PDF
+                    </button>
+                </div>
+            </form>
+
         </div>
     </div>
 </div>
 
+
 <!-- Delete Modal -->
-<div id="deleteModal" class="modal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-10">
+<div id="deleteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
     <div class="modal-dialog bg-white rounded-lg w-[90%] sm:w-[450px] shadow-lg">
         <div class="modal-content text-center">
             <div class="modal-body mb-5 px-10 py-5">
@@ -222,8 +259,8 @@
 </div>
 
 <!-- Cancel Modal -->
-<div id="cancelModal" class="modal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-10">
-    <div class="modal-dialog bg-white rounded-lg w-[90%] sm:w-[450px] shadow-lg">
+<div id="cancelModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+    <div class="modal-dialog bg-white rounded-lg w-[90%] sm:w-[450px] shadow-lg transition-transform duration-300">
         <div class="modal-content text-center">
             <div class="modal-body mb-5 px-10 py-5">
                 <i class="fa-solid fa-triangle-exclamation text-[55px] my-4 text-red-600"></i>
@@ -241,29 +278,118 @@
     </div>
 </div>
 
+<!-- Rate Modal -->
+
+<style>
+    .star-button {
+        color: #ccc;
+        /* Default color */
+    }
+
+    .star-button.selected {
+        color: #0074C8;
+        /* Gold color for selected stars */
+    }
+</style>
+
+<div id="rateModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+    <div class="modal-dialog bg-white rounded-lg w-[95%] sm:w-[500px] shadow-lg relative">
+        <div class="modal-content text-center">
+            <!-- Close Button -->
+            <button onclick="toggleRateModal(false)" class="absolute top-2 right-4 text-gray-500 hover:text-gray-700 text-2xl">
+                &times;
+            </button>
+            <div class="modal-body mb-5 px-10 py-5">
+                <h5 class="text-[25px] font-bold mb-5">Appointment Completed!</h5>
+                <p class="text-gray-600 mb-4">How satisfied are you with our service?</p>
+                <div class="flex gap-2 justify-between">
+                    <button type="button" id="star-5" class="star-button focus:outline-none flex flex-col items-center" onclick="selectRating(5)">
+                        <i class="fa fa-star fa-3x"></i> <!-- Increased the size here -->
+                        <p class="text-sm mt-2">Very Satisfied</p>
+                    </button>
+                    <button type="button" id="star-4" class="star-button focus:outline-none flex flex-col items-center" onclick="selectRating(4)">
+                        <i class="fa fa-star fa-3x"></i> <!-- Increased the size here -->
+                        <p class="text-sm mt-2">Satisfied</p>
+                    </button>
+                    <button type="button" id="star-3" class="star-button focus:outline-none flex flex-col items-center" onclick="selectRating(3)">
+                        <i class="fa fa-star fa-3x"></i> <!-- Increased the size here -->
+                        <p class="text-sm mt-2">Neutral</p>
+                    </button>
+                    <button type="button" id="star-2" class="star-button focus:outline-none flex flex-col items-center" onclick="selectRating(2)">
+                        <i class="fa fa-star fa-3x"></i> <!-- Increased the size here -->
+                        <p class="text-sm mt-2">Unsatisfied</p>
+                    </button>
+                    <button type="button" id="star-1" class="star-button focus:outline-none flex flex-col items-center" onclick="selectRating(1)">
+                        <i class="fa fa-star fa-3x"></i> <!-- Increased the size here -->
+                        <p class="text-sm mt-2">Very Unsatisfied</p>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-between border-t border-gray-200">
+                <!-- Changed Submit to Action -->
+                <form id="rateAppointmentForm" method="POST" action="{{ route('appointments.rate', ':id') }}" class="w-full" onsubmit="disableRateButton()">
+                    @csrf
+                    <input type="hidden" name="rating" id="ratingInput" value="">
+                    <button type="submit" class="w-full py-4 bg-[#F2F2F2] font-semibold hover:bg-gray-300 rounded-b-md" onclick="updateRatingInput()" id="submitRateButton">Submit</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
 
 
 <script>
+
+function disableRateButton() {
+        document.getElementById('submitRateButton').disabled = true;
+        document.getElementById('submitRateButton').textContent = 'Submitting...';
+    }
     // Toggle cancel modal
     function toggleModal(show, appointmentId = null) {
         const modal = document.getElementById('cancelModal');
         const cancelForm = document.getElementById('cancelAppointmentForm');
+        const modalDialog = modal.querySelector('.modal-dialog');
 
         if (show) {
-            modal.classList.remove('hidden');
-            let action = cancelForm.getAttribute('action');
-            cancelForm.setAttribute('action', action.replace(':id', appointmentId));
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100', 'pointer-events-auto');
+            modalDialog.classList.remove('scale-95');
+            modalDialog.classList.add('scale-100');
+
+            if (appointmentId) {
+                let action = cancelForm.getAttribute('action');
+                cancelForm.setAttribute('action', action.replace(':id', appointmentId));
+            }
         } else {
-            modal.classList.add('hidden');
+            modal.classList.remove('opacity-100', 'pointer-events-auto');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalDialog.classList.remove('scale-100');
+            modalDialog.classList.add('scale-95');
         }
     }
 
+    // Toggle QR code modal
     function toggleQRCodeModal(show) {
-        const modal = document.getElementById('qrCodeModal');
+        const qrCodeModal = document.getElementById('qrCodeModal');
+
         if (show) {
-            modal.classList.remove('hidden');
+            qrCodeModal.classList.remove('opacity-0', 'pointer-events-none');
+            qrCodeModal.classList.add('opacity-100', 'pointer-events-auto');
+            qrCodeModal.querySelector('.modal-dialog').classList.remove('scale-95');
+            qrCodeModal.querySelector('.modal-dialog').classList.add('scale-100');
         } else {
-            modal.classList.add('hidden');
+            qrCodeModal.classList.remove('opacity-100', 'pointer-events-auto');
+            qrCodeModal.classList.add('opacity-0', 'pointer-events-none');
+            qrCodeModal.querySelector('.modal-dialog').classList.remove('scale-100');
+            qrCodeModal.querySelector('.modal-dialog').classList.add('scale-95');
         }
     }
 
@@ -287,19 +413,82 @@
             });
     }
 
+
+
     // Toggle delete modal
     function toggleDeleteModal(show, appointmentId = null) {
         const deleteModal = document.getElementById('deleteModal');
         const deleteForm = document.getElementById('deleteAppointmentForm');
 
         if (show) {
-            deleteModal.classList.remove('hidden');
-            let action = deleteForm.getAttribute('action');
-            deleteForm.setAttribute('action', action.replace(':id', appointmentId));
+            deleteModal.classList.remove('opacity-0', 'pointer-events-none');
+            deleteModal.classList.add('opacity-100', 'pointer-events-auto');
+            deleteModal.querySelector('div').classList.remove('scale-95');
+            deleteModal.querySelector('div').classList.add('scale-100');
+
+            if (appointmentId) {
+                let action = deleteForm.getAttribute('action');
+                deleteForm.setAttribute('action', action.replace(':id', appointmentId));
+            }
         } else {
-            deleteModal.classList.add('hidden');
+            deleteModal.classList.remove('opacity-100', 'pointer-events-auto');
+            deleteModal.classList.add('opacity-0', 'pointer-events-none');
+            deleteModal.querySelector('div').classList.remove('scale-100');
+            deleteModal.querySelector('div').classList.add('scale-95');
         }
     }
+
+    let selectedRating = null;
+    let appointmentId = null;
+
+    function selectRating(rating) {
+        selectedRating = rating;
+
+        // Remove selected class from all stars
+        document.querySelectorAll('.star-button').forEach(button => {
+            button.classList.remove('selected');
+        });
+
+        // Add selected class to the chosen star
+        document.getElementById(`star-${rating}`).classList.add('selected');
+
+        console.log("Selected rating:", selectedRating); // For debugging
+    }
+
+    // Update the hidden input field with the selected rating value
+    function updateRatingInput() {
+        if (selectedRating) {
+            document.getElementById('ratingInput').value = selectedRating;
+        }
+    }
+
+    // Function to toggle the rate modal and set the appointment ID
+    function toggleRateModal(show, id = null) {
+        const rateModal = document.getElementById('rateModal');
+
+        if (show) {
+            appointmentId = id; // Set the appointment ID when opening the modal
+            rateModal.classList.remove('opacity-0', 'pointer-events-none');
+            rateModal.classList.add('opacity-100', 'pointer-events-auto');
+
+            // Update the action URL with the appointment ID
+            const formAction = document.getElementById('rateAppointmentForm').action.replace(':id', appointmentId);
+            document.getElementById('rateAppointmentForm').action = formAction;
+        } else {
+            rateModal.classList.remove('opacity-100', 'pointer-events-auto');
+            rateModal.classList.add('opacity-0', 'pointer-events-none');
+            selectedRating = null; // Reset the selected rating when closing the modal
+            appointmentId = null; // Reset the appointment ID
+
+            // Remove the selected class from all stars when closing the modal
+            document.querySelectorAll('.star-button').forEach(button => {
+                button.classList.remove('selected');
+            });
+        }
+    }
+
+
+
 
     // Cancel appointment functionality
     document.getElementById('confirmCancelBtn').addEventListener('click', function() {
