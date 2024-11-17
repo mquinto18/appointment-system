@@ -75,7 +75,13 @@
     <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full relative flex flex-col items-center">
         <i class="fa-solid fa-check-to-slot my-5 text-6xl" style="color: #07cc62;"></i> <!-- Increased size -->
         <h2 class="text-[25px] mb-4 text-center font-bold">Confirmed!</h2>
-        <p class="text-center">{{ session('message') }}</p>
+        <p class="text-center pb-2">{{ session('message') }}</p>
+        <p class="text-center pt-2 border-t">
+            The clinic typically processes appointment requests
+            from <span class="font-medium">
+                8:00 AM to 5:00 PM
+            </span>.
+        </p>
 
         <!-- Close button with 'X' icon -->
         <a href="{{ route('appointments.booked') }}" class="absolute top-3 right-3 text-xl text-gray-600 hover:text-gray-800">
