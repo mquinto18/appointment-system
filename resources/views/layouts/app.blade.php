@@ -141,7 +141,7 @@
                                 <li>User</li>
                             </a>
                             <a href="{{ route('doctor') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('doctor') ? 'bg-[#0074C8] text-white' : '' }}">
-                                <li>Doctor</li>
+                                <li>Doctor</li> 
                             </a>
                         </div>
                     </div>
@@ -182,6 +182,13 @@
                         <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8]">
                             <i class="fa-solid fa-file-invoice"></i>
                             <span class="text-[15px] ml-4 font-bold">Medical Certificate</span>
+                        </div>
+                    </a>
+
+                    <a href="{{ route('reports') }}" class="group nav-link {{ Request::routeIs('reports') ? 'bg-[#0074C8] text-white' : '' }}">
+                        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8]">
+                            <i class="fa-solid fa-file-invoice"></i>
+                            <span class="text-[15px] ml-4 font-bold">Reports</span>
                         </div>
                     </a>
 

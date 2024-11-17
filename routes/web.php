@@ -8,6 +8,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\CashierController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\MedicalController;
 use App\Http\Controllers\PrescriptionController;
@@ -50,6 +52,11 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('logout', 'logout')->name('logout');
 });
 
+
+Route::middleware(['auth', 'cashier'])->group(function () {
+    Route::get('/cashier/home', [CashierController::class, 'index'])->name('cashier/home');
+});
+
 // User dashboard (protected with middleware)
 Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
@@ -58,7 +65,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/dashboard/appointment/store', [HomeController::class, 'patientStore'])->name('appointment.store');
 
     Route::get('/dashboard/appointment/patientDetails', [HomeController::class, 'patientDetails'])->name('patient.details');
-
+    Route::get('/monthly-slots', [AppointmentSlotController::class, 'getMonthlySlots']);
     Route::post('/dashboard/appointment/storePatient', [HomeController::class, 'storePatientDetails'])->name('appointments.storePatientDetails');
     Route::get('/dashboard/appointment/confirmDetails', [HomeController::class, 'confirmDetails'])->name('appointments.confirmDetails');
     Route::post('/dashboard/appointment/appointment-confirm', [HomeController::class, 'appointConfirm'])->name('appointments.confirm');
@@ -66,11 +73,10 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/dashboard/appointment/appointment-cancelled/{id}', [HomeController::class, 'appointmentCancel'])->name('appointments.cancel');
     Route::delete('/dashboard/appointment/appointment-deleted/{id}', [HomeController::class, 'appointmentDelete'])->name('appointments.delete');
     Route::get('/dashboard/appointment/appointment-qrcode/{id}', [HomeController::class, 'appointmentQrcode'])->name('appointments.downloadQR');
-    
-    
+    Route::get('/dashboard/appointment/download-qrcode/{id}', [HomeController::class, 'downloadQRPdf'])->name('appointments.downloadQRPdf');
+    Route::get('/dashboard/appointment/medical-downlaod/{id}', [MedicalController::class, 'medicalDownload'])->name('medicalcert.download');
+    Route::post('/dashboard/appointment/rating/{id}', [HomeController::class, 'appointmentRate'])->name('appointments.rate');
 
-
-    Route::get('/available-slots', [AppointmentSlotController::class, 'getAvailableSlots']);
 });
 
 // Admin dashboard (protected with middleware)
@@ -99,6 +105,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('admin/doctorAcc/save', [DoctorController::class, 'doctorSave'])->name('doctor.save');
     Route::get('admin/doctorAcc/edit/{id}', [DoctorController::class, 'doctorEdit'])->name('doctor.edit');
     Route::put('admin/doctorAcc/update/{id}', [DoctorController::class, 'doctorUpdate'])->name('doctor.update');
+
+    Route::get('admin/reports', [ReportsController::class, 'reports'])->name('reports');
+    
 
     Route::get('admin/appointment', [AppointmentController::class, 'appointment'])->name('appointment');
     Route::post('admin/appointment/save', [AppointmentController::class, 'appointmentSave'])->name('appointment.save');

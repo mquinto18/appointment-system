@@ -14,40 +14,46 @@
                 @csrf <!-- Include CSRF token for security -->
 
                 <div class="mt-5">
-                    <div class="flex gap-16">
-                        <div>
+                    <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
+                        <!-- Date Selection -->
+                        <div class="w-full lg:w-[50%]">
                             <h2 class="font-medium text-xl mb-3">Select Date</h2>
-                            <div id="calendar" class="w-[600px]"></div>
+                            <div id="calendar" class="w-full max-w-[700px]"></div>
                             <input type="hidden" name="selected_date" id="selected_date" required> <!-- Hidden input for selected date -->
                         </div>
-                        <div class="flex flex-col flex-grow">
+
+                        <!-- Time Selection -->
+                        <div class="w-full lg:w-[50%]">
                             <h2 class="font-medium text-xl mb-3">Select Time</h2>
-                            <div class="flex gap-4">
+                            <div class="flex flex-col md:flex-row gap-4">
+                                <!-- Morning Time Slots -->
                                 <div class="bg-white shadow-md flex-grow">
                                     <div class="text-center border-b p-6">
                                         <span class="text-xl font-medium">Morning</span>
                                     </div>
-                                    <div class="p-8 text-center flex flex-col gap-4">
+                                    <div class="p-4 md:p-8 text-center flex flex-col gap-4">
                                         @foreach (['9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM'] as $time)
-                                        <div class="time-slot py-2 cursor-pointer transition duration-200 text-[20px] rounded-md" onclick="setTime('{{ $time }}', this)">{{ $time }}</div>
+                                        <div class="time-slot py-2 cursor-pointer transition duration-200 text-[18px] md:text-[20px] rounded-md" onclick="setTime('{{ $time }}', this)">{{ $time }}</div>
                                         @endforeach
                                     </div>
                                 </div>
+
+                                <!-- Afternoon Time Slots -->
                                 <div class="bg-white shadow-md flex-grow">
                                     <div class="text-center border-b p-6">
                                         <span class="text-xl font-medium">Afternoon</span>
                                     </div>
-                                    <div class="p-8 text-center flex flex-col gap-4">
+                                    <div class="p-4 md:p-8 text-center flex flex-col gap-4">
                                         @foreach (['1:00 PM', '1:30 PM', '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM'] as $time)
-                                        <div class="time-slot py-2 cursor-pointer transition duration-200 text-[20px] rounded-md" onclick="setTime('{{ $time }}', this)">{{ $time }}</div>
+                                        <div class="time-slot py-2 cursor-pointer transition duration-200 text-[18px] md:text-[20px] rounded-md" onclick="setTime('{{ $time }}', this)">{{ $time }}</div>
                                         @endforeach
                                     </div>
                                 </div>
                             </div>
                             <input type="hidden" name="selected_time" id="selected_time" required>
                         </div>
-
                     </div>
+
 
                     <div class="my-6">
                         <h2 class="font-medium text-xl mb-3">Select Doctor</h2>
@@ -83,44 +89,64 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var today = new Date().toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
+    var calendarEl = document.getElementById('calendar');
+    var today = new Date();
+    var todayString = today.toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            headerToolbar: {
-                left: 'prev,next',
-                center: 'title',
-                right: ''
-            },
-            validRange: {
-                start: today // Disable past dates
-            },
-            events: function(fetchInfo, successCallback, failureCallback) {
-                fetch(`/monthly-slots?month=${fetchInfo.startStr.substring(0, 7)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const events = data.map(slot => ({
-                            title: slot.available_slots > 0 ? `${slot.available_slots} Slot${slot.available_slots > 1 ? 's' : ''}` : 'Fully Booked',
-                            start: slot.date,
-                            className: slot.status
-                        }));
-                        successCallback(events);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching slot data:', error);
-                        failureCallback(error);
-                    });
-            },
-            dateClick: function(info) {
-                document.getElementById('selected_date').value = info.dateStr; // Set the hidden input for the selected date
-                highlightDate(info.dateStr); // Highlight selected date
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next',
+            center: 'title',
+            right: ''
+        },
+        validRange: {
+            start: todayString // Disable past dates
+        },
+        events: function(fetchInfo, successCallback, failureCallback) {
+            fetch(`/monthly-slots?month=${fetchInfo.startStr.substring(0, 7)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const events = data.map(slot => ({
+                        title: slot.status === 'fully_booked' ? 'Fully Booked' : `${slot.available_slots} Slot${slot.available_slots > 1 ? 's' : ''} Available`,
+                        start: slot.start,
+                        className: slot.status, // Set status to apply different styles
+                        available_slots: slot.available_slots,
+                        status: slot.status,
+                        date: slot.date, // Add date for comparison
+                    }));
+                    successCallback(events);
+                })
+                .catch(error => {
+                    console.error('Error fetching slot data:', error);
+                    failureCallback(error);
+                });
+        },
+        dateClick: function(info) {
+            const selectedDate = info.dateStr;
+
+            // Prevent selecting the current date
+            if (selectedDate === todayString) {
+                alert('You cannot select today\'s date.');
+                return;
             }
-        });
 
-        calendar.render();
+            fetch(`/monthly-slots?month=${selectedDate.substring(0, 7)}`)
+                .then(response => response.json())
+                .then(events => {
+                    const event = events.find(e => e.date === selectedDate);
+                    if (event && event.status === 'fully_booked') {
+                        alert('This date is fully booked.');
+                    } else {
+                        document.getElementById('selected_date').value = selectedDate; // Set the hidden input for the selected date
+                        highlightDate(selectedDate); // Highlight selected date
+                    }
+                });
+        }
     });
 
+    calendar.render();
+});
     function highlightDate(date) {
         const dateElements = document.querySelectorAll('.fc-day'); // Select all date elements in the calendar
         dateElements.forEach(el => {
@@ -170,21 +196,19 @@
 <style>
     /* Style events based on their status */
     .fc-event.available {
-        background-color: #00FF00;
+        background-color: #07CC62;
         /* Green */
-        border-color: #00FF00;
+        border-color: #07CC62;
     }
 
     .fc-event.fully_booked {
         background-color: #FF0000;
         /* Red */
         border-color: #FF0000;
-    }
-
-    .fc-event.partially_booked {
-        background-color: #007BFF;
-        /* Blue */
-        border-color: #007BFF;
+        pointer-events: none;
+        /* Disable clicking */
+        opacity: 0.5;
+        /* Visual indication that the date is fully booked */
     }
 </style>
 @endsection

@@ -4,20 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Appointment;
+use App\Models\Rating;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Carbon\Carbon;
 use App\Models\AppointmentSlot;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str; // Import the Str class
 
 class HomeController extends Controller
 {
     public function index()
-    {
+    {   
         return view('home');
     }
+
 
     public function adminIndex()
     {
@@ -196,7 +199,7 @@ class HomeController extends Controller
         // Find the slot for the specified appointment date
         $slot = AppointmentSlot::firstOrCreate(
             ['appointment_date' => $appointmentDate],
-            ['total_slots' => 2] // Ensure there are always 2 total slots
+            ['total_slots' => 4] // Ensure there are always 2 total slots
         );
 
         // Check if there are available slots
@@ -291,4 +294,43 @@ class HomeController extends Controller
             ->header('Content-Type', 'image/png');
     }
 
+    public function downloadQRPdf($id)
+    {
+        // Find the appointment by ID, ensuring a unique record each time
+        $appointment = Appointment::findOrFail($id);
+
+        // Generate QR code specific to this appointment's transaction number
+        $qrCode = new QrCode($appointment->transaction_number);
+        $writer = new PngWriter();
+        $qrCodeImage = $writer->write($qrCode);
+
+        // Encode QR code as base64 for embedding in PDF, avoiding any reuse or caching
+        $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($qrCodeImage->getString());
+
+        // Load the PDF view, passing in the specific QR code and appointment details
+        $pdf = Pdf::loadView('patient.qr-code', [
+            'appointment' => $appointment,
+            'qrCode' => $qrCodeBase64,
+        ]);
+
+        // Download the PDF for this specific appointment, ensuring no caching issues
+        return $pdf->download('appointment_qrcode_' . $appointment->id . '.pdf');
+    }
+
+    public function appointmentRate(Request $request)
+    {
+        // Validate the incoming request
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5', // Ensure the rating is between 1 and 5
+        ]);
+
+        // Store the rating in the database
+        $rating = new Rating();
+        $rating->rating = $request->input('rating'); // Store the rating value
+        $rating->save();
+
+        // Optionally, you can return a response or redirect
+        notify()->success('Appointment rating submitted!');
+        return redirect()->back()->with('success', 'Thank you for your feedback!');
+    }
 }

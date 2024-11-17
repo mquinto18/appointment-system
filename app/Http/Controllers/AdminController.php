@@ -40,7 +40,6 @@ class AdminController extends Controller
             'gender' => 'required|string|in:male,female,other',
             'phone_number' => 'required|string|max:15',
             'address' => 'required|string|max:500',
-            'status'  => 'required|in:active,inactive',
         ])->validate();
  
         User::create([
@@ -52,7 +51,6 @@ class AdminController extends Controller
             'phone_number' => $request->phone_number,
             'address' => $request->address,
             'type' => "1",
-            'status'  => $request->status,
         ]);
 
         notify()->success('Admin added successfully!');

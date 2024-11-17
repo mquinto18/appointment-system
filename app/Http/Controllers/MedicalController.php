@@ -59,5 +59,32 @@ class MedicalController extends Controller
         // Download the PDF
         return $pdf->download('medical_certificate_' . $appointment->id . '.pdf');
     }
+
+    public function medicalDownload($id){
+        $appointment = Appointment::findOrFail($id);
+    
+        // Calculate age from the date of birth
+        $dateOfBirth = Carbon::parse($appointment->date_of_birth);
+        $age = $dateOfBirth->age; // Calculate age
+    
+        // Prepare data for the PDF, including the appointment object
+        $data = [
+            'appointment' => $appointment, // Pass the whole appointment object
+            'appointment_date' => $appointment->appointment_date,
+            'appointment_time' => $appointment->appointment_time,
+            'patient_name' => $appointment->first_name . ' ' . $appointment->last_name,
+            'date_of_birth' => $appointment->date_of_birth,
+            'age' => $age,
+            'gender' => $appointment->gender,
+            'address' => $appointment->complete_address,
+            'diagnosis' => $appointment->diagnosis,
+        ];
+    
+        // Load the view and generate the PDF
+        $pdf = PDF::loadView('appointment.medicalPrint', $data);
+    
+        // Download the PDF
+        return $pdf->download('medical_certificate_' . $appointment->id . '.pdf');
+    }
     
 }
