@@ -55,10 +55,12 @@
 
 
                 <!-- Total Sales Section -->
-                <div class="bg-white rounded-lg shadow p-6 flex flex-col h-full">
-                    <h3 class="text-lg font-semibold border-b pb-3">Total Sales</h3>
+                <!-- Total Sales Section -->
+<div class="bg-white rounded-lg shadow p-6 flex flex-col h-full">
+    <h3 class="text-lg font-semibold border-b pb-3">Total Sales</h3>
+    <p class="text-2xl font-bold text-gray-700 pt-2">Php {{ number_format($totalSales, 2) }}</p>
+</div>
 
-                </div>
 
             </div>
         </div>
@@ -91,7 +93,17 @@
             labels: ['0-10', '11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80', '81-90'],
             datasets: [{
                 label: 'Age Distribution',
-                data: [5, 15, 50, 20, 10, 5, 2, 1, 0],
+                data: [
+                    {{ $ageRanges['0-10'] }},
+                    {{ $ageRanges['11-20'] }},
+                    {{ $ageRanges['21-30'] }},
+                    {{ $ageRanges['31-40'] }},
+                    {{ $ageRanges['41-50'] }},
+                    {{ $ageRanges['51-60'] }},
+                    {{ $ageRanges['61-70'] }},
+                    {{ $ageRanges['71-80'] }},
+                    {{ $ageRanges['81-90'] }}
+                ],
                 backgroundColor: '#3b82f6',
             }]
         },
@@ -113,12 +125,19 @@
     if (servicesCanvas) {
         const servicesCtx = servicesCanvas.getContext('2d');
         new Chart(servicesCtx, {
-            type: 'bar', // Use 'bar' instead of 'horizontalBar'
+            type: 'bar',
             data: {
-                labels: ['Medical Consultation', 'Adult ENT', 'Pediatric Consultation', 'Pediatric ENT', 'Minor Suturing', 'Wound Dressing'],
+                labels: ['Medical Consultation', 'Pediatric Consultation', 'Pediatric Ears, Nose and Throat', 'Adult Ears, Nose and Throat', 'Minor Suturing', 'Wound Dressing'],
                 datasets: [{
                     label: 'Services Usage',
-                    data: [60, 40, 30, 20, 10, 5],
+                    data: [
+                        @json($services['Medical Consultation']),
+                        @json($services['Pediatric Consultation']),
+                        @json($services['Pediatric Ears, Nose and Throat']),
+                        @json($services['Adult Ears, Nose and Throat']),
+                        @json($services['Minor Suturing']),
+                        @json($services['Wound Dressing']),
+                    ],
                     backgroundColor: '#3b82f6',
                 }]
             },
