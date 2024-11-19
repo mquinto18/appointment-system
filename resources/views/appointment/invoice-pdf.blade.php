@@ -138,11 +138,11 @@
                 </tr>
                 <tr>
                     <td colspan="4" class="invoice-total">Discount</td>
-                    <td>0.00</td>
+                    <td><p>{{ $discount }}%</p></td>
                 </tr>
                 <tr>
                     <td colspan="4" class="invoice-total">Total Amount</td>
-                    <td>{{ number_format(collect($quantities)->zip($amounts)->sum(fn($pair) => $pair[0] * $pair[1]), 2) }}</td>
+                    <td>{{ number_format($discountedAmount, 2) }}</td>
                 </tr>
             </tbody>
         </table>    
