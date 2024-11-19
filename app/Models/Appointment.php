@@ -30,6 +30,7 @@ class Appointment extends Model
         'email_address',
         'complete_address',
         'amount',
+        'discount',
         'status',
         'notes',
         'description', // Add this if you want to store the invoice description

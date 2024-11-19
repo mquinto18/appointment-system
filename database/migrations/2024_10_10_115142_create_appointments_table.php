@@ -29,6 +29,7 @@ return new class extends Migration
                 $table->string('email_address'); // Email address
                 $table->text('complete_address'); // Complete address
                 $table->json('amount')->nullable();
+                $table->decimal('discount', 5, 2)->default(0);
                 $table->enum('status', ['pending', 'approved', 'completed', 'rejected', 'cancelled'])->default('pending'); // Appointment status
                 $table->text('notes')->nullable(); // Additional notes, optional
                 $table->json('descriptions')->nullable(); // Store multiple invoice descriptions as JSON

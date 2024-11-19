@@ -7,7 +7,7 @@
     <div>
         <h1 class='font-medium text-2xl ml-3'>Medical Billing Invoice</h1>
     </div>
-    <div class='w-full h-32 mt-5 rounded-lg' style="background: linear-gradient(to bottom, #0074C8, #151A5C);"></div>   
+    <div class='w-full h-32 mt-5 rounded-lg' style="background: linear-gradient(to bottom, #0074C8, #151A5C);"></div>
     <div class='mx-10 -mt-16'>
         <div class='flex justify-between mb-2'>
             <span class='text-[20px] text-white font-medium'>View Medical Invoice</span>
@@ -72,10 +72,10 @@
                             <!-- Additional Information -->
                             <div class="mb-1">
                                 <label for="additional" class="form-label font-medium text-gray-700 block mb-2">Additional Information</label>
-                                <input type="text" 
-                                    class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                    id="additional" 
-                                    name="additional" 
+                                <input type="text"
+                                    class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    id="additional"
+                                    name="additional"
                                     value="{{ old('additional', $appointment->additional) ?: 'N/A' }}" disabled>
                             </div>
 
@@ -154,33 +154,44 @@
                             </div>
                         </div>
 
-                        <div class='mt-4'> 
-                        <form action="{{ route('invoice.items', $appointment->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
+                        <div class='mt-4'>
+                            <form action="{{ route('invoice.items', $appointment->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
 
-                            <table class="w-full text-left border-collapse">
-                                <div class="flex justify-end mt-4 gap-2 mb-3"> <!-- Flex container for Add button -->
-                                    <button type="button" id="addRow" class="bg-[#0074C8] text-white rounded-lg px-3 py-2">
-                                        <i class="fa-solid fa-plus" style="color: #ffffff;"></i>
-                                    </button>
-                                </div>
-                                <thead>
-                                    <tr>
-                                        <th class="p-2 border-t">Description</th>
-                                        <th class="p-2 border-t">Qty</th>
-                                        <th class="p-2 border-t">Amount</th>
-                                        <th class="p-2 border-t">Action</th> <!-- A dded Action column for Add/Remove buttons -->
-                                    </tr>
-                                </thead>
-                                <tbody id="invoiceTableBody">
-                                    @php
+                                <table class="w-full text-left border-collapse">
+                                    <div class="flex justify-end mt-4 gap-2 mb-3"> <!-- Flex container for Add button -->
+                                        <button type="button" id="addRow" class="bg-[#0074C8] text-white rounded-lg px-3 py-2">
+                                            <i class="fa-solid fa-plus" style="color: #ffffff;"></i>
+                                        </button>
+                                    </div>
+                                    <thead>
+                                        <div class="p-2">
+                                            <span class="font-bold">Add Discount</span>
+                                            <select name="discount" class="mt-2 w-80 border border-gray-300 rounded-lg p-2">
+                                                <option value="">---choose---</option>
+                                                <option value="50" {{ isset($appointment) && $appointment->discount == 50 ? 'selected' : '' }}>50%</option>
+                                                <option value="40" {{ isset($appointment) && $appointment->discount == 40 ? 'selected' : '' }}>40%</option>
+                                                <option value="30" {{ isset($appointment) && $appointment->discount == 30 ? 'selected' : '' }}>30%</option>
+                                                <option value="20" {{ isset($appointment) && $appointment->discount == 20 ? 'selected' : '' }}>20%</option>
+                                                <option value="10" {{ isset($appointment) && $appointment->discount == 10 ? 'selected' : '' }}>10%</option>
+                                            </select>
+                                        </div>
+                                        <tr>
+                                            <th class="p-2 border-t">Description</th>
+                                            <th class="p-2 border-t">Qty</th>
+                                            <th class="p-2 border-t">Amount</th>
+                                            <th class="p-2 border-t">Action</th> <!-- A dded Action column for Add/Remove buttons -->
+                                        </tr>
+                                    </thead>
+                                    <tbody id="invoiceTableBody">
+                                        @php
                                         $descriptions = json_decode($appointment->descriptions) ?? [];
                                         $quantities = json_decode($appointment->qty) ?? [];
                                         $amounts = json_decode($appointment->amount) ?? [];
-                                    @endphp
+                                        @endphp
 
-                                    @foreach($descriptions as $index => $description)
+                                        @foreach($descriptions as $index => $description)
                                         <tr>
                                             <td style="width: 33%;" class='pr-6 mb-2'>
                                                 <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -199,24 +210,25 @@
                                                 </button>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                        @endforeach
 
-                                    <!-- Additional rows will be added here -->
-                                </tbody>
-                            </table>
-                            
-                            <div class="mt-3 w-full flex gap-2">
-                                <button type="submit" class="block w-full rounded-md bg-[#0074C8] text-white px-3 py-2">Save</button>
-                                <a href="{{ route('invoice.print', $appointment->id) }}" class="block w-full rounded-md bg-[#0074C8] text-white text-center px-3 py-2">Print</a>                            </div>
-                        </form>
-        </div>
+                                        <!-- Additional rows will be added here -->
+                                    </tbody>
+                                </table>
 
-<script>
-    document.getElementById('addRow').addEventListener('click', function () {
-        var tableBody = document.getElementById('invoiceTableBody');
-        var newRow = document.createElement('tr');
+                                <div class="mt-3 w-full flex gap-2">
+                                    <button type="submit" class="block w-full rounded-md bg-[#0074C8] text-white px-3 py-2">Save</button>
+                                    <a href="{{ route('invoice.print', $appointment->id) }}" class="block w-full rounded-md bg-[#0074C8] text-white text-center px-3 py-2">Print</a>
+                                </div>
+                            </form>
+                        </div>
 
-        newRow.innerHTML = `
+                        <script>
+                            document.getElementById('addRow').addEventListener('click', function() {
+                                var tableBody = document.getElementById('invoiceTableBody');
+                                var newRow = document.createElement('tr');
+
+                                newRow.innerHTML = `
             <td style="width: 33%;" class='pr-6 mb-2'>
                 <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500" name="descriptions[]">
             </td>
@@ -233,19 +245,19 @@
             </td>
         `;
 
-        tableBody.appendChild(newRow);
+                                tableBody.appendChild(newRow);
 
-        // Add event listener to new remove button
-        newRow.querySelector('.removeRow').addEventListener('click', function () {
-            newRow.remove();
-        });
-    });
+                                // Add event listener to new remove button
+                                newRow.querySelector('.removeRow').addEventListener('click', function() {
+                                    newRow.remove();
+                                });
+                            });
 
-    // Event listener for existing removeRow buttons (if any)
-    document.querySelectorAll('.removeRow').forEach(button => {
-        button.addEventListener('click', function () {
-            this.closest('tr').remove();
-        });
-    });
-</script>
-    @endsection
+                            // Event listener for existing removeRow buttons (if any)
+                            document.querySelectorAll('.removeRow').forEach(button => {
+                                button.addEventListener('click', function() {
+                                    this.closest('tr').remove();
+                                });
+                            });
+                        </script>
+                        @endsection

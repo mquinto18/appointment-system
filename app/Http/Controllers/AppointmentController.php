@@ -43,6 +43,7 @@ class AppointmentController extends Controller
 
     // Fill the fields with data from the request
     $appointment->transaction_number = $transactionNumber;
+    $appointment->user_id = $request->input('user_id') ?? auth()->id();
     $appointment->first_name = $request->input('first_name');
     $appointment->last_name = $request->input('last_name');
     $appointment->date_of_birth = $request->input('date_of_birth');
