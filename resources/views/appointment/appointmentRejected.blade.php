@@ -83,43 +83,54 @@
                                 </div>
                             </td>
                             <td class="py-3 px-4 border-b">
-                                <!-- Approve Action -->
-                               <div class='flex gap-2'>
-                               <form action="{{ route('appointments.approve', $appointment->id) }}" method="POST">
+                            <div class='flex gap-2'>
+                                <form action="{{ route('appointments.approve', $appointment->id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="relative group cursor-pointer" 
+                                    <button type="submit" class="relative group cursor-pointer"
                                         @if($appointment->status === 'approved' || $appointment->status === 'completed') disabled @endif>
                                         <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
-                                            @if($appointment->status === 'approved' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
+                    @if($appointment->status === ' approved' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
                                             <i class="fa-solid fa-thumbs-up" style="color: #3bce54;"></i>
                                         </div>
+                                        <!-- Tooltip for Approve -->
+                                        <span class="absolute bottom-full mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
+                                            Approve
+                                        </span>
                                     </button>
                                 </form>
-                                
+
                                 <!-- Complete Action -->
                                 <form action="{{ route('appointments.complete', $appointment->id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="relative group cursor-pointer" 
+                                    <button type="submit" class="relative group cursor-pointer"
                                         @if($appointment->status === 'completed') disabled @endif>
                                         <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
-                                            @if($appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
+                    @if($appointment->status === ' completed') cursor-not-allowed opacity-50 @endif'>
                                             <i class="fa-solid fa-check-to-slot" style="color: #0074cb;"></i>
                                         </div>
+                                        <!-- Tooltip for Complete -->
+                                        <span class="absolute bottom-full mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
+                                            Complete
+                                        </span>
                                     </button>
                                 </form>
 
                                 <!-- Reject Action -->
                                 <form action="{{ route('appointments.reject', $appointment->id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="relative group cursor-pointer" 
+                                    <button type="submit" class="relative group cursor-pointer"
                                         @if($appointment->status === 'rejected' || $appointment->status === 'completed') disabled @endif>
                                         <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
-                                            @if($appointment->status === 'rejected' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
+                    @if($appointment->status === ' rejected' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
                                             <i class="fa-solid fa-thumbs-down" style="color: #d02525;"></i>
                                         </div>
+                                        <!-- Tooltip for Reject -->
+                                        <span class="absolute bottom-full mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
+                                            Reject
+                                        </span>
                                     </button>
                                 </form>
-                               </div>
+                            </div>
                             </td>
                             <td class="cursor-pointer relative">
                                 <!-- Ellipsis Icon -->

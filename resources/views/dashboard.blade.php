@@ -80,14 +80,27 @@
                 <canvas id="statusChart" class="" style="max-width: 400px; max-height: 400px;"></canvas>
             </div>
         </div>
+        <div class='bg-white w-full px-4 py-6 rounded-lg shadow-xl'>
+            <div class='font-medium border-b py-3'>
+                Patients Review
+            </div>
+            <div class="flex justify-center items-center h-[400px]">
+                <canvas id="ratingChart" class="w-full h-full"></canvas>
+            </div>
+        </div>
     </div>
 
     <div class='bg-white w-full mt-5 px-4 rounded-lg shadow-xl'>
-        <div class='font-medium border-b py-3'>
-            Appointment Today
-        </div>
+    <div class='font-medium border-b py-3'>
+        Appointment Today
+    </div>
 
-        <div>
+    <div>
+        @if ($appointments->isEmpty())
+            <div class="py-5 text-center text-gray-600">
+                No Appointments Today
+            </div>
+        @else
             <table class="min-w-full bg-white border mt-3">
                 <thead>
                     <tr class="text-left">
@@ -103,67 +116,67 @@
                 </thead>
                 <tbody>
                     @foreach ($appointments as $appointment)
-                    <tr>
-                        <td class="py-3 px-4 border-b">{{ $loop->iteration + ($appointments->currentPage() - 1) * $appointments->perPage() }}</td>
-                        <td class="py-3 px-4 border-b">{{ $appointment->first_name }} {{ $appointment->last_name }}</td>
-                        <td class="py-3 px-4 border-b">{{ $appointment->visit_type }}</td>
-                        <td class="py-3 px-4 border-b">{{ $appointment->doctor }}</td>
-                        <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
-                        <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}</td>
-                        <td class="py-3 px-4 border-b">
-                            <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
+                        <tr>
+                            <td class="py-3 px-4 border-b">{{ $loop->iteration + ($appointments->currentPage() - 1) * $appointments->perPage() }}</td>
+                            <td class="py-3 px-4 border-b">{{ $appointment->first_name }} {{ $appointment->last_name }}</td>
+                            <td class="py-3 px-4 border-b">{{ $appointment->visit_type }}</td>
+                            <td class="py-3 px-4 border-b">{{ $appointment->doctor }}</td>
+                            <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
+                            <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}</td>
+                            <td class="py-3 px-4 border-b">
+                                <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
                                     @if($appointment->status === 'pending') bg-orange-100 border-orange-700 
                                     @elseif($appointment->status === 'approved') bg-green-100 border-green-700 
                                     @elseif($appointment->status === 'rejected') bg-red-100 border-red-700 
                                     @elseif($appointment->status === 'completed') bg-blue-100 border-blue-700 @endif">
-                                <i class="fa-solid fa-circle fa-2xs"
-                                    @if($appointment->status === 'pending') style="color: #c05621"
-                                    @elseif($appointment->status === 'approved') style="color: #38a169"
-                                    @elseif($appointment->status === 'rejected') style="color: #e53e3e"
-                                    @elseif($appointment->status === 'completed') style="color: #3182ce" @endif></i>
-                                {{ strtoupper($appointment->status) }}
-                            </div>
-                        </td>
-                        <td class="py-3 px-4 border-b">
-                            <div class='flex gap-2'>
-                                <!-- Approve Action -->
-                                <form action="{{ route('appointments.approve', $appointment->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="relative group cursor-pointer"
-                                        @if($appointment->status === 'approved' || $appointment->status === 'completed') disabled @endif>
-                                        <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
-                                            @if($appointment->status === ' approved' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
-                                            <i class="fa-solid fa-thumbs-up" style="color: #3bce54;"></i>
-                                        </div>
-                                    </button>
-                                </form>
+                                    <i class="fa-solid fa-circle fa-2xs"
+                                        @if($appointment->status === 'pending') style="color: #c05621"
+                                        @elseif($appointment->status === 'approved') style="color: #38a169"
+                                        @elseif($appointment->status === 'rejected') style="color: #e53e3e"
+                                        @elseif($appointment->status === 'completed') style="color: #3182ce" @endif></i>
+                                    {{ strtoupper($appointment->status) }}
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 border-b">
+                                <div class='flex gap-2'>
+                                    <!-- Approve Action -->
+                                    <form action="{{ route('appointments.approve', $appointment->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="relative group cursor-pointer"
+                                            @if($appointment->status === 'approved' || $appointment->status === 'completed') disabled @endif>
+                                            <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
+                                                @if($appointment->status === ' approved' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
+                                                <i class="fa-solid fa-thumbs-up" style="color: #3bce54;"></i>
+                                            </div>
+                                        </button>
+                                    </form>
 
-                                <!-- Complete Action -->
-                                <form action="{{ route('appointments.complete', $appointment->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="relative group cursor-pointer"
-                                        @if($appointment->status === 'completed') disabled @endif>
-                                        <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
-                                            @if($appointment->status === ' completed') cursor-not-allowed opacity-50 @endif'>
-                                            <i class="fa-solid fa-check-to-slot" style="color: #0074cb;"></i>
-                                        </div>
-                                    </button>
-                                </form>
+                                    <!-- Complete Action -->
+                                    <form action="{{ route('appointments.complete', $appointment->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="relative group cursor-pointer"
+                                            @if($appointment->status === 'completed') disabled @endif>
+                                            <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
+                                                @if($appointment->status === ' completed') cursor-not-allowed opacity-50 @endif'>
+                                                <i class="fa-solid fa-check-to-slot" style="color: #0074cb;"></i>
+                                            </div>
+                                        </button>
+                                    </form>
 
-                                <!-- Reject Action -->
-                                <form action="{{ route('appointments.reject', $appointment->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="relative group cursor-pointer"
-                                        @if($appointment->status === 'rejected' || $appointment->status === 'completed') disabled @endif>
-                                        <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
-                                            @if($appointment->status === ' rejected' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
-                                            <i class="fa-solid fa-thumbs-down" style="color: #d02525;"></i>
-                                        </div>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
+                                    <!-- Reject Action -->
+                                    <form action="{{ route('appointments.reject', $appointment->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="relative group cursor-pointer"
+                                            @if($appointment->status === 'rejected' || $appointment->status === 'completed') disabled @endif>
+                                            <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
+                                                @if($appointment->status === ' rejected' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
+                                                <i class="fa-solid fa-thumbs-down" style="color: #d02525;"></i>
+                                            </div>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -172,7 +185,10 @@
             <div class="mt-4">
                 {{ $appointments->links() }}
             </div>
-        </div>
+        @endif
+    </div>
+</div>
+
     </div>
 
     
@@ -283,6 +299,63 @@
                 }
             }
         });
+
+        const ctxRating = document.getElementById('ratingChart').getContext('2d');
+        const ratingsData = @json($ratingsData); // Inject PHP variable as JSON
+
+        const ratingChart = new Chart(ctxRating, {
+            type: 'bar', // Bar chart
+            data: {
+                labels: ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars'], // Rating labels
+                datasets: [{
+                    label: 'Number of Reviews',
+                    data: [ratingsData[1], ratingsData[2], ratingsData[3], ratingsData[4], ratingsData[5]], // Use ratingsData for chart
+                    backgroundColor: [
+                        '#f56565', // Red for 1 Star
+                        '#ed8936', // Orange for 2 Stars
+                        '#ecc94b', // Yellow for 3 Stars
+                        '#48bb78', // Green for 4 Stars
+                        '#4299e1'  // Blue for 5 Stars
+                    ],
+                    borderColor: [
+                        '#e53e3e', // Border red
+                        '#dd6b20', // Border orange
+                        '#d69e2e', // Border yellow
+                        '#38a169', // Border green
+                        '#3182ce'  // Border blue
+                    ],
+                    borderWidth: 1 // Optional: Add a border around bars
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y', // Switch to horizontal bars
+                plugins: {
+                    legend: {
+                        display: false // Hide legend for simplicity
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true, // Ensure the x-axis starts at 0
+                        title: {
+                            display: true,
+                            text: 'Number of Reviews'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false // Remove horizontal grid lines
+                        },
+                        title: {
+                            display: true,
+                            text: 'Rating'
+                        }
+                    }
+                }
+            }
+        });
+
     });
 </script>
 
