@@ -23,58 +23,79 @@ class HomeController extends Controller
 
 
     public function adminIndex()
-    {
+{
+    $totalUsers = User::count();
+    $totalAppointment = Appointment::count();
 
-        $totalUsers = User::count();
-        $totalAppointment = Appointment::count();
+    $appointments = Appointment::whereDate('appointment_date', Carbon::today())->paginate(3);
+    $appointmentsAll = Appointment::all();
+    $totalAmount = 0;
+    $totalCompleted = 0;
 
+    // Array to store monthly earnings
+    $monthlyEarnings = [];
 
+    foreach ($appointments as $appointment) {
+        $amounts = json_decode($appointment->amount, true);
 
-        $appointments = Appointment::whereDate('appointment_date', Carbon::today())->paginate(3);
-        $appointmentsAll = Appointment::all();
-        $totalAmount = 0;
-        $totalCompleted = 0;
-
-        // Array to store monthly earnings
-        $monthlyEarnings = [];
-
-        foreach ($appointments as $appointment) {
-            $amounts = json_decode($appointment->amount, true);
-
-            // Sum the decoded amounts
-            if (is_array($amounts)) {
-                $appointmentTotal = array_sum($amounts);
-                $totalAmount += $appointmentTotal;
-            } elseif (is_numeric($appointment->amount)) {
-                $appointmentTotal = $appointment->amount;
-                $totalAmount += $appointment->amount;
-            } else {
-                $appointmentTotal = 0;
-            }
-
-            if ($appointment->status === 'completed') {
-                $totalCompleted++;
-            }
-
-            // Group total earnings by month
-            $month = \Carbon\Carbon::parse($appointment->created_at)->format('m-d-y');
-            if (!isset($monthlyEarnings[$month])) {
-                $monthlyEarnings[$month] = 0;
-            }
-            $monthlyEarnings[$month] += $appointmentTotal;
+        // Sum the decoded amounts
+        if (is_array($amounts)) {
+            $appointmentTotal = array_sum($amounts);
+            $totalAmount += $appointmentTotal;
+        } elseif (is_numeric($appointment->amount)) {
+            $appointmentTotal = $appointment->amount;
+            $totalAmount += $appointment->amount;
+        } else {
+            $appointmentTotal = 0;
         }
 
-        $totalAmount = number_format($totalAmount, 2, '.', ',');
+        if ($appointment->status === 'completed') {
+            $totalCompleted++;
+        }
 
-        $statusCounts = [
-            'pending' => $appointmentsAll->where('status', 'pending')->count(),
-            'approved' => $appointmentsAll->where('status', 'approved')->count(),
-            'completed' => $appointmentsAll->where('status', 'completed')->count(),
-            'rejected' => $appointmentsAll->where('status', 'rejected')->count(),
-        ];
-        // Pass the earnings data to the view
-        return view('dashboard', compact('totalUsers', 'totalAppointment', 'totalAmount', 'totalCompleted', 'appointments', 'appointmentsAll', 'monthlyEarnings', 'statusCounts'));
+        // Group total earnings by month
+        $month = \Carbon\Carbon::parse($appointment->created_at)->format('m-d-y');
+        if (!isset($monthlyEarnings[$month])) {
+            $monthlyEarnings[$month] = 0;
+        }
+        $monthlyEarnings[$month] += $appointmentTotal;
     }
+
+    $totalAmount = number_format($totalAmount, 2, '.', ',');
+
+    $statusCounts = [
+        'pending' => $appointmentsAll->where('status', 'pending')->count(),
+        'approved' => $appointmentsAll->where('status', 'approved')->count(),
+        'completed' => $appointmentsAll->where('status', 'completed')->count(),
+        'rejected' => $appointmentsAll->where('status', 'rejected')->count(),
+    ];
+
+    // Retrieve and count ratings
+    $ratings = DB::table('ratings')
+        ->select('rating', DB::raw('COUNT(*) as count'))
+        ->groupBy('rating')
+        ->pluck('count', 'rating')
+        ->toArray();
+
+    // Ensure all ratings (1-5) are present, even if 0
+    $ratingsData = [];
+    for ($i = 1; $i <= 5; $i++) {
+        $ratingsData[$i] = $ratings[$i] ?? 0; // Default to 0 if no ratings for that star
+    }
+
+    return view('dashboard', compact(
+        'totalUsers',
+        'totalAppointment',
+        'totalAmount',
+        'totalCompleted',
+        'appointments',
+        'appointmentsAll',
+        'monthlyEarnings',
+        'statusCounts',
+        'ratingsData' // Pass ratings data to the view
+    ));
+}
+
 
 
 
