@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.cashier')
 
-@section('title', 'Admin')
+@section('title', 'Cashier')
 
 @section('contents')
 
@@ -70,7 +70,7 @@
                 All Trasaction History
             </div>
 
-            <form action="{{ route('reports') }}" method="GET">
+            <form action="{{ route('cashierReports') }}" method="GET">
                 <!-- The filter fields go here -->
                 <div class="flex items-end gap-10">
                     <div class="flex items-end gap-4 mt-3">

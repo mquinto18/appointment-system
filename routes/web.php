@@ -11,9 +11,11 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\CashierProfileController;
 use App\Http\Controllers\MedicalController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\AppointmentSlotController;
+use App\Http\Middleware\Cashier;
 use Illuminate\Support\Facades\Request;
 
 /*
@@ -43,18 +45,39 @@ Route::controller(AuthController::class)->group(function () {
     // Register routes
     Route::get('register', 'register')->name('register');
     Route::post('register', 'registerSave')->name('register.save');
+    Route::get('/authentication', 'authentication')->name('authentication');
+    Route::post('/verify-pin', 'verifyPin')->name('verify.pin');
+
 
     // Login routes
     Route::get('login', 'login')->name('login');
+    Route::get('otp', 'otp')->name('otp');
     Route::post('login', 'loginAction')->name('login.action');
     
     // Logout route (typically a POST request)
     Route::post('logout', 'logout')->name('logout');
 });
 
+Route::middleware(['auth', 'doctor'])->group(function () {
+    Route::get('doctor/home', [DoctorController::class, 'doctorIndex'])->name('doctor/home');
 
+    Route::get('doctor/appointment', [DoctorController::class, 'doctorAppointment'])->name('doctorAppointment');
+});
 Route::middleware(['auth', 'cashier'])->group(function () {
-    Route::get('/cashier/home', [CashierController::class, 'index'])->name('cashier/home');
+    Route::get('cashier/home', [CashierController::class, 'cashierIndex'])->name('cashier/home');
+
+    Route::get('cashier/invoice', [CashierController::class, 'invoiceCashier'])->name('cashier.invoice');
+    Route::get('cashier/invoice/print/{id}', [CashierController::class, 'cashierinvoicePrint'])->name('cashierinvoince.print');
+    Route::put('cashier/invoice/save/{id}', [CashierController::class, 'cashierinvoiceSave'])->name('cashierinvoice.items');
+    Route::get('cashier/invoice/generate/{id}', [CashierController::class, 'cashierprintInvoice'])->name('invoiceCashier.print');
+
+    Route::get('cashier/reports', [ReportsController::class, 'reports'])->name('cashierReports');
+    Route::get('cashier/profile', [CashierProfileController::class, 'profileSettings'])->name('cashierProfile.settings');
+    Route::put('cashier/profile', [CashierProfileController::class, 'profileUpdate'])->name('cashierProfile.update');
+    Route::get('cashier/security', [CashierProfileController::class, 'securitySettings'])->name('cashierSecurity.settings');
+    Route::put('cashier/update', [CashierProfileController::class, 'securityUpdate'])->name('cashierSecurity.update');
+    Route::put('cashier/profile/security/update', [CashierProfileController::class, 'changePassword'])->name('cashierchangePassword.update');
+    Route::delete('cashier/profile/security/delete', [CashierProfileController::class, 'accountDelete'])->name('cashierAccount.delete');
 });
 
 // User dashboard (protected with middleware)
@@ -71,6 +94,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/dashboard/appointment/appointment-confirm', [HomeController::class, 'appointConfirm'])->name('appointments.confirm');
     Route::get('/dashboard/appointment/appointment-booked', [HomeController::class, 'appointmentBooked'])->name('appointments.booked');
     Route::post('/dashboard/appointment/appointment-cancelled/{id}', [HomeController::class, 'appointmentCancel'])->name('appointments.cancel');
+    Route::post('/dashboard/appointment/appointment-reschedule/{id}', [HomeController::class, 'appointmentReschedule'])->name('appointments.reschedule');
     Route::delete('/dashboard/appointment/appointment-deleted/{id}', [HomeController::class, 'appointmentDelete'])->name('appointments.delete');
     Route::get('/dashboard/appointment/appointment-qrcode/{id}', [HomeController::class, 'appointmentQrcode'])->name('appointments.downloadQR');
     Route::get('/dashboard/appointment/download-qrcode/{id}', [HomeController::class, 'downloadQRPdf'])->name('appointments.downloadQRPdf');
@@ -105,6 +129,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('admin/doctorAcc/save', [DoctorController::class, 'doctorSave'])->name('doctor.save');
     Route::get('admin/doctorAcc/edit/{id}', [DoctorController::class, 'doctorEdit'])->name('doctor.edit');
     Route::put('admin/doctorAcc/update/{id}', [DoctorController::class, 'doctorUpdate'])->name('doctor.update');
+
+    Route::get('admin/cashierAcc', [CashierController::class, 'CashierAcc'])->name('cashier');
+    Route::post('admin/cashierAcc/save', [CashierController::class, 'cashierSave'])->name('cashier.save');
 
     Route::get('admin/reports', [ReportsController::class, 'reports'])->name('reports');
     

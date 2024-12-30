@@ -1,12 +1,12 @@
-@extends('layouts.app')
+@extends('layouts.cashier')
 
-@section('title', 'Admin Dashboard')
+@section('title', 'Cashier Dashboard')
 
 @section('contents')
 <div class='flex justify-between items-center'>
     <div>
         <h1 class='font-medium text-2xl ml-3'>
-            Admin Dashboard
+            Cashier Dashboard
         </h1>
     </div>
 </div>
@@ -64,7 +64,13 @@
     </div>
 
     <div class='flex gap-3 mt-3'>
-        
+        <!-- Earnings Line Chart -->
+        <div class='bg-white w-full px-4 py-6 rounded-lg shadow-xl'>
+            <div class='font-medium border-b py-3'>
+                Total Earnings Over Time
+            </div>
+            <canvas id="earningsChart" style="max-width: 600px; max-height: 400px;"></canvas>
+        </div>
 
         <div class='bg-white w-full px-4 py-6 rounded-lg shadow-xl'>
             <div class='font-medium border-b py-3'>
@@ -86,7 +92,7 @@
 
     <div class='bg-white w-full mt-5 px-4 rounded-lg shadow-xl'>
     <div class='font-medium border-b py-3'>
-        Appointment Today
+        Completed Appointment
     </div>
 
     <div>
@@ -193,7 +199,75 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-       
+        // Earnings data and labels
+        const earningsData = @json(array_values($monthlyEarnings));
+        const earningsLabels = @json(array_keys($monthlyEarnings));  // Labels in 'm-d-y' format
+        
+        // Ensure 5 days are displayed, format as 'm-d-y'
+        const currentDate = new Date();
+        let fiveDays = [];
+        
+        for (let i = 4; i >= 0; i--) {
+            const day = new Date();
+            day.setDate(currentDate.getDate() - i);
+            
+            // Format the date as 'm-d-y' to match earningsLabels format
+            const formattedDate = ('0' + (day.getMonth() + 1)).slice(-2) + '-' + 
+                                  ('0' + day.getDate()).slice(-2) + '-' + 
+                                  day.getFullYear().toString().slice(-2);
+            fiveDays.push(formattedDate);
+        }
+        
+        // Fill missing data points with 0 if no earnings for a day
+        let earningsDataWithFiveDays = fiveDays.map(day => {
+            const index = earningsLabels.indexOf(day);
+            return index !== -1 ? earningsData[index] : 0;
+        });
+
+        // Create the earnings chart
+        const ctxEarnings = document.getElementById('earningsChart').getContext('2d');
+        const earningsChart = new Chart(ctxEarnings, {
+            type: 'line',
+            data: {
+                labels: fiveDays,  // Display the last 5 days
+                datasets: [{
+                    label: 'Total Earnings (₱)',
+                    data: earningsDataWithFiveDays,  // Total earnings mapped to 5 days
+                    borderColor: '#0074cb',
+                    backgroundColor: 'rgba(0, 116, 200, 0.2)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    spanGaps: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₱' + value.toLocaleString();
+                            }
+                        }
+                    },
+                    x: {
+                        type: 'category',
+                        labels: fiveDays,  // Ensure the x-axis shows the last 5 days
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return '₱' + tooltipItem.raw.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
 
         // Status Data
         const statusCounts = @json($statusCounts);

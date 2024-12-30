@@ -130,7 +130,9 @@
                         </button>
                         <form method="GET" action="" class="w-1/2">
                             @csrf
-                            <button type="submit" class="w-full h-12 bg-[#F2F2F2] font-semibold hover:bg-gray-300 text-black  transition duration-200">
+                            <button type="button" 
+                                class="w-full h-12 bg-[#F2F2F2] font-semibold hover:bg-gray-300 text-black transition duration-200"
+                                onclick="toggleRescheduleModal(true, {{ $appointment->id }})">
                                 Reschedule
                             </button>
                         </form>
@@ -188,6 +190,7 @@
 </div>
 
 <!-- QR Code Modal -->
+@foreach ($appointments as $appointment)
 <div id="qrCodeModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
     <div class="modal-dialog bg-[#0074C8] rounded-lg w-[90%] sm:w-[450px] shadow-lg relative">
         <!-- Close button (using &times;) -->
@@ -201,12 +204,12 @@
 
                 <div class="bg-white font-semibold py-5 rounded-2xl">
                     <div class="pb-2">
-                        <span class="text-[20px]">Clinic Details</span><br>
+                        <span class="text-[20px]">{{ $appointment->first_name }} {{ $appointment->last_name }}</span><br>
                     </div>
                     <div class="font-normal text-[15px]">
-                        <span>St. Benedict Medical Clinic & Pharmacy</span><br>
-                        <span>Contact: <span class="font-medium">+1 (555) 123-4567</span></span><br>
-                        <span>Address: <span class="font-medium">123 Wellness Avenue, Suite 101</span></span><br>
+                        <span>{{ $appointment->visit_type }}</span><br>
+                        <span>Schedule Date: <span class="font-medium">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</span></span><br>
+                        <span>Address: <span class="font-medium">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</span></span><br>
                     </div>
 
                     <div class="flex justify-between items-center">
@@ -224,17 +227,62 @@
             <!-- Update the "Close" button to "Download QR" -->
             <form action="{{ route('appointments.downloadQRPdf', ':id') }}" method="GET">
                 @csrf
-                <div class="flex justify-center border-t border-gray-200">
+                <!-- <div class="flex justify-center border-t border-gray-200">
                     <button type="submit" class="w-full py-4 bg-[#F2F2F2] font-semibold hover:bg-gray-300 rounded-br-md">
                         Download QR as PDF
                     </button>
-                </div>
+                </div> -->
             </form>
 
         </div>
     </div>
 </div>
+@endforeach
+<!-- Reschedule Modal -->
+@foreach ($appointments as $appointment)
+<div id="rescheduleModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
+    <div class="modal-dialog bg-white rounded-lg w-[90%] sm:w-[650px] shadow-lg transition-transform duration-300">
+        <div class="modal-content text-center">
+            <div class="modal-body">
+                <h5 class="text-[24px] font-bold mb-3 mt-8">Your appointment has been Rescheduled to</h5>
+                
+                <form id="rescheduleAppointmentForm" method="POST" action="{{ route('appointments.reschedule', ':id') }}">
+                    @csrf
+              
+                    <!-- Date and Time Input Fields -->
+                    <div class="flex justify-between mb-6 px-12 py-8">
+                        <div class="w-[48%]">
+                            <label for="appointment_date" class="block text-left text-sm font-semibold text-gray-500 mb-1">Date</label>
+                            <input type="date" id="appointment_date" name="appointment_date" 
+                                value="{{ $appointment->appointment_date }}" 
+                                class="block w-full text-gray-600 font-medium bg-gray-100 rounded-md p-3 border border-gray-300 focus:outline-none" readonly>
+                        </div>
+                        <div class="w-[48%]">
+                            <label for="appointment_time" class="block text-left text-sm font-semibold text-gray-500 mb-1">Time</label>
+                            <input type="time" id="appointment_time" name="appointment_time" 
+                                value="{{ $appointment->appointment_time }}" 
+                                class="block w-full text-gray-600 font-medium bg-gray-100 rounded-md p-3 border border-gray-300 focus:outline-none" readonly>
+                        </div>
+                    </div>
 
+                    <!-- Buttons -->
+                    <div class="flex border-t border-gray-200">
+                        <button type="button" 
+                            class="w-1/2 py-4 bg-[#F2F2F2] font-semibold border-r hover:bg-gray-300 rounded-bl-md border-gray-200" 
+                            onclick="toggleRescheduleModal(false)">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                            class="w-1/2  py-4 bg-[#F2F2F2] font-semibold hover:bg-gray-300 rounded-br-md">
+                            Confirm
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 
 <!-- Delete Modal -->
 <div id="deleteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
@@ -347,6 +395,24 @@
 
 
 <script>
+
+function toggleRescheduleModal(show, appointmentId = null) {
+        const rescheduleModal = document.getElementById('rescheduleModal');
+        const formAction = `{{ route('appointments.reschedule', ':id') }}`.replace(':id', appointmentId);
+        const rescheduleForm = document.getElementById('rescheduleAppointmentForm');
+
+        if (appointmentId) {
+            rescheduleForm.action = formAction;
+        }
+
+        if (show) {
+            rescheduleModal.classList.remove('opacity-0', 'pointer-events-none');
+            rescheduleModal.classList.add('opacity-100');
+        } else {
+            rescheduleModal.classList.add('opacity-0', 'pointer-events-none');
+            rescheduleModal.classList.remove('opacity-100');
+        }
+    }
 
 function disableRateButton() {
         document.getElementById('submitRateButton').disabled = true;

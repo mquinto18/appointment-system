@@ -108,10 +108,16 @@
                     <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="completeAddress" name="complete_address" value="{{ old('complete_address', $appointment->complete_address) }}" required>
                 </div>
 
-                <div class="col-span-1 md:col-span-3 mb-4">
+               <div class="col-span-1 md:col-span-3 mb-4">
                     <label for="notes" class="form-label font-medium text-gray-700 block mb-2">Notes</label>
                     <textarea class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="notes" name="notes">{{ old('notes', $appointment->notes) }}</textarea>
                 </div>
+                <div class="col-span-1 md:col-span-3 mb-4">
+                    <label for="diagnosis" class="form-label font-medium text-gray-700 block mb-2">Diagnosis</label>
+                    <textarea class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="diagnosis" name="diagnosis">{{ old('diagnosis', $appointment->diagnosis) }}</textarea>
+                </div>
+
+                
             </div>
 
             <div class="flex justify-end mt-4">
