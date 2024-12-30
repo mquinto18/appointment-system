@@ -11,99 +11,118 @@
 
             @include('patient.navigation')
 
-            <form id="appointmentForm" action="{{ route('appointments.storePatientDetails') }}" method="POST"><!-- Set the form action to your route -->
-                @csrf <!-- Include CSRF token for security -->
+            <form id="appointmentForm" action="{{ route('appointments.storePatientDetails') }}" method="POST">
+    @csrf
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- First Name and Last Name -->
-                    <div>
-                        <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                        <input type="text" name="first_name" id="first_name" class="mt-1 block w-full rounded-md border border-gray-300 p-2" required>
-                    </div>
-                    <div>
-                        <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                        <input type="text" name="last_name" id="last_name" class="mt-1 block w-full rounded-md border border-gray-300 p-2" required>
-                    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- First Name and Last Name -->
+        <div>
+            <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+            <input type="text" name="first_name" id="first_name" class="mt-1 block w-full rounded-md border border-gray-300 p-2" required>
+        </div>
+        <div>
+            <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+            <input type="text" name="last_name" id="last_name" class="mt-1 block w-full rounded-md border border-gray-300 p-2" required>
+        </div>
 
-                    <!-- Email and Mobile Number -->
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                        <input type="email" name="email" id="email" class="mt-1 block w-full rounded-md border border-gray-300 p-2" required>
-                    </div>
-                    <div>
-                        <label for="mobile_number" class="block text-sm font-medium text-gray-700 mb-2">Mobile Number</label>
-                        <input type="text" name="mobile_number" id="mobile_number" class="mt-1 block w-full rounded-md border border-gray-300 p-2" required>
-                    </div>
+        <!-- Email and Mobile Number -->
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <input type="email" name="email" id="email" class="mt-1 block w-full rounded-md border border-gray-300 p-2" required>
+        </div>
+        <div>
+            <label for="mobile_number" class="block text-sm font-medium text-gray-700 mb-2">Mobile Number</label>
+            <input type="text" name="mobile_number" id="mobile_number" class="mt-1 block w-full rounded-md border border-gray-300 p-2" required>
+        </div>
 
-                    <!-- Address -->
-                    <div class="col-span-2">
-                        <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Address</label>
-                        <input type="text" name="address" id="address" class="mt-1 block w-full rounded-md border border-gray-300 p-2" required>
-                    </div>
+        <!-- Address -->
+        <div class="col-span-2">
+            <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+            <input type="text" name="address" id="address" class="mt-1 block w-full rounded-md border border-gray-300 p-2" required>
+        </div>
 
-                    <!-- Birthday and Gender -->
-                    <div>
-                        <label for="birthday" class="block text-sm font-medium text-gray-700 mb-2">Birthday</label>
-                        <input type="date" name="birthday" id="birthday" class="mt-1 block w-full rounded-md border border-gray-300 p-2" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
-                        <div class="mt-1 flex space-x-4">
-                            <div>
-                                <input type="radio" name="gender" value="male" id="male" class="mr-2">
-                                <label for="male">Male</label>
-                            </div>
-                            <div>
-                                <input type="radio" name="gender" value="female" id="female" class="mr-2">
-                                <label for="female">Female</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Visit Type and Additional (side by side) -->
-                    <div>
-                        <label for="visit_type" class="block text-sm font-medium text-gray-700 mb-2">Visit Type</label>
-                        <select name="visit_type" id="visit_type" class="mt-1 block w-full rounded-md border border-gray-300 p-2" required>
-                            <option value="Medical Consultation">Medical Consultation</option>
-                            <option value="Pediatric Consultation">Pediatric Consultation</option>
-                            <option value="Pediatric Ears, Nose and Throat">Pediatric Ears, Nose and Throat</option>
-                            <option value="Adult Ears, Nose and Throat">Adult Ears, Nose and Throat</option>
-                            <option value="Minor Suturing">Minor Suturing</option>
-                            <option value="Wound Dressing">Wound Dressing</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Additional Information</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="medical_certificate" name="medical_certificate" value="Medical Certificate">
-                            <label class="form-check-label" for="medical_certificate">
-                                Need Medical Certificate
-                            </label>
-                        </div>
-                    </div>
-
-
-                    <!-- Privacy Policy Checkbox with Link to Modal -->
-                    <div class="flex items-start">
-                        <div class="flex items-center h-5">
-                            <input id="terms" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50" required="">
-                        </div>
-                        <div class="ml-3 text-sm">
-                            <label for="terms" class="font-light text-gray-500">
-                                I agree that I have read the
-                                <a href="#" class="font-medium text-[#0074C8] underline" onclick="toggleModal(true)">privacy policy</a>.
-                            </label>
-                        </div>
-                    </div>
-
+        <!-- Birthday and Gender -->
+        <div>
+            <label for="birthday" class="block text-sm font-medium text-gray-700 mb-2">Birthday</label>
+            <input type="date" name="birthday" id="birthday" class="mt-1 block w-full rounded-md border border-gray-300 p-2" required>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+            <div class="mt-1 flex space-x-4">
+                <div>
+                    <input type="radio" name="gender" value="male" id="male" class="mr-2">
+                    <label for="male">Male</label>
                 </div>
+                <div>
+                    <input type="radio" name="gender" value="female" id="female" class="mr-2">
+                    <label for="female">Female</label>
+                </div>
+            </div>
         </div>
 
-        <div class="mt-6">
-            <button type="submit" class="w-full h-12 bg-[#F2F2F2] border text-black font-semibold hover:bg-blue-600 hover:text-white transition duration-200">Next</button>
+        <!-- Visit Type (Full Width) -->
+        <div class="col-span-2">
+            <label for="visit_type" class="block text-sm font-medium text-gray-700 mb-2">Visit Type</label>
+            <div id="visit_type" class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                <button type="button" class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" data-value="Medical Consultation">
+                    <span class="block font-medium">Medical Consultation (Adult)</span>
+                    <span class="block text-sm text-gray-500">₱600/Consultation</span>
+                </button>
+                <button type="button" class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" data-value="Pediatric Consultation">
+                    <span class="block font-medium">Pediatric Consultation</span>
+                    <span class="block text-sm text-gray-500">₱600/Consultation</span>
+                </button>
+                <button type="button" class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" data-value="Pediatric Ears, Nose and Throat">
+                    <span class="block font-medium">Pediatric Ears, Nose, and Throat</span>
+                    <span class="block text-sm text-gray-500">₱599/Consultation</span>
+                </button>
+                <button type="button" class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" data-value="Adult Ears, Nose and Throat">
+                    <span class="block font-medium">Adult Ears, Nose, and Throat</span>
+                    <span class="block text-sm text-gray-500">₱599/Consultation</span>
+                </button>
+                <button type="button" class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" data-value="Minor Suturing">
+                    <span class="block font-medium">Minor Suturing</span>
+                    <span class="block text-sm text-gray-500">₱899/Consultation</span>
+                </button>
+                <button type="button" class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" data-value="Wound Dressing">
+                    <span class="block font-medium">Wound Dressing</span>
+                    <span class="block text-sm text-gray-500">₱600/Consultation</span>
+                </button>
+            </div>
+            <input type="hidden" name="visit_type" id="selected_visit_type" required>
         </div>
-        </form>
+
+        <!-- Medical Certificate -->
+        <div class="col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Additional Information</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="medical_certificate" name="medical_certificate" value="Medical Certificate">
+                <label class="form-check-label" for="medical_certificate">
+                    Need Medical Certificate  / ₱300
+                </label>
+            </div>
+        </div>
+
+        <!-- Privacy Policy Checkbox -->
+        <div class="col-span-2 flex items-start">
+            <div class="flex items-center h-5">
+                <input id="terms" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50" required="">
+            </div>
+            <div class="ml-3 text-sm">
+                <label for="terms" class="font-light text-gray-500">
+                    I agree that I have read the
+                    <a href="#" class="font-medium text-[#0074C8] underline" onclick="toggleModal(true)">privacy policy</a>.
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="mt-6">
+        <button type="submit" class="w-full h-12 bg-[#F2F2F2] border text-black font-semibold hover:bg-blue-600 hover:text-white transition duration-200">Next</button>
+    </div>
+</form>
+
 
     </div>
 </div>
@@ -246,7 +265,19 @@
         // Toggle icon rotation
         icon.classList.toggle('rotate-45'); // Rotates the icon when content is expanded
     }
-    k
+    
+    document.querySelectorAll('#visit_type button').forEach(button => {
+        button.addEventListener('click', () => {
+            // Remove active styling from other buttons
+            document.querySelectorAll('#visit_type button').forEach(btn => btn.classList.remove('bg-indigo-100', 'border-indigo-500'));
+
+            // Add active styling to the selected button
+            button.classList.add('bg-indigo-100', 'border-indigo-500');
+
+            // Set the hidden input's value
+            document.getElementById('selected_visit_type').value = button.getAttribute('data-value');
+        });
+    });
 </script>
 
 @endsection

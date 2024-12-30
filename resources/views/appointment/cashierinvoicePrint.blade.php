@@ -1,6 +1,6 @@
-    @extends('layouts.app')
+    @extends('layouts.cashier')
 
-    @section('title', 'Admin')
+    @section('title', 'cashier')
 
     @section('contents')
 
@@ -155,7 +155,7 @@
                         </div>
 
                         <div class='mt-4'>
-                            <form action="{{ route('invoice.items', $appointment->id) }}" method="POST">
+                            <form action="{{ route('cashierinvoice.items', $appointment->id) }}" method="POST">
                                 @csrf
                                 @method('PUT')
 
@@ -218,7 +218,7 @@
 
                                 <div class="mt-3 w-full flex gap-2">
                                     <button type="submit" class="block w-full rounded-md bg-[#0074C8] text-white px-3 py-2">Save</button>
-                                    <a href="{{ route('invoice.print', $appointment->id) }}" class="block w-full rounded-md bg-[#0074C8] text-white text-center px-3 py-2">Print</a>
+                                    <a href="{{ route('invoiceCashier.print', $appointment->id) }}" class="block w-full rounded-md bg-[#0074C8] text-white text-center px-3 py-2">Print</a>
                                 </div>
                             </form>
                         </div>

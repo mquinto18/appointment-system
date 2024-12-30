@@ -46,7 +46,7 @@ class InvoiceController extends Controller
             'descriptions.*' => 'string',
             'qty' => 'array',
             'qty.*' => 'integer|min:1',
-            'discount' => 'required|integer|min:10|max:50', // Validate discount value
+            'discount' => 'required|integer|min:0|max:50', // Validate discount value
         ]);
     
         $appointment = Appointment::findOrFail($id);

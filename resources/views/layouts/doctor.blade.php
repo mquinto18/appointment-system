@@ -117,42 +117,15 @@
 
                 <div class='mx-2'>
                     <!-- Home Link -->
-                    <a href="/admin/home" class="group nav-link">
-                        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8] {{ Request::is('admin/home') ? 'bg-[#0074C8] text-white' : '' }}">
+                    <a href="/doctor/home" class="group nav-link">
+                        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8] {{ Request::is('doctor/home') ? 'bg-[#0074C8] text-white' : '' }}">
                             <i class="bi bi-house-door-fill"></i>
                             <span class="text-[15px] ml-4 font-bold">Home</span>
                         </div>
                     </a>
 
-                    <!-- System User Link with Dropdown -->
                     <div class="relative">
-                        <a href="javascript:void(0);" class="group nav-link {{ Request::routeIs('admin', 'user', 'doctor', 'cashier') ? 'bg-[#0074C8] text-white' : '' }}" onclick="toggleDropdown('system-user-dropdown');">
-                            <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8] {{ Request::is('admin/system-user/*') ? 'bg-[#0074C8] text-white' : '' }}">
-                                <i class="fa-solid fa-user"></i>
-                                <span class="text-[15px] ml-4 font-bold">System User</span>
-                                <i class="ml-auto bi bi-chevron-down"></i>
-                            </div>
-                        </a>
-                        <!-- Dropdown for System User (open by default if a child link is active) -->
-                        <div id="system-user-dropdown" class="relative w-full text-left rounded-md mt-1 space-y-1 px-2 py-1 {{ Request::is('admin/system-user/*') ? '' : 'hidden' }}">
-                            <a href="{{ route('admin') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('admin') ? 'bg-[#0074C8] text-white' : '' }}">
-                                <li>Admin</li>
-                            </a>
-                            <a href="{{ route('user') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('user') ? 'bg-[#0074C8] text-white' : '' }}">
-                                <li>User</li>
-                            </a>
-                            <a href="{{ route('doctor') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('doctor') ? 'bg-[#0074C8] text-white' : '' }}">
-                                <li>Doctor</li> 
-                            </a>
-                            <a href="{{ route('cashier') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('cashier') ? 'bg-[#0074C8] text-white' : '' }}">
-                                <li>cashier</li> 
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Appointment Link with Dropdown -->
-                    <div class="relative">
-                        <a href="javascript:void(0);" class="group nav-link {{ Request::routeIs('appointment') ? 'bg-[#0074C8] text-white' : '' }}" onclick="toggleDropdown('appointment-dropdown');">
+                        <a href="javascript:void(0);" class="group nav-link {{ Request::routeIs('doctorAppointment') ? 'bg-[#0074C8] text-white' : '' }}" onclick="toggleDropdown('appointment-dropdown');">
                             <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8] {{ Request::is('admin/appointments/*') ? 'bg-[#0074C8] text-white' : '' }}">
                                 <i class="fa-solid fa-calendar-days"></i>
                                 <span class="text-[15px] ml-4 font-bold">Appointment</span>
@@ -161,35 +134,21 @@
                         </a>
                         <!-- Dropdown for Appointment (open by default if a child link is active) -->
                         <div id="appointment-dropdown" class="relative w-full text-left rounded-md mt-1 space-y-1 px-2 py-1 {{ Request::is('admin/appointments/*') ? '' : 'hidden' }}">
-                            <a href="{{ route('appointment') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('appointment') ? 'bg-[#0074C8] text-white' : '' }}">
+                            <a href="{{ route('doctorAppointment') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('doctorAppointment') ? 'bg-[#0074C8] text-white' : '' }}">
                                 <li>Total Appointment</li>
                             </a>
                         </div>
                     </div>
 
-                    <!-- Other Navigation Links -->
-                    <!-- <a href="{{ route('prescription') }}" class="group nav-link {{ Request::routeIs('prescription') ? 'bg-[#0074C8] text-white' : '' }}">
-                        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8]">
-                            <i class="fa-solid fa-prescription"></i>
-                            <span class="text-[15px] ml-4 font-bold">Prescription</span>
-                        </div>
-                    </a> -->
-
-                    <a href="{{ route('invoice') }}" class="group nav-link {{ Request::routeIs('invoice') ? 'bg-[#0074C8] text-white' : '' }}">
+                    <!-- <a href="{{ route('cashier.invoice') }}" class="group nav-link {{ Request::routeIs('cashier.invoice') ? 'bg-[#0074C8] text-white' : '' }}">
                         <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8]">
                             <i class="fa-solid fa-file-invoice"></i>
                             <span class="text-[15px] ml-4 font-bold">Invoice</span>
                         </div>
-                    </a>
+                    </a> -->
 
-                    <a href="{{ route('medicalcert') }}" class="group nav-link {{ Request::routeIs('medicalcert') ? 'bg-[#0074C8] text-white' : '' }}">
-                        <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8]">
-                            <i class="fa-solid fa-file-invoice"></i>
-                            <span class="text-[15px] ml-4 font-bold">Medical Certificate</span>
-                        </div>
-                    </a>
 
-                    <!-- <a href="{{ route('reports') }}" class="group nav-link {{ Request::routeIs('reports') ? 'bg-[#0074C8] text-white' : '' }}">
+                    <!-- <a href="{{ route('cashierReports') }}" class="group nav-link {{ Request::routeIs('cashierReports') ? 'bg-[#0074C8] text-white' : '' }}">
                         <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8]">
                             <i class="fa-solid fa-file-invoice"></i>
                             <span class="text-[15px] ml-4 font-bold">Reports</span>
@@ -207,10 +166,10 @@
                         </a>
                         <!-- Dropdown for Account Settings -->
                         <div id="profile-dropdown" class="hidden relative w-full text-left rounded-md mt-1 space-y-1 px-2 py-1">
-                            <a href="{{ route('profile.settings') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('profile.settings') ? 'bg-[#0074C8] text-white' : '' }}">
+                            <a href="{{ route('cashierProfile.settings') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('cashierProfile.settings') ? 'bg-[#0074C8] text-white' : '' }}">
                                 <li>Profile Settings</li>
                             </a>
-                            <a href="{{ route('security.settings') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('security.settings') ? 'bg-[#0074C8] text-white' : '' }}">
+                            <a href="{{ route('cashierSecurity.settings') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('cashierSecurity.settings') ? 'bg-[#0074C8] text-white' : '' }}">
                                 <li>Security Settings</li>
                             </a>
                         </div>
@@ -220,7 +179,7 @@
 
                 <!-- Sign out -->
                 <div class='mx-2 my-2 rounded-md py-2 text-center bg-[#0074C8] cursor-pointer text-white' onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
                     Sign out

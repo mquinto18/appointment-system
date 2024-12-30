@@ -113,7 +113,9 @@ class HomeController extends Controller
     public function patient_appointment()
     {
         // Retrieve all users with type = 1
-        $users = User::where('type', 2)->get(); // Retrieves all users with type 1
+        $users = User::where('type', 2)
+             ->where('status', 'active')
+             ->get(); // Retrieves all users with type 1
 
         // Pass the users to the view
         return view('patient.patient-appointment', compact('users'));
@@ -212,60 +214,61 @@ class HomeController extends Controller
         return view('patient.confirm-appointment', compact('patientDetails', 'date', 'time', 'doctorName'));
     }
     public function appointConfirm(Request $request)
-    {
-        // Retrieve the patient details from the session
-        $patientDetails = session('patient_details');
-        $appointmentDate = $patientDetails['appointment_date'];
+{
+    // Retrieve the patient details from the session
+    $patientDetails = session('patient_details');
+    $appointmentDate = $patientDetails['appointment_date'];
 
         // Find the slot for the specified appointment date
-        $slot = AppointmentSlot::firstOrCreate(
+    $slot = AppointmentSlot::firstOrCreate(
             ['appointment_date' => $appointmentDate],
             ['total_slots' => 4] // Ensure there are always 2 total slots
-        );
+    );
 
-        // Check if there are available slots
-        if ($slot->booked_slots < $slot->total_slots) {
-            // Generate a unique transaction number
-            $transactionNumber = 'TRX-' . strtoupper(Str::random(10));
+    // Check if there are available slots
+    if ($slot->booked_slots < $slot->total_slots) {
+        // Generate a unique transaction number
+        $transactionNumber = 'TRX-' . strtoupper(Str::random(10));
 
             // Convert appointment time to 24-hour format
             $appointmentTime = Carbon::createFromFormat('g:i A', $patientDetails['appointment_time'])->format('H:i:s');
 
-            // Create a new Appointment instance
-            $appointment = new Appointment([
-                'transaction_number' => $transactionNumber,
-                'first_name' => $patientDetails['first_name'],
-                'last_name' => $patientDetails['last_name'],
-                'date_of_birth' => $patientDetails['birthday'],
-                'appointment_date' => $appointmentDate,
-                'appointment_time' => $appointmentTime,
-                'visit_type' => $patientDetails['visit_type'],
-                'doctor' => $patientDetails['appointment_doctor'], // This is now the doctor's name
-                'additional' => $patientDetails['medical_certificate'],
-                'gender' => $patientDetails['gender'],
-                'contact_number' => $patientDetails['mobile_number'],
-                'email_address' => $patientDetails['email'],
-                'complete_address' => $patientDetails['address'],
-                'status' => 'pending',
-                'user_id' => auth()->id(), // Set the user_id to the currently authenticated user's ID
-            ]);
+        // Create a new Appointment instance
+        $appointment = new Appointment([
+            'transaction_number' => $transactionNumber,
+            'first_name' => $patientDetails['first_name'],
+            'last_name' => $patientDetails['last_name'],
+            'date_of_birth' => $patientDetails['birthday'],
+            'appointment_date' => $appointmentDate,
+            'appointment_time' => $appointmentTime,
+            'visit_type' => $patientDetails['visit_type'],
+            'doctor' => $patientDetails['appointment_doctor'], // This is now the doctor's name
+            'additional' => $patientDetails['medical_certificate'],
+            'gender' => $patientDetails['gender'],
+            'contact_number' => $patientDetails['mobile_number'],
+            'email_address' => $patientDetails['email'],
+            'complete_address' => $patientDetails['address'],
+            'status' => 'pending',
+            'user_id' => auth()->id(), // Set the user_id to the currently authenticated user's ID
+        ]);
 
-            // Save the appointment to the database
-            $appointment->save();
+        // Save the appointment to the database
+        $appointment->save();
 
             // Increment booked slots
             $slot->increment('booked_slots');
 
-            // Clear the session data
-            session()->forget('patient_details');
+        // Clear the session data
+        session()->forget('patient_details');
 
-            // Redirect to a success page or confirmation view
-            return redirect()->back()->with('message', 'Please wait for a notification once your appointment has been approved.');
-        } else {
-            // No slots available, show an error message
+        // Redirect to a success page or confirmation view
+        return redirect()->back()->with('message', 'Please wait for a notification once your appointment has been approved.');
+    } else {
+        // No slots available, show an error message
             return redirect()->back()->with('error', 'This date is fully booked. Please select a different date.');
-        }
     }
+}
+
 
 
     public function appointmentBooked()
@@ -287,6 +290,15 @@ class HomeController extends Controller
 
         notify()->success('Appointment Cancelled!');
         return redirect()->back()->with('success', 'Appointment cancelled successfully.');
+    }
+
+    public function appointmentReschedule($id){
+        $appointment = Appointment::findorFail($id);
+        $appointment->status = 'approved';
+        $appointment->save();
+
+        notify()->success('Appointment Rescheduled!');
+        return redirect()->back()->with('success', 'Appointment rescheduled successfully.');
     }
 
     public function appointmentDelete($id)

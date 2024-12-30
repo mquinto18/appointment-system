@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Twilio\Rest\Client;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
 use Illuminate\Support\Facades\Auth;
@@ -135,6 +135,7 @@ class AppointmentController extends Controller
             'email_address' => 'required|email|max:255',
             'complete_address' => 'required|string|max:255',
             'notes' => 'nullable|string',
+            'diagnosis' => 'nullable|string',
         ]);
 
         // Find the appointment by ID
@@ -148,7 +149,7 @@ class AppointmentController extends Controller
         return redirect()->route('appointment') // Adjust the route as needed
             ->with('success', 'Appointment updated successfully.');
     }
-    
+
     public function appointmentDelete($id){
         $appointment = Appointment::findOrFail($id);
         $appointment->delete();

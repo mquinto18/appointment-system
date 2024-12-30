@@ -62,7 +62,7 @@ class AdminController extends Controller
 
         if($user){
             session()->flash('success', 'Deleted Successfully');
-            notify()->success('Admin deleted successfully!');
+            notify()->success('Deleted successfully!');
             return redirect()->back()->with('success', 'Admin deleted successfully.');
         }else{
             session()->flash('error', 'Error Delete');
