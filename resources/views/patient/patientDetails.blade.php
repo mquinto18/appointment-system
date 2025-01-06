@@ -64,33 +64,54 @@
         <div class="col-span-2">
             <label for="visit_type" class="block text-sm font-medium text-gray-700 mb-2">Visit Type</label>
             <div id="visit_type" class="grid grid-cols-2 lg:grid-cols-3 gap-4">
-                <button type="button" class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" data-value="Medical Consultation">
+                <button type="button" 
+                    class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                    data-value="Medical Consultation" 
+                    data-amount="600">
                     <span class="block font-medium">Medical Consultation (Adult)</span>
                     <span class="block text-sm text-gray-500">₱600/Consultation</span>
                 </button>
-                <button type="button" class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" data-value="Pediatric Consultation">
+                <button type="button" 
+                    class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                    data-value="Pediatric Consultation" 
+                    data-amount="600">
                     <span class="block font-medium">Pediatric Consultation</span>
                     <span class="block text-sm text-gray-500">₱600/Consultation</span>
                 </button>
-                <button type="button" class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" data-value="Pediatric Ears, Nose and Throat">
+                <button type="button" 
+                    class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                    data-value="Pediatric Ears, Nose and Throat" 
+                    data-amount="599">
                     <span class="block font-medium">Pediatric Ears, Nose, and Throat</span>
                     <span class="block text-sm text-gray-500">₱599/Consultation</span>
                 </button>
-                <button type="button" class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" data-value="Adult Ears, Nose and Throat">
+                <button type="button" 
+                    class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                    data-value="Adult Ears, Nose, and Throat" 
+                    data-amount="699">
                     <span class="block font-medium">Adult Ears, Nose, and Throat</span>
-                    <span class="block text-sm text-gray-500">₱599/Consultation</span>
+                    <span class="block text-sm text-gray-500">₱699/Consultation</span>
                 </button>
-                <button type="button" class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" data-value="Minor Suturing">
+                <button type="button" 
+                    class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                    data-value="Minor Suturing" 
+                    data-amount="699">
                     <span class="block font-medium">Minor Suturing</span>
-                    <span class="block text-sm text-gray-500">₱899/Consultation</span>
+                    <span class="block text-sm text-gray-500">₱699/Consultation</span>
                 </button>
-                <button type="button" class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" data-value="Wound Dressing">
+                <button type="button" 
+                    class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                    data-value="Wound Dressing" 
+                    data-amount="500">
                     <span class="block font-medium">Wound Dressing</span>
-                    <span class="block text-sm text-gray-500">₱600/Consultation</span>
+                    <span class="block text-sm text-gray-500">₱500/Consultation</span>
                 </button>
+                <!-- Add the remaining buttons similarly -->
             </div>
             <input type="hidden" name="visit_type" id="selected_visit_type" required>
+            <input type="hidden" name="amount" id="selected_visit_amount" required>
         </div>
+
 
         <!-- Medical Certificate -->
         <div class="col-span-2">
@@ -266,18 +287,28 @@
         icon.classList.toggle('rotate-45'); // Rotates the icon when content is expanded
     }
     
-    document.querySelectorAll('#visit_type button').forEach(button => {
-        button.addEventListener('click', () => {
-            // Remove active styling from other buttons
-            document.querySelectorAll('#visit_type button').forEach(btn => btn.classList.remove('bg-indigo-100', 'border-indigo-500'));
-
-            // Add active styling to the selected button
-            button.classList.add('bg-indigo-100', 'border-indigo-500');
-
-            // Set the hidden input's value
-            document.getElementById('selected_visit_type').value = button.getAttribute('data-value');
+    document.querySelectorAll('[data-value]').forEach(button => {
+    button.addEventListener('click', () => {
+        // Remove the background color from all buttons
+        document.querySelectorAll('[data-value]').forEach(btn => {
+            btn.classList.remove('bg-indigo-100', 'border-indigo-500');
         });
+
+        // Add the background color to the selected button
+        button.classList.add('bg-indigo-100', 'border-indigo-500');
+
+        const visitType = button.getAttribute('data-value');
+        const visitAmount = button.querySelector('span.text-gray-500').textContent.replace(/[^\d]/g, ''); // Extract numeric value
+        
+        // Store the amount as a number in an array
+        const jsonData = JSON.stringify([parseInt(visitAmount)]); // Convert amount to an array
+
+        // Set the JSON data in the hidden input fields
+        document.getElementById('selected_visit_type').value = visitType;
+        document.getElementById('selected_visit_amount').value = jsonData;
     });
+
+});
 </script>
 
 @endsection

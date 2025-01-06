@@ -68,6 +68,8 @@
                                     Admin
                                 @elseif($user->type == 2)
                                     Doctor
+                                @elseif($user->type == 3)
+                                    Cashier
                                 @endif
                             </td>
                             <td class="py-3 px-4 border-b">{{ $user->created_at->format('F d, Y') }}</td>

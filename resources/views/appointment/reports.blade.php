@@ -3,6 +3,12 @@
 @section('title', 'Cashier')
 
 @section('contents')
+<div id="loadingOverlay" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white p-5 rounded-lg shadow-lg flex items-center gap-3">
+        <div class="loader border-t-2 border-blue-600 border-solid rounded-full w-8 h-8 animate-spin"></div>
+        <span class="font-medium text-blue-600">Processing your download...</span>
+    </div>
+</div>
 
 <div>
     <h1 class='font-medium text-2xl ml-3'>Reports</h1>
@@ -70,9 +76,9 @@
                 All Trasaction History
             </div>
 
-            <form action="{{ route('cashierReports') }}" method="GET">
+            <form action="{{ route('cashierReports', '$appointment->id') }}" method="GET">
                 <!-- The filter fields go here -->
-                <div class="flex items-end gap-10">
+                <div class="flex justify-between items-end gap-10">
                     <div class="flex items-end gap-4 mt-3">
                             <div>
                                 <label for="filter-year" class="font-medium text-sm">Year</label>
@@ -110,24 +116,24 @@
                                 </select>
                             </div>
                             <div class="flex items-end gap-4">
-                        <div>
-                            <label for="visitType" class="font-medium text-sm">Visit Type</label>
-                            <select
-                                class="w-full border rounded px-3 py-2 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
-                                id="visitType"
-                                name="visit_type" 
-                            >
-                                <option value="">Select All</option>
-                                <option value="Medical Consultation" {{ request('visit_type') == 'Medical Consultation' ? 'selected' : '' }}>Medical Consultation</option>
-                                <option value="Pediatric Consultation" {{ request('visit_type') == 'Pediatric Consultation' ? 'selected' : '' }}>Pediatric Consultation</option>
-                                <option value="Pediatric Ears, Nose and Throat" {{ request('visit_type') == 'Pediatric Ears, Nose and Throat' ? 'selected' : '' }}>Pediatric Ears, Nose and Throat</option>
-                                <option value="Adult Ears, Nose and Throat" {{ request('visit_type') == 'Adult Ears, Nose and Throat' ? 'selected' : '' }}>Adult Ears, Nose and Throat</option>
-                                <option value="Minor Suturing" {{ request('visit_type') == 'Minor Suturing' ? 'selected' : '' }}>Minor Suturing</option>
-                                <option value="Wound Dressing" {{ request('visit_type') == 'Wound Dressing' ? 'selected' : '' }}>Wound Dressing</option>
-                            </select>
-                        </div>
+                                <div>
+                                    <label for="visitType" class="font-medium text-sm">Visit Type</label>
+                                    <select
+                                        class="w-full border rounded px-3 py-2 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+                                        id="visitType"
+                                        name="visit_type" 
+                                    >
+                                        <option value="">Select All</option>
+                                        <option value="Medical Consultation" {{ request('visit_type') == 'Medical Consultation' ? 'selected' : '' }}>Medical Consultation</option>
+                                        <option value="Pediatric Consultation" {{ request('visit_type') == 'Pediatric Consultation' ? 'selected' : '' }}>Pediatric Consultation</option>
+                                        <option value="Pediatric Ears, Nose and Throat" {{ request('visit_type') == 'Pediatric Ears, Nose and Throat' ? 'selected' : '' }}>Pediatric Ears, Nose and Throat</option>
+                                        <option value="Adult Ears, Nose and Throat" {{ request('visit_type') == 'Adult Ears, Nose and Throat' ? 'selected' : '' }}>Adult Ears, Nose and Throat</option>
+                                        <option value="Minor Suturing" {{ request('visit_type') == 'Minor Suturing' ? 'selected' : '' }}>Minor Suturing</option>
+                                        <option value="Wound Dressing" {{ request('visit_type') == 'Wound Dressing' ? 'selected' : '' }}>Wound Dressing</option>
+                                    </select>
+                                </div>
 
-                    </div>
+                            </div>
                         <div>
                             <button
                                 type="submit"
@@ -137,7 +143,14 @@
                             </button>
                         </div>
                     </div>
-
+                    
+                    <a href="{{ route('report.print', '$appointment->id') }}" 
+                    class="bg-white py-3 px-3 border border-[#0074CB] rounded-md relative group downloadButton">
+                        <i class="fa-solid fa-download text-[20px] text-blue-600"></i>
+                        <span class="absolute bottom-full mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
+                            Download
+                        </span>
+                    </a>
                 </div>
             </form>
 
@@ -269,6 +282,41 @@
     } else {
         console.error('Services chart canvas not found');
     }
+
+
+    document.querySelectorAll('.downloadButton').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent default action for demonstration
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.classList.remove('hidden');
+            
+            // Simulate a download delay for demonstration (Remove this in production)
+            setTimeout(() => {
+                window.location.href = this.href; // Perform the actual download
+                loadingOverlay.classList.add('hidden'); // Hide overlay after download
+            }, 2000); // Adjust delay time as needed
+        });
+    });
 </script>
+<style>
+    .loader {
+        border-width: 4px;
+        border-color: rgba(0, 0, 0, 0.1);
+        border-top-color: #3498db; /* Adjust to match your blue color */
+        width: 40px; /* Size of the loader */
+        height: 40px; /* Size of the loader */
+        border-radius: 50%; /* Makes it a circle */
+        animation: spin 1s linear infinite; /* Spinning animation */
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
 
 @endsection

@@ -62,6 +62,13 @@ Route::middleware(['auth', 'doctor'])->group(function () {
     Route::get('doctor/home', [DoctorController::class, 'doctorIndex'])->name('doctor/home');
 
     Route::get('doctor/appointment', [DoctorController::class, 'doctorAppointment'])->name('doctorAppointment');
+    Route::delete('doctor/appointments/delete/{id}', [DoctorController::class, 'appointmentdoctorDelete'])->name('appointments.doctoDestroy');
+    Route::get('doctor/profile', [DoctorController::class, 'profiledoctorSettings'])->name('doctorProfile.settings');
+    Route::put('doctor/profile', [DoctorController::class, 'profiledoctorUpdate'])->name('doctorProfile.update');
+    Route::get('doctor/security', [DoctorController::class, 'securitydoctorSettings'])->name('doctorSecurity.settings');
+    Route::put('doctor/update', [DoctorController::class, 'securitydoctorUpdate'])->name('doctorSecurity.update');
+    Route::put('doctor/profile/security/update', [DoctorController::class, 'changeuserPassword'])->name('doctorchangePassword.update');
+    Route::delete('doctor/profile/security/delete', [DoctorController::class, 'accountDelete'])->name('doctorAccount.delete');
 });
 Route::middleware(['auth', 'cashier'])->group(function () {
     Route::get('cashier/home', [CashierController::class, 'cashierIndex'])->name('cashier/home');
@@ -70,6 +77,8 @@ Route::middleware(['auth', 'cashier'])->group(function () {
     Route::get('cashier/invoice/print/{id}', [CashierController::class, 'cashierinvoicePrint'])->name('cashierinvoince.print');
     Route::put('cashier/invoice/save/{id}', [CashierController::class, 'cashierinvoiceSave'])->name('cashierinvoice.items');
     Route::get('cashier/invoice/generate/{id}', [CashierController::class, 'cashierprintInvoice'])->name('invoiceCashier.print');
+
+    Route::get('cashier/reports/generate/{id}', [CashierController::class, 'cashierprintReports'])->name('report.print');
 
     Route::get('cashier/reports', [ReportsController::class, 'reports'])->name('cashierReports');
     Route::get('cashier/profile', [CashierProfileController::class, 'profileSettings'])->name('cashierProfile.settings');
@@ -101,6 +110,15 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/dashboard/appointment/medical-downlaod/{id}', [MedicalController::class, 'medicalDownload'])->name('medicalcert.download');
     Route::post('/dashboard/appointment/rating/{id}', [HomeController::class, 'appointmentRate'])->name('appointments.rate');
 
+    Route::get('/dashboard/appointments/edit/{id}', [HomeController::class, 'appointmentuserEdit'])->name('appointments.userEdit');
+    Route::put('/dashboard/appointments/update/{id}', [HomeController::class, 'appointmentuserUpdate'])->name('appointments.userUpdate');
+    Route::get('user/profile', [HomeController::class, 'profileuserSettings'])->name('userProfile.settings');
+    Route::put('user/profile', [HomeController::class, 'profileuserUpdate'])->name('userProfile.update');
+    Route::get('user/security', [HomeController::class, 'securityuserSettings'])->name('userSecurity.settings');
+    Route::put('user/update', [HomeController::class, 'securityuserUpdate'])->name('userSecurity.update');
+    Route::put('user/profile/security/update', [HomeController::class, 'changeuserPassword'])->name('userchangePassword.update');
+    Route::delete('user/profile/security/delete', [HomeController::class, 'accountDelete'])->name('userAccount.delete');
+    
 });
 
 // Admin dashboard (protected with middleware)
