@@ -14,7 +14,7 @@
 <div class='w-full h-32 mt-5 rounded-lg' style="background: linear-gradient(to bottom, #0074C8, #151A5C);"></div>
 
 <div class='mx-10 -mt-20'>
-    <div class='grid grid-cols-4 gap-3'>
+    <div class='grid grid-cols-3 gap-3'>
         <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
             <div class='flex justify-between'>
                 <h1 class='font-medium text-[18px]'>Total Users</h1>
@@ -54,13 +54,13 @@
                 </a>
             </div>
         </div>
-        <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
+        <!-- <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
             <div class='flex justify-between'>
                 <h1 class='font-medium text-[18px]'>Total Earning</h1>
                 <i class="fa-solid fa-peso-sign text-[50px]" style="color: #0074cb;"></i>
             </div>
             <h1 class='font-bold text-[40px]'>{{ $totalAmount }}</h1>
-        </div>
+        </div> -->
     </div>
 
     <div class='flex gap-3 mt-3'>

@@ -55,7 +55,6 @@
                         <th class="py-3 px-4 border-b">Appointment Date</th>
                         <th class="py-3 px-4 border-b">Appointment Time</th>
                         <th class="py-3 px-4 border-b">Status</th>
-                        <th class="py-3 px-4 border-b">Actions</th>
                         <th class="py-3 px-4 border-b"></th>
                     </tr>
                 </thead>
@@ -82,71 +81,21 @@
                                 {{ strtoupper($appointment->status) }}
                             </div>
                         </td>
-                        <td class="py-3 px-4 border-b">
-                            <!-- Approve Action -->
-                            <div class='flex gap-2'>
-                                <form action="{{ route('appointments.approve', $appointment->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="relative group cursor-pointer"
-                                        @if($appointment->status === 'approved' || $appointment->status === 'completed') disabled @endif>
-                                        <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
-                    @if($appointment->status === ' approved' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
-                                            <i class="fa-solid fa-thumbs-up" style="color: #3bce54;"></i>
-                                        </div>
-                                        <!-- Tooltip for Approve -->
-                                        <span class="absolute bottom-full mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
-                                            Approve
-                                        </span>
-                                    </button>
-                                </form>
+                        
 
-                                <!-- Complete Action -->
-                                <form action="{{ route('appointments.complete', $appointment->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="relative group cursor-pointer"
-                                        @if($appointment->status === 'completed') disabled @endif>
-                                        <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
-                    @if($appointment->status === ' completed') cursor-not-allowed opacity-50 @endif'>
-                                            <i class="fa-solid fa-check-to-slot" style="color: #0074cb;"></i>
-                                        </div>
-                                        <!-- Tooltip for Complete -->
-                                        <span class="absolute bottom-full mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
-                                            Complete
-                                        </span>
-                                    </button>
-                                </form>
-
-                                <!-- Reject Action -->
-                                <form action="{{ route('appointments.reject', $appointment->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="relative group cursor-pointer"
-                                        @if($appointment->status === 'rejected' || $appointment->status === 'completed') disabled @endif>
-                                        <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
-                    @if($appointment->status === ' rejected' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
-                                            <i class="fa-solid fa-thumbs-down" style="color: #d02525;"></i>
-                                        </div>
-                                        <!-- Tooltip for Reject -->
-                                        <span class="absolute bottom-full mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
-                                            Reject
-                                        </span>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-
-                        <td class="cursor-pointer relative">
+                        <td class="cursor-pointer relative border-b text-center">
                             <!-- Ellipsis Icon -->
                             <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"></i>
 
                             <!-- Dropdown Menu -->
                             <ul class="dropdown-menu font-medium absolute right-0 z-10 hidden text-left bg-white shadow-lg rounded-lg w-40" aria-labelledby="dropdownMenuButton">
                                 <!-- Edit Option -->
-                                <a href="{{ route('appointments.edit', $appointment->id) }}" class="block">
+                                <!-- <a href="{{ route('appointments.edit', $appointment->id) }}" class="block">
                                     <div class="px-4 py-2 flex items-center hover:bg-gray-100">
                                         <i class="fa-regular fa-pen-to-square mr-2 text-gray-600"></i>
                                         <span class="text-sm">Edit</span>
                                     </div>
-                                </a>
+                                </a> -->
                                 <!-- View Option -->
                                 <a href="#" onclick="openViewModal({{ $appointment }})" class="block">
                                     <li class="px-4 py-2 flex items-center hover:bg-gray-100">
@@ -160,7 +109,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <i class="fa-regular fa-trash-can mr-2 text-gray-600"></i>
-                                        <button type="button" onclick="openDeleteModal('{{ $appointment->first_name }} {{ $appointment->last_name }}', '{{ route('appointments.destroy', $appointment->id) }}')" class="text-sm">
+                                        <button type="button" onclick="openDeleteModal('{{ $appointment->first_name }} {{ $appointment->last_name }}', '{{ route('appointments.doctoDestroy', $appointment->id) }}')" class="text-sm">
                                             Delete
                                         </button>
                                     </form>

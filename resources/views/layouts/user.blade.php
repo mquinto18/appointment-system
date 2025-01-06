@@ -130,11 +130,11 @@
                                         </div>
                                     </div>
                                     <div class='py-3'>
-                                        <a href="" class='flex flex-row gap-2 items-center py-2 px-5 cursor-pointer hover:bg-[#bbd5e9]'>
+                                        <a href="{{ route('userProfile.settings') }}" class='flex flex-row gap-2 items-center py-2 px-5 cursor-pointer hover:bg-[#bbd5e9]'>
                                             <i class="fa-solid fa-user"></i>
                                             <span>My Profile</span>
                                         </a>
-                                        <a href="" class='flex flex-row gap-2 items-center py-2 px-5 cursor-pointer hover:bg-[#bbd5e9]'>
+                                        <a href="{{ route('userSecurity.settings') }}" class='flex flex-row gap-2 items-center py-2 px-5 cursor-pointer hover:bg-[#bbd5e9]'>
                                             <i class="fa-solid fa-gear"></i>
                                             <span>Account Settings</span>
                                         </a>

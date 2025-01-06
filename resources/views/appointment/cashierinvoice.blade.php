@@ -24,8 +24,8 @@
             </div>
             <div class="flex items-center">
                 <!-- Search form -->
-                <form method="GET" action="{{ route('appointment') }}">
-                    <input type="text" name="search" value="{{ request('search') }}" class="border border-gray-300 p-2 rounded" placeholder="Search by patient, doctor or visit type">
+                <form method="GET" action="{{ route('cashier.invoice') }}">
+                    <input type="text" name="search" value="{{ request('search') }}" class="border border-gray-300 p-2 rounded" placeholder="Search ">
                     <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Search</button>
                 </form>
             </div>
@@ -92,12 +92,12 @@
                                     <!-- Dropdown Menu -->
                                     <ul class="dropdown-menu font-medium absolute right-0 z-10 hidden text-left bg-white shadow-lg rounded-lg w-40" aria-labelledby="dropdownMenuButton">
                                         <!-- Edit Option -->
-                                        <a href="{{ route('appointments.edit', $appointment->id) }}" class="block">
+                                        <!-- <a href="{{ route('appointments.edit', $appointment->id) }}" class="block">
                                             <div class="px-4 py-2 flex items-center hover:bg-gray-100">
                                                 <i class="fa-regular fa-pen-to-square mr-2 text-gray-600"></i>
                                                 <span class="text-sm">Edit</span>
                                             </div>
-                                        </a>
+                                        </a> -->
                                         <!-- View Option -->
                                         <a href="#" onclick="openViewModal({{ $appointment }})" class="block">
                                             <li class="px-4 py-2 flex items-center hover:bg-gray-100">

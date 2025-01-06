@@ -160,11 +160,11 @@
                                 @method('PUT')
 
                                 <table class="w-full text-left border-collapse">
-                                    <div class="flex justify-end mt-4 gap-2 mb-3"> <!-- Flex container for Add button -->
+                                    <!-- <div class="flex justify-end mt-4 gap-2 mb-3">
                                         <button type="button" id="addRow" class="bg-[#0074C8] text-white rounded-lg px-3 py-2">
                                             <i class="fa-solid fa-plus" style="color: #ffffff;"></i>
                                         </button>
-                                    </div>
+                                    </div> -->
                                     <thead>
                                         <div class="p-2">
                                             <span class="font-bold">Add Discount</span>
@@ -181,39 +181,44 @@
                                             <th class="p-2 border-t">Description</th>
                                             <th class="p-2 border-t">Qty</th>
                                             <th class="p-2 border-t">Amount</th>
-                                            <th class="p-2 border-t">Action</th> <!-- A dded Action column for Add/Remove buttons -->
+                                            <!-- <th class="p-2 border-t">Action</th> A dded Action column for Add/Remove buttons -->
                                         </tr>
                                     </thead>
                                     <tbody id="invoiceTableBody">
-                                        @php
-                                        $descriptions = json_decode($appointment->descriptions) ?? [];
-                                        $quantities = json_decode($appointment->qty) ?? [];
-                                        $amounts = json_decode($appointment->amount) ?? [];
-                                        @endphp
-
-                                        @foreach($descriptions as $index => $description)
                                         <tr>
                                             <td style="width: 33%;" class='pr-6 mb-2'>
                                                 <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    name="descriptions[]" value="{{ $description }}">
+                                                    name="descriptions[]" value="{{ $appointment->visit_type }}">
                                             </td>
                                             <td style="width: 15%;" class='mb-2'>
-                                                <input type="number" name="qty[]" value="{{ $quantities[$index] }}" min="1" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                <input type="number" name="qty[]" value="1" min="1" readonly class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-200 cursor-not-allowed">
                                             </td>
+
                                             <td style="width: 15%;" class='mb-2'>
                                                 <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    name="amount[]" value="{{ $amounts[$index] }}">
-                                            </td>
-                                            <td style="width: 10%;">
-                                                <button type="button" class="removeRow bg-red-500 text-white rounded-lg px-3 py-1">
-                                                    <i class="fa-solid fa-x" style="color: #ffffff;"></i>
-                                                </button>
+                                                    name="amount[]" value="{{ json_decode($appointment->amount)[0] ?? '0'}}">
                                             </td>
                                         </tr>
-                                        @endforeach
 
-                                        <!-- Additional rows will be added here -->
+                                        <!-- Add input for 'additional' if not empty -->
+                                        @if (!empty($appointment->additional))
+                                        <tr>
+                                            <td style="width: 33%;" class='pr-6 mb-2'>
+                                                <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    name="descriptions[]" value="{{ $appointment->additional }}">
+                                            </td>
+                                            <td style="width: 15%;" class='mb-2'>
+                                                <input type="number" name="qty[]" value="1" min="1" readonly class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-200 cursor-not-allowed">
+                                            </td>
+
+                                            <td style="width: 15%;" class='mb-2'>
+                                                <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    name="amount[]" value="300">
+                                            </td>
+                                        </tr>
+                                        @endif
                                     </tbody>
+
                                 </table>
 
                                 <div class="mt-3 w-full flex gap-2">
@@ -223,7 +228,7 @@
                             </form>
                         </div>
 
-                        <script>
+                        <!-- <script>
                             document.getElementById('addRow').addEventListener('click', function() {
                                 var tableBody = document.getElementById('invoiceTableBody');
                                 var newRow = document.createElement('tr');
@@ -259,5 +264,5 @@
                                     this.closest('tr').remove();
                                 });
                             });
-                        </script>
+                        </script> -->
                         @endsection

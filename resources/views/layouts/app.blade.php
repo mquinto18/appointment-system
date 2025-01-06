@@ -198,7 +198,7 @@
 
                     <!-- Profile Link with Dropdown -->
                     <div class="relative">
-                        <a href="javascript:void(0);" class="group nav-link" onclick="toggleDropdown('profile-dropdown');">
+                        <a href="javascript:void(0);" class="group nav-link {{ Request::routeIs('profile.settings', 'security.settings') ? 'bg-[#0074C8] text-white' : '' }}" onclick="toggleDropdown('profile-dropdown');">
                             <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8] {{ Request::is('admin/profile/*') ? 'bg-[#0074C8] text-white' : '' }}">
                                 <i class="fa-solid fa-calendar-days"></i>
                                 <span class="text-[15px] ml-4 font-bold">Account Settings</span>

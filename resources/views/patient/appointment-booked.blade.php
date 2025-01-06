@@ -84,9 +84,71 @@
                         }
                         @endphp
 
-                        <div class="{{ $bgColor }} text-white w-8 h-8 rounded-full flex items-center justify-center">
-                            {{ $status }}
+                        <div class="flex justify-center items-center gap-3">
+                            <div class="{{ $bgColor }} text-white w-8 h-8 rounded-full flex items-center justify-center">
+                                {{ $status }}
+                            </div>
+                            <div class="relative">
+                                <!-- Dropdown Toggle -->
+                                <i class="fa-solid fa-ellipsis-vertical cursor-pointer" id="dropdownMenuButton" onclick="toggleDropdown(this)"></i>
+
+                                <!-- Dropdown Menu -->
+                                <ul class="dropdown-menu absolute right-0 z-10 text-left bg-white shadow-lg rounded-lg w-40 hidden">
+                                    <!-- Edit Option -->
+                                    <li>
+                                        @if ($appointment->status === 'pending')
+                                            <a href="{{ route('appointments.userEdit', $appointment->id) }}" class="block px-4 py-2 hover:bg-gray-100">
+                                                <i class="fa-regular fa-pen-to-square mr-2 text-gray-600"></i>
+                                                Edit
+                                            </a>
+                                        @else
+                                            <span class="block px-4 py-2 text-gray-400 cursor-not-allowed opacity-50">
+                                                <i class="fa-regular fa-pen-to-square mr-2 text-gray-400"></i>
+                                                Edit
+                                            </span>
+                                        @endif
+                                    </li>
+                                    <!-- View Option -->
+                                    <li>
+                                        <a href="#" 
+                                        onclick="openViewModal(
+                                            '{{ $appointment->transaction_number }}', 
+                                            '{{ $appointment->first_name }} {{ $appointment->last_name }}', 
+                                            '{{ $appointment->doctor }}', 
+                                            '{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}', 
+                                            '{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}', 
+                                            '{{ $appointment->visit_type }}', 
+                                            '{{ $appointment->additional ?? 'N/A' }}', 
+                                            '{{ $appointment->date_of_birth }}', 
+                                            '{{ $appointment->gender }}', 
+                                            '{{ $appointment->contact_number }}', 
+                                            '{{ $appointment->email_address }}', 
+                                            '{{ $appointment->complete_address }}'
+                                        )" 
+                                        class="block px-4 py-2 bg-white hover:bg-gray-200">
+                                            <i class="fa-regular fa-eye mr-2 text-gray-600"></i>
+                                            View
+                                        </a>
+                                    </li>
+
+                                    <!-- Delete Option -->
+                                    <li>
+                                        <form action="#" method="POST" class="block px-4 py-2 hover:bg-gray-100" onsubmit="return false;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <i class="fa-regular fa-trash-can mr-2 text-gray-600"></i>
+                                            <button type="button" onclick="openDeleteModal('{{ $appointment->id }}', '{{ $appointment->first_name }} {{ $appointment->last_name }}')" class="text-left">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                            
                         </div>
+                        
                     </div>
 
                     <!-- Appointment Details -->
@@ -120,9 +182,9 @@
                     <div class="mt-6 flex">
                         @if(strtolower($appointment->status) === 'cancelled')
                         <!-- Show the Delete button if the appointment is cancelled -->
-                        <button type="button" onclick="toggleDeleteModal(true, {{ $appointment->id }})" class="w-full h-12 bg-[#F2F2F2] hover:bg-gray-300 text-black font-semibold transition duration-200">
+                        <!-- <button type="button" onclick="toggleDeleteModal(true, {{ $appointment->id }})" class="w-full h-12 bg-[#F2F2F2] hover:bg-gray-300 text-black font-semibold transition duration-200">
                             Delete
-                        </button>
+                        </button> -->
                         @elseif(strtolower($appointment->status) === 'rejected')
                         <!-- Show both Cancel and Reschedule buttons if the appointment is rejected -->
                         <button type="button" class="w-1/2 h-12 bg-[#F2F2F2] border  font-semibold flex items-center justify-center hover:bg-gray-300 text-black transition duration-200" onclick="toggleModal(true, {{ $appointment->id }})">
@@ -389,6 +451,66 @@
 
 
 
+<!-- The Modal -->
+<div id="viewModal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg shadow-lg w-11/12 md:w-3/4">
+        <div class="flex justify-between items-center border-b px-4 py-2">
+            <h2 class="text-lg font-semibold">Appointment Details</h2>
+            <button onclick="closeViewModal()" class="text-gray-500 hover:text-gray-800 text-[30px]">&times;</button>
+        </div>
+        <div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-gray-700 font-medium">Transaction Number:</label>
+                <input id="transactionNumber" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium">Patient Name:</label>
+                <input id="patientName" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium">Doctor:</label>
+                <input id="doctorName" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium">Appointment Date:</label>
+                <input id="appointmentDate" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium">Appointment Time:</label>
+                <input id="appointmentTime" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium">Visit Type:</label>
+                <input id="visitType" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
+            </div>
+            <div class="col-span-2 md:col-span-3">
+                <label class="block text-gray-700 font-medium">Additional Information:</label>
+                <textarea id="additionalInfo" class="w-full px-3 py-2 border rounded-md" readonly></textarea>
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium">Date of Birth:</label>
+                <input id="dob" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium">Gender:</label>
+                <input id="gender" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium">Contact Number:</label>
+                <input id="contactNumber" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium">Email Address:</label>
+                <input id="email" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
+            </div>
+            <div>
+                <label class="block text-gray-700 font-medium">Complete Address:</label>
+                <input id="complete_address" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
@@ -565,5 +687,88 @@ function disableRateButton() {
             toggleModal(false); // Hide the modal after confirmation
         }
     });
+
+
+
+    function toggleDropdown(button) {
+    // Get the dropdown menu element (next sibling)
+    const dropdownMenu = button.nextElementSibling;
+
+    // Toggle visibility of the dropdown menu
+    if (dropdownMenu.classList.contains('hidden')) {
+        dropdownMenu.classList.remove('hidden');
+    } else {
+        dropdownMenu.classList.add('hidden');
+    }
+}
+
+// Close dropdown if clicked outside
+document.addEventListener('click', function (event) {
+    const dropdownButtons = document.querySelectorAll('#dropdownMenuButton');
+    dropdownButtons.forEach((button) => {
+        const dropdownMenu = button.nextElementSibling;
+        if (dropdownMenu && !button.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.classList.add('hidden');
+        }
+    });
+});
+
+
+function openDeleteModal(appointmentId, fullName) {
+    // Update the modal text with the appointment details
+    const modalText = `Are you sure you want to delete ${fullName}'s appointment? Once deleted, it cannot be recovered.`;
+    document.querySelector('#deleteModal .modal-body p').textContent = modalText;
+
+    // Set the form action URL dynamically
+    const formAction = document.querySelector('#deleteAppointmentForm');
+    formAction.action = formAction.action.replace(':id', appointmentId);
+
+    // Show the modal
+    toggleDeleteModal(true);
+}
+
+function toggleDeleteModal(show) {
+    const modal = document.getElementById('deleteModal');
+    if (show) {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100', 'pointer-events-auto');
+    } else {
+        modal.classList.remove('opacity-100', 'pointer-events-auto');
+        modal.classList.add('opacity-0', 'pointer-events-none');
+    }
+}
+
+
+function openViewModal(transactionNumber, patientName, doctorName, appointmentDate, appointmentTime, visitType, additionalInfo, dob, gender, contactNumber, email, complete_address) {
+    // Populate the modal fields with the appointment details
+    document.getElementById('transactionNumber').value = transactionNumber;
+    document.getElementById('patientName').value = patientName;
+    document.getElementById('doctorName').value = doctorName;
+    document.getElementById('appointmentDate').value = appointmentDate;
+    document.getElementById('appointmentTime').value = appointmentTime;
+    document.getElementById('visitType').value = visitType;
+    document.getElementById('additionalInfo').value = additionalInfo;
+    document.getElementById('dob').value = dob;
+    document.getElementById('gender').value = gender;
+    document.getElementById('contactNumber').value = contactNumber;
+    document.getElementById('email').value = email;
+    document.getElementById('complete_address').value = complete_address;
+
+    // Show the modal
+    const modal = document.getElementById('viewModal');
+    modal.classList.remove('hidden');
+}
+
+function closeViewModal() {
+    const modal = document.getElementById('viewModal');
+    modal.classList.add('hidden');
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('viewModal');
+    if (event.target === modal) {
+        modal.classList.add('hidden');
+    }
+}
 </script>
 @endsection

@@ -51,7 +51,7 @@ class ReportsController extends Controller
         if (is_array($amount)) {
             foreach ($amount as $value) {
                 // Sum the amount values (adjust this if the structure is different)
-                $totalSales += $value;
+                $totalSales += intval($value);
             }
         }
     }

@@ -157,7 +157,7 @@
 
                     <!-- Profile Link with Dropdown -->
                     <div class="relative">
-                        <a href="javascript:void(0);" class="group nav-link" onclick="toggleDropdown('profile-dropdown');">
+                        <a href="javascript:void(0);" class="group nav-link {{ Request::routeIs('doctorProfile.settings', 'doctorSecurity.settings') ? 'bg-[#0074C8] text-white' : '' }}" onclick="toggleDropdown('profile-dropdown');">
                             <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8] {{ Request::is('admin/profile/*') ? 'bg-[#0074C8] text-white' : '' }}">
                                 <i class="fa-solid fa-calendar-days"></i>
                                 <span class="text-[15px] ml-4 font-bold">Account Settings</span>
@@ -166,10 +166,10 @@
                         </a>
                         <!-- Dropdown for Account Settings -->
                         <div id="profile-dropdown" class="hidden relative w-full text-left rounded-md mt-1 space-y-1 px-2 py-1">
-                            <a href="{{ route('cashierProfile.settings') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('cashierProfile.settings') ? 'bg-[#0074C8] text-white' : '' }}">
+                            <a href="{{ route('doctorProfile.settings') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('doctorProfile.settings') ? 'bg-[#0074C8] text-white' : '' }}">
                                 <li>Profile Settings</li>
                             </a>
-                            <a href="{{ route('cashierSecurity.settings') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('cashierSecurity.settings') ? 'bg-[#0074C8] text-white' : '' }}">
+                            <a href="{{ route('doctorSecurity.settings') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('doctorSecurity.settings') ? 'bg-[#0074C8] text-white' : '' }}">
                                 <li>Security Settings</li>
                             </a>
                         </div>

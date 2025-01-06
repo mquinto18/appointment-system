@@ -231,5 +231,14 @@ class CashierController extends Controller
         return $pdf->download('invoice_' . $appointment->id . '.pdf');
     }
 
-    
+    public function cashierprintReports()
+    {
+        $appointments = Appointment::all(); 
+
+   
+        $pdf = Pdf::loadView('appointment.report_pdf', compact('appointments'));
+
+       
+        return $pdf->download('transaction_history.pdf');
+    }
 }
