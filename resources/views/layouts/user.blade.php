@@ -30,13 +30,31 @@
                             </h1>
                         </div>
                     </div>
-                    <div class="flex-grow flex justify-center">
-                        <div class="ml-10 flex items-baseline space-x-4 font-medium">
-                            <a href="{{ url('/') }}" class="text-white px-3 py-2 rounded-md text-sm">Home</a>
-                            <a href="" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">About Us</a>
-                            <a href="#" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">Contact Us</a>
+
+                    <!-- Mobile Hamburger Button -->
+                    <div class="md:hidden flex items-center">
+                        <button id="hamburgerButton" class="text-white focus:outline-none">
+                            <i class="bi bi-list text-2xl"></i> <!-- Hamburger Icon -->
+                        </button>
+                    </div>
+
+                    <div id="navbar" class="hidden space-x-4">
+                        <a href="{{ url('/') }}" class="text-white px-3 py-2 rounded-md text-sm">Home</a>
+                        <a href="#" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">About Us</a>
+                        <a href="#" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">Contact Us</a>
+                    </div>
+
+                    <div class="hidden md:block">
+                        <div class="flex-grow flex justify-center ">
+                            <div class="ml-10 flex items-baseline space-x-4 font-medium">
+                                <a href="{{ url('/') }}" class="text-white px-3 py-2 rounded-md text-sm">Home</a>
+                                <a href="" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">About Us</a>
+                                <a href="#" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">Contact Us</a>
+                            </div>
                         </div>
                     </div>
+
+                   
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
                             @if (Route::has('login'))
@@ -173,6 +191,15 @@
 
     <x-notify::notify />
     @notifyJs
+    
+    <script>
+        document.getElementById("hamburgerButton").addEventListener("click", function() {
+            var navbar = document.getElementById("navbar");
+
+            // Toggle the 'hidden' class to show or hide the navbar
+            navbar.classList.toggle("hidden");
+        });
+    </script>
 </body>
 
 </html>

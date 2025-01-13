@@ -50,11 +50,11 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
             <div class="mt-1 flex space-x-4">
                 <div>
-                    <input type="radio" name="gender" value="male" id="male" class="mr-2">
+                    <input type="radio" name="gender" value="male" id="male" class="mr-2" required>
                     <label for="male">Male</label>
                 </div>
                 <div>
-                    <input type="radio" name="gender" value="female" id="female" class="mr-2">
+                    <input type="radio" name="gender" value="female" id="female" class="mr-2" required>
                     <label for="female">Female</label>
                 </div>
             </div>

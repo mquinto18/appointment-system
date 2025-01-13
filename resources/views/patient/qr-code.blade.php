@@ -1,25 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Appointment QR Code</title>
     <style>
-        /* Add basic styling for PDF */
-        body { font-family: sans-serif; }
-        .qr-code { text-align: center; margin: 20px 0; }
+        /* Add your styles for the PDF here */
     </style>
 </head>
 <body>
-<div class="qr-code">
-    <h2>QR Code</h2>
-    <img src="{{ $qrCode }}" alt="QR Code">
-</div>
+    <h1>Appointment Details</h1>
+    <p>Appointment Name: {{ $appointment->first_name }} {{ $appointment->last_name }}</p>
+    <p>Visit Type: {{ $appointment->visit_type }}</p>
+    <p>Schedule Date: {{ $appointment->appointment_date }}</p>
+    <p>Address: {{ $appointment->complete_address }}</p>
 
-<div class="appointment-details">
-    <p>Transaction Number: {{ $appointment->transaction_number }}</p>
-    <p>Name: {{ $appointment->first_name }} {{ $appointment->last_name }}</p>
-    <p>Date: {{ $appointment->appointment_date }}</p>
-    <!-- Add other appointment details as needed -->
-</div>
+    <h3>QR Code:</h3>
+    <img src="{{ $qrCodeDataUri }}" alt="QR Code" />
 </body>
 </html>

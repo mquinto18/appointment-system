@@ -194,7 +194,7 @@
                             @csrf
                             <button type="button" 
                                 class="w-full h-12 bg-[#F2F2F2] font-semibold hover:bg-gray-300 text-black transition duration-200"
-                                onclick="toggleRescheduleModal(true, {{ $appointment->id }})">
+                                onclick="toggleRescheduleModal(true, {{ $appointment->id }}, '{{ $appointment->appointment_date }}', '{{ $appointment->appointment_time }}')">
                                 Reschedule
                             </button>
                         </form>
@@ -236,7 +236,8 @@
 
                         @if(strtolower($appointment->status) === 'approved')
                         <!-- Form to trigger the modal -->
-                        <button type="button" class="w-full h-12 bg-[#F2F2F2] cursor-pointer border text-black font-semibold hover:bg-gray-300 transition duration-200" onclick="showQRCodeModal({{ $appointment->id }})">
+                        <button type="button" class="w-full h-12 bg-[#F2F2F2] cursor-pointer border text-black font-semibold hover:bg-gray-300 transition duration-200"
+                                onclick="showQRCodeModal({{ $appointment->id }}, '{{ $appointment->first_name }} {{ $appointment->last_name }}', '{{ $appointment->visit_type }}', '{{ $appointment->appointment_date }}', '{{ $appointment->complete_address }}')">
                             View QR
                         </button>
                         @endif
@@ -252,7 +253,7 @@
 </div>
 
 <!-- QR Code Modal -->
-@foreach ($appointments as $appointment)
+
 <div id="qrCodeModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
     <div class="modal-dialog bg-[#0074C8] rounded-lg w-[90%] sm:w-[450px] shadow-lg relative">
         <!-- Close button (using &times;) -->
@@ -266,17 +267,17 @@
 
                 <div class="bg-white font-semibold py-5 rounded-2xl">
                     <div class="pb-2">
-                        <span class="text-[20px]">{{ $appointment->first_name }} {{ $appointment->last_name }}</span><br>
+                        <span id="appointmentName" class="text-[20px]"></span><br>
                     </div>
                     <div class="font-normal text-[15px]">
-                        <span>{{ $appointment->visit_type }}</span><br>
-                        <span>Schedule Date: <span class="font-medium">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</span></span><br>
-                        <span>Address: <span class="font-medium">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</span></span><br>
+                        <span id="visitType"></span><br>
+                        <span>Schedule Date: <span id="appointmentDate" class="font-medium"></span></span><br>
+                        <span>Address: <span id="appointmentTime" class="font-medium"></span></span><br>
                     </div>
 
                     <div class="flex justify-between items-center">
                         <div class="h-16 w-16 ml-[-30px] bg-[#0074C8] rounded-full"></div>
-                        <div class="flex-grow border-t-4 border-dashed border-[#D9D9D9]"></div> <!-- This will ensure the dashed line spans available space -->
+                        <div class="flex-grow border-t-4 border-dashed border-[#D9D9D9]"></div>
                         <div class="h-16 w-16 mr-[-30px] bg-[#0074C8] rounded-full"></div>
                     </div>
 
@@ -286,22 +287,25 @@
                 </div>
             </div>
 
-            <!-- Update the "Close" button to "Download QR" -->
-            <form action="{{ route('appointments.downloadQRPdf', ':id') }}" method="GET">
+            <form id="qrCodeForm" action="{{ route('appointments.downloadQRPdf', ':id') }}" method="GET">
                 @csrf
-                <!-- <div class="flex justify-center border-t border-gray-200">
+                <input type="hidden" id="qrCodeData" name="qrCodeData" value="">
+
+                <div class="flex justify-center border-t border-gray-200">
                     <button type="submit" class="w-full py-4 bg-[#F2F2F2] font-semibold hover:bg-gray-300 rounded-br-md">
                         Download QR as PDF
                     </button>
-                </div> -->
+                </div>
             </form>
 
         </div>
     </div>
 </div>
-@endforeach
+
+
+
 <!-- Reschedule Modal -->
-@foreach ($appointments as $appointment)
+
 <div id="rescheduleModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
     <div class="modal-dialog bg-white rounded-lg w-[90%] sm:w-[650px] shadow-lg transition-transform duration-300">
         <div class="modal-content text-center">
@@ -316,13 +320,13 @@
                         <div class="w-[48%]">
                             <label for="appointment_date" class="block text-left text-sm font-semibold text-gray-500 mb-1">Date</label>
                             <input type="date" id="appointment_date" name="appointment_date" 
-                                value="{{ $appointment->appointment_date }}" 
+                                value="" 
                                 class="block w-full text-gray-600 font-medium bg-gray-100 rounded-md p-3 border border-gray-300 focus:outline-none" readonly>
                         </div>
                         <div class="w-[48%]">
                             <label for="appointment_time" class="block text-left text-sm font-semibold text-gray-500 mb-1">Time</label>
                             <input type="time" id="appointment_time" name="appointment_time" 
-                                value="{{ $appointment->appointment_time }}" 
+                                value="" 
                                 class="block w-full text-gray-600 font-medium bg-gray-100 rounded-md p-3 border border-gray-300 focus:outline-none" readonly>
                         </div>
                     </div>
@@ -344,7 +348,7 @@
         </div>
     </div>
 </div>
-@endforeach
+
 
 <!-- Delete Modal -->
 <div id="deleteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10">
@@ -518,23 +522,30 @@
 
 <script>
 
-function toggleRescheduleModal(show, appointmentId = null) {
-        const rescheduleModal = document.getElementById('rescheduleModal');
-        const formAction = `{{ route('appointments.reschedule', ':id') }}`.replace(':id', appointmentId);
-        const rescheduleForm = document.getElementById('rescheduleAppointmentForm');
+function toggleRescheduleModal(show, appointmentId = null, appointmentDate = null, appointmentTime = null) {
+    const rescheduleModal = document.getElementById('rescheduleModal');
+    const formAction = `{{ route('appointments.reschedule', ':id') }}`.replace(':id', appointmentId);
+    const rescheduleForm = document.getElementById('rescheduleAppointmentForm');
 
-        if (appointmentId) {
-            rescheduleForm.action = formAction;
-        }
-
-        if (show) {
-            rescheduleModal.classList.remove('opacity-0', 'pointer-events-none');
-            rescheduleModal.classList.add('opacity-100');
-        } else {
-            rescheduleModal.classList.add('opacity-0', 'pointer-events-none');
-            rescheduleModal.classList.remove('opacity-100');
-        }
+    // Set the form action
+    if (appointmentId) {
+        rescheduleForm.action = formAction;
     }
+
+    // Set the date and time in the modal
+    document.getElementById('appointment_date').value = appointmentDate || '';
+    document.getElementById('appointment_time').value = appointmentTime || '';
+
+    // Show or hide the modal
+    if (show) {
+        rescheduleModal.classList.remove('opacity-0', 'pointer-events-none');
+        rescheduleModal.classList.add('opacity-100');
+    } else {
+        rescheduleModal.classList.add('opacity-0', 'pointer-events-none');
+        rescheduleModal.classList.remove('opacity-100');
+    }
+}
+
 
 function disableRateButton() {
         document.getElementById('submitRateButton').disabled = true;
@@ -582,24 +593,38 @@ function disableRateButton() {
     }
 
     // Show the modal and load the QR code dynamically via AJAX
-    function showQRCodeModal(appointmentId) {
-        // Show the modal
-        toggleQRCodeModal(true);
+    function showQRCodeModal(appointmentId, name, visitType, appointmentDate, appointmentAddress) {
+    // Show the modal
+    toggleQRCodeModal(true);
 
-        // Send an AJAX request to get the QR code image for this appointment
-        fetch(`/dashboard/appointment/appointment-qrcode/${appointmentId}`)
-            .then(response => response.blob()) // Expecting the QR image as a blob
-            .then(imageBlob => {
-                // Create an object URL for the image blob
-                const imageUrl = URL.createObjectURL(imageBlob);
-                // Insert the QR code image into the modal
-                const qrCodeContainer = document.getElementById('qrCodeImage');
-                qrCodeContainer.innerHTML = `<img src="${imageUrl}" alt="QR Code" class="mx-auto w-[200px]" />`;
-            })
-            .catch(error => {
-                console.error("Error fetching QR code:", error);
-            });
-    }
+    // Set dynamic content in modal
+    document.getElementById('appointmentName').textContent = name;
+    document.getElementById('visitType').textContent = visitType;
+    document.getElementById('appointmentDate').textContent = appointmentDate;
+    document.getElementById('appointmentTime').textContent = appointmentAddress;
+
+    // Dynamically update form action with appointmentId
+    var form = document.getElementById('qrCodeForm');
+    form.action = "{{ route('appointments.downloadQRPdf', ':id') }}".replace(':id', appointmentId);
+
+    // Fetch and display the QR code
+    fetch(`/dashboard/appointment/appointment-qrcode/${appointmentId}`)
+        .then(response => response.blob())
+        .then(imageBlob => {
+            const imageUrl = URL.createObjectURL(imageBlob);
+            document.getElementById('qrCodeImage').innerHTML = `<img src="${imageUrl}" alt="QR Code" class="mx-auto w-[200px]" />`;
+
+            // Set QR code data to hidden input for PDF download
+            document.getElementById('qrCodeData').value = imageUrl; // Or base64 string if needed
+        })
+        .catch(error => {
+            console.error("Error fetching QR code:", error);
+        });
+}
+
+
+
+
 
 
 

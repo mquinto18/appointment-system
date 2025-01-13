@@ -106,7 +106,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::post('/dashboard/appointment/appointment-reschedule/{id}', [HomeController::class, 'appointmentReschedule'])->name('appointments.reschedule');
     Route::delete('/dashboard/appointment/appointment-deleted/{id}', [HomeController::class, 'appointmentDelete'])->name('appointments.delete');
     Route::get('/dashboard/appointment/appointment-qrcode/{id}', [HomeController::class, 'appointmentQrcode'])->name('appointments.downloadQR');
-    Route::get('/dashboard/appointment/download-qrcode/{id}', [HomeController::class, 'downloadQRPdf'])->name('appointments.downloadQRPdf');
+    Route::get('/dashboard/appointment/download-qrcode/{appointment}', [HomeController::class, 'downloadQRPdf'])->name('appointments.downloadQRPdf');
     Route::get('/dashboard/appointment/medical-downlaod/{id}', [MedicalController::class, 'medicalDownload'])->name('medicalcert.download');
     Route::post('/dashboard/appointment/rating/{id}', [HomeController::class, 'appointmentRate'])->name('appointments.rate');
 

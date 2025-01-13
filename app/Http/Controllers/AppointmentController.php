@@ -5,7 +5,11 @@ use Twilio\Rest\Client;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;    
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AppointmentApprovedMail; // Import your mailable class
+use App\Mail\AppointmentCompletedMail; // Import your mailable class
+use App\Mail\AppointmentRejectedMail; // Import your mailable class
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str; // Import the Str class
@@ -83,19 +87,37 @@ class AppointmentController extends Controller
 
     // Approve appointment
     public function approve($id)
-    {
-        $appointment = Appointment::findOrFail($id);
-        $appointment->status = 'approved';
-        $appointment->save();
+{
+    $appointment = Appointment::findOrFail($id);
+    $appointment->status = 'approved';  
+    $appointment->save();
 
-        notify()->success('Appointment approved!');
-        return redirect()->back()->with('success', 'Appointment approved successfully.');
-    }
+    // Send email to the user
+    $details = [
+        'name' => $appointment->first_name . ' ' . $appointment->last_name,
+        'email_address' => $appointment->email_address,
+        'appointment_date' => $appointment->appointment_date,
+        'status' => 'approved'
+    ];
+    Mail::to($appointment->email_address)->send(new AppointmentApprovedMail($details));
+
+    notify()->success('Appointment approved!');
+    return redirect()->back()->with('success', 'Appointment approved successfully.');
+}
     //Completed appointment
     public function completed($id){
         $appointment = Appointment::findOrFail($id);
         $appointment->status = 'completed';
         $appointment->save();
+
+        $details = [
+            'name' => $appointment->first_name . ' ' . $appointment->last_name,
+            'email_address' => $appointment->email_address,
+            'appointment_date' => $appointment->appointment_date,
+            'status' => 'completed'
+        ];
+
+        Mail::to($appointment->email_address)->send(new AppointmentCompletedMail($details));
 
         notify()->success('Appointment completed!');
         return redirect()->back()->with('success', 'Appointment completed successfully.');
@@ -105,6 +127,15 @@ class AppointmentController extends Controller
         $appointment = Appointment::findOrFail($id);
         $appointment->status = 'rejected';
         $appointment->save();
+
+        $details = [
+            'name' => $appointment->first_name . ' ' . $appointment->last_name,
+            'email_address' => $appointment->email_address,
+            'appointment_date' => $appointment->appointment_date,
+            'status' => 'rejected'
+        ];
+
+        Mail::to($appointment->email_address)->send(new AppointmentRejectedMail($details));
 
         notify()->success('Appointment rejected!');
         return redirect()->back()->with('success', 'Appointment rejected successfully.');

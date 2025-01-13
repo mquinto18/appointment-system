@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Your Verification PIN</title>
+    <title>Appointment Approval Notification</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,7 +20,7 @@
             overflow: hidden;
         }
         .email-header {
-            background-color: #4caf50;
+            background-color: #0074C8;
             color: #fff;
             text-align: center;
             padding: 15px 20px;
@@ -37,17 +37,6 @@
             font-size: 16px;
             margin-bottom: 20px;
         }
-        .email-pin {
-            display: inline-block;
-            background-color: #e0f7fa;
-            color: #00796b;
-            font-size: 28px;
-            font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: 1px solid #b2ebf2;
-            margin-top: 10px;
-        }
         .email-footer {
             background-color: #f9f9f9;
             text-align: center;
@@ -60,15 +49,16 @@
 <body>
     <div class="email-container">
         <div class="email-header">
-            <h1>Your Verification PIN</h1>
+            <h1>Appointment Approved</h1>
         </div>
         <div class="email-content">
-            <p>Please use the following PIN to verify your account:</p>
-            <div class="email-pin">{{ $pin }}</div>
-            <p>Thank you!</p>
+            <p>Dear {{ $details['name'] }},</p>
+            <p>Your appointment on {{ \Carbon\Carbon::parse($details['appointment_date'])->format('F j, Y') }}</p>
+            <p>Status: <strong>{{ ucfirst($details['status']) }}</strong></p>
+            <p>Thank you for choosing our service!</p>
         </div>
         <div class="email-footer">
-            <p>If you did not request this verification, please ignore this email.</p>
+            &copy; {{ date('Y') }} St. Benedict Medical Clinic & Pharmacy. All rights reserved.
         </div>
     </div>
 </body>
