@@ -31,9 +31,17 @@
                                 <input type="text" id="transaction_number" name="transaction_number" class="w-full border border-gray-300 rounded-md px-3 py-2" value="{{ $appointment->transaction_number }}" readonly disabled>
                             </div>
                             <div>
-                                <label for="time" class="font-medium">Time</label>
-                                <input type="text" id="time" name="appointment_time" class="w-full border border-gray-300 rounded-md px-3 py-2" value="{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}" readonly disabled>
+                                <label for="appointment_time" class="font-medium">Time</label>
+                                <select id="appointment_time" name="appointment_time" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    <option value="09:00 AM" {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') == '09:00 AM' ? 'selected' : '' }}>9:00 AM</option>
+                                    <option value="09:30 AM" {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') == '09:30 AM' ? 'selected' : '' }}>9:30 AM</option>
+                                    <option value="10:00 AM" {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') == '10:00 AM' ? 'selected' : '' }}>10:00 AM</option>
+                                    <option value="10:30 AM" {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') == '10:30 AM' ? 'selected' : '' }}>10:30 AM</option>
+                                    <option value="11:00 AM" {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') == '11:00 AM' ? 'selected' : '' }}>11:00 AM</option>
+                                    <option value="11:30 AM" {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') == '11:30 AM' ? 'selected' : '' }}>11:30 AM</option>
+                                </select>
                             </div>
+
                             <div>
                                 <label for="first_name" class="font-medium">First Name</label>
                                 <input type="text" id="first_name" name="first_name" class="w-full border border-gray-300 rounded-md px-3 py-2" value="{{ $appointment->first_name }}">

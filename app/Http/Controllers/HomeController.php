@@ -332,30 +332,25 @@ class HomeController extends Controller
         return response($qrCodeImage->getString())
             ->header('Content-Type', 'image/png');
     }
-
-    public function downloadQRPdf($id)
+    public function downloadQRPdf($appointmentId)
     {
-        // Find the appointment by ID, ensuring a unique record each time
-        $appointment = Appointment::findOrFail($id);
-
-        // Generate QR code specific to this appointment's transaction number
-        $qrCode = new QrCode($appointment->transaction_number);
+        $appointment = Appointment::findOrFail($appointmentId);
+    
+        // Create QR code using transaction number
+        $qrCode = new QrCode($appointment->transaction_number);// Use create() method for the new syntax
         $writer = new PngWriter();
+    
+        // Generate QR code image
         $qrCodeImage = $writer->write($qrCode);
-
-        // Encode QR code as base64 for embedding in PDF, avoiding any reuse or caching
-        $qrCodeBase64 = 'data:image/png;base64,' . base64_encode($qrCodeImage->getString());
-
-        // Load the PDF view, passing in the specific QR code and appointment details
-        $pdf = Pdf::loadView('patient.qr-code', [
-            'appointment' => $appointment,
-            'qrCode' => $qrCodeBase64,
-        ]);
-
-        // Download the PDF for this specific appointment, ensuring no caching issues
-        return $pdf->download('appointment_qrcode_' . $appointment->id . '.pdf');
+    
+        // Convert QR code binary to base64 string for embedding in PDF
+        $qrCodeDataUri = 'data:image/png;base64,' . base64_encode($qrCodeImage->getString());
+    
+        // Generate PDF with QR code
+        $pdf = Pdf::loadView('patient.qr-code', compact('appointment', 'qrCodeDataUri'));
+        return $pdf->download('appointment_qr_code.pdf');
     }
-
+    
     public function appointmentRate(Request $request)
     {
         // Validate the incoming request
@@ -382,16 +377,20 @@ class HomeController extends Controller
     }
 
     public function appointmentuserUpdate(Request $request, $id)
-{
-    // Validate the input data
-    $request->validate([
+    {
+        // Validate the input data
+    $validatedData = $request->validate([
         'first_name' => 'required|string|max:255',
         'last_name' => 'required|string|max:255',
         'visit_type' => 'required|string',
         'mobile_number' => 'required|string|max:15', // Matching form input
         'email_address' => 'required|email|max:255',
         'selected_date' => 'required|date', // Ensure the selected_date is provided and valid
+        'appointment_time' => 'required|string|in:09:00 AM,09:30 AM,10:00 AM,10:30 AM,11:00 AM,11:30 AM', // Validate appointment time
     ]);
+
+    // Convert the appointment time to the correct format for storage
+    $validatedData['appointment_time'] = Carbon::createFromFormat('h:i A', $validatedData['appointment_time'])->format('H:i:s');
 
     // Find the appointment by ID
     $appointment = Appointment::findOrFail($id);
@@ -401,12 +400,13 @@ class HomeController extends Controller
 
     // Update the appointment with the validated data
     $appointment->update([
-        'appointment_date' => $request->selected_date, // Updating selected date
-        'first_name' => $request->first_name,
-        'last_name' => $request->last_name,
-        'visit_type' => $request->visit_type,
-        'contact_number' => $request->mobile_number, // Correct field name
-        'email_address' => $request->email_address,
+        'appointment_date' => $validatedData['selected_date'],
+        'first_name' => $validatedData['first_name'],
+        'last_name' => $validatedData['last_name'],
+        'visit_type' => $validatedData['visit_type'],
+        'contact_number' => $validatedData['mobile_number'],
+        'email_address' => $validatedData['email_address'],
+        'appointment_time' => $validatedData['appointment_time'],
     ]);
 
     // Adjust the booked_slots if the date has changed
