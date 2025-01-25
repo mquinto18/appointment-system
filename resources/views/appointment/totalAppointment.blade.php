@@ -134,38 +134,53 @@
                             </div>
                         </td>
 
-                        <td class="cursor-pointer relative">
-                            <!-- Ellipsis Icon -->
-                            <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                        <td class="cursor-pointer border-b pr-5 text-center">
+                            
+                            
 
-                            <!-- Dropdown Menu -->
-                            <ul class="dropdown-menu font-medium absolute right-0 z-10 hidden text-left bg-white shadow-lg rounded-lg w-40" aria-labelledby="dropdownMenuButton">
-                                <!-- Edit Option -->
-                                <a href="{{ route('appointments.edit', $appointment->id) }}" class="block">
+                            <div class="flex justify-center items-center gap-3">
+                                <a href="{{ route('appointments.followUp', $appointment->id) }}" class="">
+                                    <button 
+                                        class="bg-white shadow-md px-3 py-2 rounded focus:outline-none {{ $appointment->status !== 'completed' ? 'cursor-not-allowed opacity-50' : '' }}" 
+                                        @if($appointment->status !== 'completed') disabled @endif>
+                                        <i class="fa-solid fa-notes-medical"></i>
+                                    </button>
+                                    <span class="absolute bottom-full w-[70px] mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
+                                        Follow-up check up
+                                    </span>
+                                </a>
+                                <!-- Ellipsis Icon -->
+                               <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"></i>
+
+                                <!-- Dropdown Menu -->
+                                <ul class="dropdown-menu font-medium absolute right-0 z-10 hidden text-left bg-white shadow-lg rounded-lg w-40" aria-labelledby="dropdownMenuButton">
+                                    <!-- Edit Option -->
+                                    <a href="{{ route('appointments.edit', $appointment->id) }}" class="block">
+                                        <div class="px-4 py-2 flex items-center hover:bg-gray-100">
+                                            <i class="fa-regular fa-pen-to-square mr-2 text-gray-600"></i>
+                                            <span class="text-sm">Edit</span>
+                                        </div>
+                                    </a>
+                                    <!-- View Option -->
+                                    <a href="#" onclick="openViewModal({{ $appointment }})" class="block">
+                                        <li class="px-4 py-2 flex items-center hover:bg-gray-100">
+                                            <i class="fa-regular fa-eye mr-2 text-gray-600"></i>
+                                            <span class="text-sm">View</span>
+                                        </li>
+                                    </a>
+                                    <!-- Delete Option -->
                                     <div class="px-4 py-2 flex items-center hover:bg-gray-100">
-                                        <i class="fa-regular fa-pen-to-square mr-2 text-gray-600"></i>
-                                        <span class="text-sm">Edit</span>
+                                        <form action="#" method="POST" class="flex items-center w-full" onsubmit="return false;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <i class="fa-regular fa-trash-can mr-2 text-gray-600"></i>
+                                            <button type="button" onclick="openDeleteModal('{{ $appointment->first_name }} {{ $appointment->last_name }}', '{{ route('appointments.destroy', $appointment->id) }}')" class="text-sm">
+                                                Delete
+                                            </button>
+                                        </form>
                                     </div>
-                                </a>
-                                <!-- View Option -->
-                                <a href="#" onclick="openViewModal({{ $appointment }})" class="block">
-                                    <li class="px-4 py-2 flex items-center hover:bg-gray-100">
-                                        <i class="fa-regular fa-eye mr-2 text-gray-600"></i>
-                                        <span class="text-sm">View</span>
-                                    </li>
-                                </a>
-                                <!-- Delete Option -->
-                                <div class="px-4 py-2 flex items-center hover:bg-gray-100">
-                                    <form action="#" method="POST" class="flex items-center w-full" onsubmit="return false;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <i class="fa-regular fa-trash-can mr-2 text-gray-600"></i>
-                                        <button type="button" onclick="openDeleteModal('{{ $appointment->first_name }} {{ $appointment->last_name }}', '{{ route('appointments.destroy', $appointment->id) }}')" class="text-sm">
-                                            Delete
-                                        </button>
-                                    </form>
-                                </div>
-                            </ul>
+                                </ul>
+                            </div>
                         </td>
 
                     </tr>
@@ -389,11 +404,13 @@
                         <div class="col-md-4 mb-3">
                             <label for="doctor" class="form-label">Doctor</label>
                             <select class="form-select" id="doctor" name="doctor" required>
-                                <option value="Dr. Jane Smith">Dr. Jane Smith</option>
-                                <option value="Dr. John Doe">Dr. John Doe</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
                             </select>
                         </div>
 
+    
                         <!-- Gender -->
                         <div class="col-md-4 mb-3">
                             <label for="gender" class="form-label">Gender</label>

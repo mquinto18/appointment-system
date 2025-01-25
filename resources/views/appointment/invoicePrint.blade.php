@@ -177,6 +177,14 @@
                                                 <option value="10" {{ isset($appointment) && $appointment->discount == 10 ? 'selected' : '' }}>10%</option>
                                             </select>
                                         </div>
+                                        <div class="font-medium flex text-[14px] justify-center items-center gap-1 border-[1px] my-2 px-2 rounded-full py-2 text-center w-[200px] 
+                                            {{ empty($appointment->descriptions) ? 'bg-red-100 border-red-700 text-red-700' : 'bg-green-100 border-green-700 text-green-700' }}">
+                                            <i class="fa-solid fa-circle fa-2xs"></i>
+                                            {{ empty($appointment->descriptions) ? 'NOT PAID' : 'PAID' }}
+                                        </div>
+
+
+
                                         <tr>
                                             <th class="p-2 border-t">Description</th>
                                             <th class="p-2 border-t">Qty</th>
@@ -186,40 +194,47 @@
                                     </thead>
                                     <tbody id="invoiceTableBody">
                                         @php
-                                        $descriptions = json_decode($appointment->descriptions) ?? [];
-                                        $quantities = json_decode($appointment->qty) ?? [];
-                                        $amounts = json_decode($appointment->amount) ?? [];
+                                            $descriptions = json_decode($appointment->descriptions) ?? [];
+                                            $quantities = json_decode($appointment->qty) ?? [];
+                                            $amounts = json_decode($appointment->amount) ?? [];
                                         @endphp
 
-                                        @foreach($descriptions as $index => $description)
-                                        <tr>
-                                            <td style="width: 33%;" class='pr-6 mb-2'>
-                                                <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    name="descriptions[]" value="{{ $description }}">
-                                            </td>
-                                            <td style="width: 15%;" class='mb-2'>
-                                                <input type="number" name="qty[]" value="{{ $quantities[$index] }}" min="1" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                            </td>
-                                            <td style="width: 15%;" class='mb-2'>
-                                                <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    name="amount[]" value="{{ $amounts[$index] }}">
-                                            </td>
-                                            <td style="width: 10%;">
-                                                <button type="button" class="removeRow bg-red-500 text-white rounded-lg px-3 py-1">
-                                                    <i class="fa-solid fa-x" style="color: #ffffff;"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-
-                                        <!-- Additional rows will be added here -->
+                                        @if(empty($descriptions))
+                                            <tr>
+                                                <td colspan="4" class="text-center border p-7">
+                                                    Transaction still on process...
+                                                </td>
+                                            </tr>
+                                        @else
+                                            @foreach($descriptions as $index => $description)
+                                            <tr>
+                                                <td style="width: 33%;" class='pr-6 mb-2'>
+                                                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        name="descriptions[]" value="{{ $description }}">
+                                                </td>
+                                                <td style="width: 15%;" class='mb-2'>
+                                                    <input type="number" name="qty[]" value="{{ $quantities[$index] }}" min="1" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                </td>
+                                                <td style="width: 15%;" class='mb-2'>
+                                                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        name="amount[]" value="{{ $amounts[$index] }}">
+                                                </td>
+                                                <td style="width: 10%;">
+                                                    <button type="button" class="removeRow bg-red-500 text-white rounded-lg px-3 py-1">
+                                                        <i class="fa-solid fa-x" style="color: #ffffff;"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        @endif
                                     </tbody>
+
                                 </table>
 
-                                <div class="mt-3 w-full flex gap-2">
+                                <!-- <div class="mt-3 w-full flex gap-2">
                                     <button type="submit" class="block w-full rounded-md bg-[#0074C8] text-white px-3 py-2">Save</button>
                                     <a href="{{ route('invoice.print', $appointment->id) }}" class="block w-full rounded-md bg-[#0074C8] text-white text-center px-3 py-2">Print</a>
-                                </div>
+                                </div> -->
                             </form>
                         </div>
 

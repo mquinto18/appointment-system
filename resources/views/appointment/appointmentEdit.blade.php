@@ -52,10 +52,7 @@
 
                 <div class="mb-4">
                     <label for="visitType" class="form-label font-medium text-gray-700 block mb-2">Visit Type</label>
-                    <select class="form-select block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="visitType" name="visit_type" required>
-                        <option value="Consultation" {{ old('visit_type', $appointment->visit_type) == 'Consultation' ? 'selected' : '' }}>Consultation</option>
-                        <option value="Follow-up" {{ old('visit_type', $appointment->visit_type) == 'Follow-up' ? 'selected' : '' }}>Follow-up</option>
-                    </select>
+                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="firstName" name="visit_type" value="{{ old('visit_type', $appointment->visit_type) }}" required>
                 </div>
 
                 <div class="mb-4">

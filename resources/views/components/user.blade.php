@@ -50,7 +50,7 @@
                             <th class="py-3 px-4 border-b">Gender</th>
                             <th class="py-3 px-4 border-b">Role Type</th>
                             <th class="py-3 px-4 border-b">Date added</th>
-                            <th class="py-3 px-4 border-b">Status</th>
+                            <!-- <th class="py-3 px-4 border-b">Status</th> -->
                             <th class="py-3 px-4 border-b">Actions</th>
                         </tr>
                     </thead>
@@ -71,7 +71,7 @@
                                 @endif
                             </td>
                             <td class="py-3 px-4 border-b">{{ $user->created_at->format('F d, Y') }}</td>
-                            <td class="py-3 px-4 border-b">
+                            <!-- <td class="py-3 px-4 border-b">
                                 <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center
                                     @if(strtolower($user->status) == 'active')
                                         bg-green-100 border-green-700
@@ -88,7 +88,7 @@
                                     
                                     {{ strtoupper($user->status) }}
                                 </div>
-                            </td>
+                            </td> -->
                             <td class="py-3 px-4 border-b flex gap-2">
                                 <!-- View Action -->
                                 <div class='relative group cursor-pointer'>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
 use App\Models\Appointment;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -17,6 +18,10 @@ use Illuminate\Support\Str; // Import the Str class
 class AppointmentController extends Controller
 {
     public function appointment(Request $request) {
+
+        $users = User::where('type', 2)
+        ->where('status', 'active')
+        ->get(); // Retrieves all users with type 1
         // Get search query
         $search = $request->input('search');
     
@@ -34,7 +39,7 @@ class AppointmentController extends Controller
         $totalAppointments = Appointment::count(); // Count total number of appointments
     
         // Pass the appointments data and total count to the view
-        return view('appointment.totalAppointment', compact('appointments', 'totalAppointments', 'search'));
+        return view('appointment.totalAppointment', compact('appointments', 'totalAppointments', 'search', 'users'));
     }
 
     public function appointmentSave(Request $request)
@@ -97,6 +102,7 @@ class AppointmentController extends Controller
         'name' => $appointment->first_name . ' ' . $appointment->last_name,
         'email_address' => $appointment->email_address,
         'appointment_date' => $appointment->appointment_date,
+        'appointment_time' => $appointment->appointment_time,
         'status' => 'approved'
     ];
     Mail::to($appointment->email_address)->send(new AppointmentApprovedMail($details));
@@ -148,6 +154,64 @@ class AppointmentController extends Controller
         // Pass the admin details to the view
         return view('appointment.appointmentEdit', compact('appointment'));
     }
+
+    public function appointmentFollowUp($id){
+        $appointment = Appointment::findOrFail($id);
+
+        return view('appointment.followUp', compact('appointment'));
+    }
+
+    public function appointmentFollowUpSave(Request $request, $id)
+{
+    // Generate a unique transaction number
+    $transactionNumber = 'TRX-' . strtoupper(Str::random(10));
+
+    // Validate request data
+    $request->validate([
+        'first_name' => 'required|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'date_of_birth' => 'required|date',
+        'appointment_date' => 'required|date',
+        'appointment_time' => 'required',
+        'visit_type' => 'required|string|max:255',
+        'doctor' => 'required|string|max:255',
+        'gender' => 'required|string',
+        'marital_status' => 'required|string',
+        'contact_number' => 'required|string|max:20',
+        'email_address' => 'required|email|max:255',
+        'complete_address' => 'required|string|max:255',
+        'notes' => 'nullable|string',
+        'diagnosis' => 'nullable|string',
+    ]);
+
+    // Find the existing appointment by ID
+    $appointment = Appointment::findOrFail($id);
+
+    // Update appointment details and set status to approved
+    $appointment->update([
+        'first_name' => $request->input('first_name'),
+        'last_name' => $request->input('last_name'),
+        'date_of_birth' => $request->input('date_of_birth'),
+        'appointment_date' => $request->input('appointment_date'),
+        'appointment_time' => $request->input('appointment_time'),
+        'visit_type' => $request->input('visit_type'),
+        'doctor' => $request->input('doctor'),
+        'gender' => $request->input('gender'),
+        'marital_status' => $request->input('marital_status'),
+        'contact_number' => $request->input('contact_number'),
+        'email_address' => $request->input('email_address'),
+        'complete_address' => $request->input('complete_address'),
+        'notes' => $request->input('notes'),
+        'diagnosis' => $request->input('diagnosis'),
+        'transaction_number' => $transactionNumber, // Save the generated transaction number
+        'status' => 'approved',  // Set the status to approved
+    ]);
+
+    notify()->success('Appointment follow-up updated successfully!');
+    // Redirect with success message
+    return redirect()->route('appointment')
+                     ->with('success', 'Appointment follow-up updated successfully');
+}
 
     public function appointmentUpdate(Request $request, $id)
     {

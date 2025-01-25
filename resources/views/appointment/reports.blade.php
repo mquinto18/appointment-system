@@ -144,13 +144,31 @@
                         </div>
                     </div>
                     
-                    <a href="{{ route('report.print', '$appointment->id') }}" 
-                    class="bg-white py-3 px-3 border border-[#0074CB] rounded-md relative group downloadButton">
-                        <i class="fa-solid fa-download text-[20px] text-blue-600"></i>
-                        <span class="absolute bottom-full mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
-                            Download
-                        </span>
-                    </a>
+                    <div class="relative inline-block text-left">
+                        <button 
+                            type="button" 
+                            id="dropdownButton"
+                            class="bg-white py-3 px-3 border border-[#0074CB] rounded-md relative flex items-center group">
+                            <i class="fa-solid fa-download text-[20px] text-blue-600 mr-2"></i> 
+                            Download Report
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div id="dropdownMenu" class="absolute right-0 mt-2 w-48 bg-white border border-[#0074CB] rounded-md shadow-lg hidden">
+                            <ul class="py-1">
+                                <li>
+                                    <a href="{{ route('report.print', ['interval' => 'weekly']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Weekly Report</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('report.print', ['interval' => 'monthly']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Monthly Report</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('report.print', ['interval' => 'yearly']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Yearly Report</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
             </form>
 
@@ -296,6 +314,23 @@
                 loadingOverlay.classList.add('hidden'); // Hide overlay after download
             }, 2000); // Adjust delay time as needed
         });
+    });
+    
+
+     // Get the button and dropdown menu elements
+     const button = document.getElementById('dropdownButton');
+    const menu = document.getElementById('dropdownMenu');
+
+    // Toggle dropdown on button click
+    button.addEventListener('click', function() {
+        menu.classList.toggle('hidden');
+    });
+
+    // Close the dropdown if clicked outside
+    window.addEventListener('click', function(event) {
+        if (!button.contains(event.target) && !menu.contains(event.target)) {
+            menu.classList.add('hidden');
+        }
     });
 </script>
 <style>

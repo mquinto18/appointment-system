@@ -20,6 +20,7 @@ class AppointmentApprovedMail extends Mailable
     public function build()
     {
         return $this->subject('Your Appointment is Approved')
-                    ->view('auth.appointment_approved'); // Avoid setting 'to()' here
+                    ->view('auth.appointment_approved')
+                    ->with(['details' => $this->details]);
     }
 }

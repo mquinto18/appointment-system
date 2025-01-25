@@ -30,10 +30,8 @@ class InvoiceController extends Controller
         return view('appointment.invoice', compact('appointments', 'totalAppointments', 'search'));
     }
 
-    public function invoicePrint($id){
-        $appointment = appointment::findOrFail($id);
-    
-        // Pass the admin details to the view
+    public function invoicePrint($id) {
+        $appointment = Appointment::findOrFail($id);
         return view('appointment.invoicePrint', compact('appointment'));
     }
 

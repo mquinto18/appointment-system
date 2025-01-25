@@ -78,7 +78,7 @@ Route::middleware(['auth', 'cashier'])->group(function () {
     Route::put('cashier/invoice/save/{id}', [CashierController::class, 'cashierinvoiceSave'])->name('cashierinvoice.items');
     Route::get('cashier/invoice/generate/{id}', [CashierController::class, 'cashierprintInvoice'])->name('invoiceCashier.print');
 
-    Route::get('cashier/reports/generate/{id}', [CashierController::class, 'cashierprintReports'])->name('report.print');
+    Route::get('cashier/reports/generate/{interval?}', [CashierController::class, 'cashierprintReports'])->name('report.print');
 
     Route::get('cashier/reports', [ReportsController::class, 'reports'])->name('cashierReports');
     Route::get('cashier/profile', [CashierProfileController::class, 'profileSettings'])->name('cashierProfile.settings');
@@ -171,6 +171,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/appointments/canceled', [AppointmentController::class, 'canceledAppoint'])->name('appointments.canceled');
 
     Route::get('admin/appointments/edit/{id}', [AppointmentController::class, 'appointmentEdit'])->name('appointments.edit');
+    Route::get('admin/appointments/follow-up/{id}', [AppointmentController::class, 'appointmentFollowUp'])->name('appointments.followUp');
+    Route::post('admin/appointments/follow-up/save/{id}', [AppointmentController::class, 'appointmentFollowUpSave'])->name('appointments.followUpPost');
     Route::put('admin/appointments/update/{id}', [AppointmentController::class, 'appointmentUpdate'])->name('appointments.update');
     Route::delete('admin/appointments/delete/{id}', [AppointmentController::class, 'appointmentDelete'])->name('appointments.destroy');
 

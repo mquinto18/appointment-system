@@ -19,12 +19,28 @@ class HomeController extends Controller
 {
     public function index()
     {   
-        return view('home');
+
+        $images = [
+            asset('images/pic1.jpg'),
+            asset('images/pic2.jpg'),
+            asset('images/pic3.jpg'),
+            asset('images/pic3.jpg'),
+        ];
+
+        return view('home', compact('images'));
     }
 
 
     public function adminIndex()
 {
+
+    $appointmentStatus = Appointment::where('user_id', auth()->id())
+    ->where('status', 'pending')
+    ->get();
+
+    $appointmentCount = $appointmentStatus->count();
+
+
     $totalUsers = User::count();
     $totalAppointment = Appointment::count();
 
@@ -93,7 +109,9 @@ class HomeController extends Controller
         'appointmentsAll',
         'monthlyEarnings',
         'statusCounts',
-        'ratingsData' // Pass ratings data to the view
+        'ratingsData',
+        'appointmentStatus', 
+        'appointmentCount' 
     ));
 }
 
