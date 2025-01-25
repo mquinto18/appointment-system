@@ -22,11 +22,11 @@
             </div>
             <h1 class='font-bold text-[40px]'>{{ $totalUsers }}</h1> <!-- Display total users here -->
 
-            <div class="flex justify-end">
+            <!-- <div class="flex justify-end">
                 <a href="{{ route('user') }}">
                     <i class="fa-solid fa-angles-right text-[30px]"></i>
                 </a>
-            </div>
+            </div> -->
         </div>
         <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
             <div class='flex justify-between'>
@@ -35,11 +35,11 @@
             </div>
             <h1 class='font-bold text-[40px]'>{{ $totalAppointment }}</h1>
 
-            <div class="flex justify-end">
+            <!-- <div class="flex justify-end">
                 <a href="{{ route('appointment') }}">
                     <i class="fa-solid fa-angles-right text-[30px]"></i>
                 </a>
-            </div>
+            </div> -->
         </div>
         <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
             <div class='flex justify-between'>
@@ -49,7 +49,7 @@
             <h1 class='font-bold text-[40px]'>{{ $totalCompleted }}</h1>
 
             <div class="flex justify-end">
-                <a href="{{ route('appointments.completed') }}">
+                <a href="{{ route('doctorAppointment') }}">
                     <i class="fa-solid fa-angles-right text-[30px]"></i>
                 </a>
             </div>

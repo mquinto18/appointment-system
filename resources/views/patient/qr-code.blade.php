@@ -13,6 +13,7 @@
     <p>Address: {{ $appointment->complete_address }}</p>
 
     <h3>QR Code:</h3>
+    
     <img src="{{ $qrCodeDataUri }}" alt="QR Code" />
 </body>
 </html>

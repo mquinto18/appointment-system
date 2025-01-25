@@ -231,14 +231,44 @@ class CashierController extends Controller
         return $pdf->download('invoice_' . $appointment->id . '.pdf');
     }
 
-    public function cashierprintReports()
+    public function cashierprintReports($interval)
     {
-        $appointments = Appointment::all(); 
-
-   
-        $pdf = Pdf::loadView('appointment.report_pdf', compact('appointments'));
-
-       
+        $appointments = Appointment::query();
+    
+        // Set the date range based on the interval
+        switch($interval) {
+            case 'weekly':
+                $startDate = Carbon::now()->startOfWeek();
+                $endDate = Carbon::now()->endOfWeek();
+                $appointments->whereBetween('appointment_date', [$startDate, $endDate]);
+                $dateRange = "From " . $startDate->toFormattedDateString() . " to " . $endDate->toFormattedDateString();
+                break;
+    
+            case 'monthly':
+                $startDate = Carbon::now()->startOfMonth();
+                $endDate = Carbon::now()->endOfMonth();
+                $appointments->whereBetween('appointment_date', [$startDate, $endDate]);
+                $dateRange = "From " . $startDate->toFormattedDateString() . " to " . $endDate->toFormattedDateString();
+                break;
+    
+            case 'yearly':
+                $startDate = Carbon::now()->startOfYear();
+                $endDate = Carbon::now()->endOfYear();
+                $appointments->whereBetween('appointment_date', [$startDate, $endDate]);
+                $dateRange = "From " . $startDate->toFormattedDateString() . " to " . $endDate->toFormattedDateString();
+                break;
+    
+            default:
+                $appointments = Appointment::all();
+                $dateRange = "All Time";
+                break;
+        }
+    
+        $appointments = $appointments->get();
+    
+        $pdf = Pdf::loadView('appointment.report_pdf', compact('appointments', 'dateRange'));
+    
         return $pdf->download('transaction_history.pdf');
     }
+    
 }

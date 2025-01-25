@@ -12,10 +12,10 @@
 <div class='mx-10 -mt-16'>
     <div class='flex justify-between mb-2'>
         <span class='text-[20px] text-white font-medium'>All Appointment | {{ $totalAppointments }}</span>
-        <div class='bg-white px-3 py-2 rounded-md cursor-pointer' data-bs-toggle="modal" data-bs-target="#addAdminModal">
+        <!-- <div class='bg-white px-3 py-2 rounded-md cursor-pointer' data-bs-toggle="modal" data-bs-target="#addAdminModal">
             <i class="fa-solid fa-plus" style="color: #0074CB;"></i>
             <a href="#" class='font-medium no-underline text-black'>Add appointment</a>
-        </div>
+        </div> -->
     </div>
 
     <div class='bg-white w-full rounded-lg shadow-md p-8'>

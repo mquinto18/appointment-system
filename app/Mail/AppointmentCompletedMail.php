@@ -19,7 +19,7 @@ class AppointmentCompletedMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Your Appointment is Completed')
+        return $this->subject('Your Appointment is Completed') 
                     ->view('auth.appointment_completed'); // Avoid setting 'to()' here
     }
 }

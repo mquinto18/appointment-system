@@ -29,6 +29,12 @@
 </head>
 <body>
     <h1>Transaction History</h1>
+    
+    <!-- Date Range -->
+    @if(isset($dateRange))
+        <p><strong>Date Range:</strong> {{ $dateRange }}</p>
+    @endif
+
     <table>
         <thead>
             <tr>
