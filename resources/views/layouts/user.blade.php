@@ -10,7 +10,7 @@
     <meta name="author" content="">
     @vite('resources/css/app.css')
     <title>@yield('title')</title>
-    
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
@@ -158,7 +158,7 @@
 
     <x-notify::notify />
     @notifyJs
-    
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
         document.getElementById("hamburgerButton").addEventListener("click", function() {
             var navbar = document.getElementById("navbar");
