@@ -10,9 +10,11 @@ use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Carbon\Carbon;
 use App\Models\AppointmentSlot;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use App\Mail\ContactMessage;
 use Illuminate\Support\Str; // Import the Str class
 
 class HomeController extends Controller
@@ -549,5 +551,34 @@ class HomeController extends Controller
 
         Auth::logout();
         return redirect('/')->with('success', 'Your account has been deleted successfully.');
+    }
+
+    public function contactSend(Request $request)
+    {
+        // Validate the form data
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'message' => 'required|string|max:1000',
+        ]);
+
+        // Send the email
+        Mail::to('quintom53@gmail.com')->send(new ContactMessage($request->all()));
+
+        // Return a response
+        notify()->success('Message sent successfully!');
+        return back()->with('success', 'Your message has been sent successfully.');
+    }
+
+    public function aboutMore() {
+
+        $images = [
+            asset('images/pic1.jpg'),
+            asset('images/pic2.jpg'),
+            asset('images/pic3.jpg'),
+            asset('images/pic3.jpg'),
+        ];
+
+        return view('appointment.aboutMore', compact('images'));
     }
 }

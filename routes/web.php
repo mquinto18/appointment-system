@@ -118,6 +118,9 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::put('user/update', [HomeController::class, 'securityuserUpdate'])->name('userSecurity.update');
     Route::put('user/profile/security/update', [HomeController::class, 'changeuserPassword'])->name('userchangePassword.update');
     Route::delete('user/profile/security/delete', [HomeController::class, 'accountDelete'])->name('userAccount.delete');
+    Route::post('user/dashboard/contactSend', [HomeController::class, 'contactSend'])->name('appointment.contactSend');
+    Route::get('user/dashboard/about', [HomeController::class, 'aboutMore'])->name('appointment.aboutMore');
+
     
 });
 
