@@ -19,7 +19,7 @@
 
 <body class="bg-gray-100">
     <div class=''>
-        <nav class="bg-[#0074C8]">
+        <nav class="bg-[#0074C8] ">
             <div class="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex items-center">

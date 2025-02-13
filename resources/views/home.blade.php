@@ -81,11 +81,7 @@
 
                 <div class="flex flex-col sm:flex-row justify-center items-center gap-10 my-10">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
-                        @foreach ($images as $image)
-                        <div class="">
-                            <img src="{{ $image }}" alt="Image" class="w-full h-auto object-cover rounded" style="width: 1000px;">
-                        </div>
-                        @endforeach
+                        
                     </div>
                     <div class="flex flex-col gap-8">
                         <h1 class="font-semibold text-[22px]">In St. Benedict Medical Clinic you are safe!</h1>
@@ -175,7 +171,7 @@
                 <h1 class="font-bold text-[20px] sm:text-2xl md:text-3xl lg:text-3xl">Location</h1>
             </div>
 
-            <div id="map" class="my-10" style="height: 400px; width: 100%;"></div>
+            <div id="map" class="my-10" style="height: 400px; width: 100%; z-index:0"></div>
 
             <div class="my-20">
                 <h1 class="font-bold text-[20px] text-center sm:text-2xl md:text-3xl lg:text-3xl">We'd love to talk to you</h1>

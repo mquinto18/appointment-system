@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;    
 use Illuminate\Http\Request;
+use Spatie\SimpleExcel\SimpleExcelWriter;
+use Illuminate\Support\Facades\File;
 
 class CashierController extends Controller
 {
@@ -232,43 +234,97 @@ class CashierController extends Controller
     }
 
     public function cashierprintReports($interval)
-    {
-        $appointments = Appointment::query();
-    
-        // Set the date range based on the interval
-        switch($interval) {
-            case 'weekly':
-                $startDate = Carbon::now()->startOfWeek();
-                $endDate = Carbon::now()->endOfWeek();
-                $appointments->whereBetween('appointment_date', [$startDate, $endDate]);
-                $dateRange = "From " . $startDate->toFormattedDateString() . " to " . $endDate->toFormattedDateString();
-                break;
-    
-            case 'monthly':
-                $startDate = Carbon::now()->startOfMonth();
-                $endDate = Carbon::now()->endOfMonth();
-                $appointments->whereBetween('appointment_date', [$startDate, $endDate]);
-                $dateRange = "From " . $startDate->toFormattedDateString() . " to " . $endDate->toFormattedDateString();
-                break;
-    
-            case 'yearly':
-                $startDate = Carbon::now()->startOfYear();
-                $endDate = Carbon::now()->endOfYear();
-                $appointments->whereBetween('appointment_date', [$startDate, $endDate]);
-                $dateRange = "From " . $startDate->toFormattedDateString() . " to " . $endDate->toFormattedDateString();
-                break;
-    
-            default:
-                $appointments = Appointment::all();
-                $dateRange = "All Time";
-                break;
-        }
-    
-        $appointments = $appointments->get();
-    
-        $pdf = Pdf::loadView('appointment.report_pdf', compact('appointments', 'dateRange'));
-    
-        return $pdf->download('transaction_history.pdf');
+{
+    $appointments = Appointment::query();
+
+    // Set the date range based on the interval
+    switch ($interval) {
+        case 'weekly':
+            $startDate = Carbon::now()->startOfWeek();
+            $endDate = Carbon::now()->endOfWeek();
+            $appointments->whereBetween('appointment_date', [$startDate, $endDate]);
+            $dateRange = "From " . $startDate->toFormattedDateString() . " to " . $endDate->toFormattedDateString();
+            break;
+
+        case 'monthly':
+            $startDate = Carbon::now()->startOfMonth();
+            $endDate = Carbon::now()->endOfMonth();
+            $appointments->whereBetween('appointment_date', [$startDate, $endDate]);
+            $dateRange = "From " . $startDate->toFormattedDateString() . " to " . $endDate->toFormattedDateString();
+            break;
+
+        case 'yearly':
+            $startDate = Carbon::now()->startOfYear();
+            $endDate = Carbon::now()->endOfYear();
+            $appointments->whereBetween('appointment_date', [$startDate, $endDate]);
+            $dateRange = "From " . $startDate->toFormattedDateString() . " to " . $endDate->toFormattedDateString();
+            break;
+
+        default:
+            $appointments = Appointment::all();
+            $dateRange = "All Time";
+            break;
     }
+
+    // Retrieve the appointments
+    if ($interval !== 'default') {
+        $appointments = $appointments->get();
+    }
+
+    // Ensure the directory exists
+    $storagePath = storage_path('reports');
+    if (!File::exists($storagePath)) {
+        File::makeDirectory($storagePath, 0755, true); // Create the directory if it doesn't exist
+    }
+
+    // Generate Excel file
+    $filePath = $storagePath . '/appointments_' . time() . '.xlsx';
+    $writer = SimpleExcelWriter::create($filePath, 'xlsx');
+    
+    // Add header row
+    $writer->addHeader([
+        'ID', 'PATIENT NAME', 'GENDER', 'APPOINTMENT DATE', 'VISIT TYPE', 'AMOUNT', 'DISCOUNT', 'TOTAL AMOUNT',
+    ]);
+    
+    $totalSales = 0;
+    
+    // Add data rows
+    foreach ($appointments as $appointment) {
+        // Decode amount to an array and calculate total amount
+        $amount = json_decode($appointment->amount, true);
+        $totalAmount = is_array($amount) ? array_sum($amount) : 0;
+    
+        // Get discount and calculate the discount amount
+        $discount = $appointment->discount ?? 0;
+        $discountAmount = ($totalAmount * $discount) / 100;
+    
+        // Calculate the final amount after discount
+        $finalAmount = $totalAmount - $discountAmount;
+    
+        // Add to total sales
+        $totalSales += $finalAmount;
+    
+        // Add row to the Excel file
+        $writer->addRow([
+            $appointment->id,
+            $appointment->first_name . ' ' . $appointment->last_name,
+            ucfirst($appointment->gender),
+            Carbon::parse($appointment->appointment_date)->toFormattedDateString(),
+            $appointment->visit_type,
+            number_format($totalAmount, 2),
+            $discount . '%',
+            number_format($finalAmount, 2),
+        ]);
+    }
+    
+    // Add total sales row at the bottom
+    $writer->addRow([
+        '', '', '', '', '', '', 'Total Sales:', number_format($totalSales, 2),
+    ]);
+    
+
+    // Return Excel file for download
+    return response()->download($filePath)->deleteFileAfterSend(true);
+}
     
 }

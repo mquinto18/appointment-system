@@ -74,7 +74,7 @@ class AuthController extends Controller
             'type' => "0",
         ]);
 
-        // Clear session data
+        // Clear session data   
         session()->forget(['verification_pin', 'registration_data']);
 
         return redirect()->route('login')->with('message', 'Account verified! You can now login.');
