@@ -160,13 +160,13 @@
                                 @method('PUT')
 
                                 <table class="w-full text-left border-collapse">
-                                    <div class="flex justify-end mt-4 gap-2 mb-3"> <!-- Flex container for Add button -->
+                                    <!-- <div class="flex justify-end mt-4 gap-2 mb-3"> Flex container for Add button
                                         <button type="button" id="addRow" class="bg-[#0074C8] text-white rounded-lg px-3 py-2">
                                             <i class="fa-solid fa-plus" style="color: #ffffff;"></i>
                                         </button>
-                                    </div>
+                                    </div> -->
                                     <thead>
-                                        <div class="p-2">
+                                        <!-- <div class="p-2">
                                             <span class="font-bold">Add Discount</span>
                                             <select name="discount" class="mt-2 w-80 border border-gray-300 rounded-lg p-2">
                                                 <option value="0" {{ isset($appointment) && $appointment->discount == 0 ? 'selected' : '' }}>0%</option>
@@ -176,7 +176,7 @@
                                                 <option value="20" {{ isset($appointment) && $appointment->discount == 20 ? 'selected' : '' }}>20%</option>
                                                 <option value="10" {{ isset($appointment) && $appointment->discount == 10 ? 'selected' : '' }}>10%</option>
                                             </select>
-                                        </div>
+                                        </div> -->
                                         <div class="font-medium flex text-[14px] justify-center items-center gap-1 border-[1px] my-2 px-2 rounded-full py-2 text-center w-[200px] 
                                             {{ empty($appointment->descriptions) ? 'bg-red-100 border-red-700 text-red-700' : 'bg-green-100 border-green-700 text-green-700' }}">
                                             <i class="fa-solid fa-circle fa-2xs"></i>
@@ -189,7 +189,7 @@
                                             <th class="p-2 border-t">Description</th>
                                             <th class="p-2 border-t">Qty</th>
                                             <th class="p-2 border-t">Amount</th>
-                                            <th class="p-2 border-t">Action</th> <!-- A dded Action column for Add/Remove buttons -->
+                                            <!-- <th class="p-2 border-t">Action</th> A dded Action column for Add/Remove buttons -->
                                         </tr>
                                     </thead>
                                     <tbody id="invoiceTableBody">
@@ -219,11 +219,11 @@
                                                     <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                         name="amount[]" value="{{ $amounts[$index] }}">
                                                 </td>
-                                                <td style="width: 10%;">
+                                                <!-- <td style="width: 10%;">
                                                     <button type="button" class="removeRow bg-red-500 text-white rounded-lg px-3 py-1">
                                                         <i class="fa-solid fa-x" style="color: #ffffff;"></i>
                                                     </button>
-                                                </td>
+                                                </td> -->
                                             </tr>
                                             @endforeach
                                         @endif

@@ -68,20 +68,31 @@
                         <td class="py-3 px-4 border-b">{{ $appointment->doctor }}</td>
                         <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
                         <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}</td>
-                        <td class="py-3 px-4 border-b">
+                        <td class="py-3 px-4 border-b ">
+                            <!-- Status Badge -->
                             <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
-                                    @if($appointment->status === 'pending') bg-orange-100 border-orange-700 
-                                    @elseif($appointment->status === 'approved') bg-green-100 border-green-700 
-                                    @elseif($appointment->status === 'rejected') bg-red-100 border-red-700 
-                                    @elseif($appointment->status === 'completed') bg-blue-100 border-blue-700 @endif">
+        @if($appointment->status === 'pending') bg-orange-100 border-orange-700 
+        @elseif($appointment->status === 'approved') bg-green-100 border-green-700 
+        @elseif($appointment->status === 'rejected') bg-red-100 border-red-700 
+        @elseif($appointment->status === 'completed') bg-blue-100 border-blue-700 @endif">
                                 <i class="fa-solid fa-circle fa-2xs"
                                     @if($appointment->status === 'pending') style="color: #c05621"
                                     @elseif($appointment->status === 'approved') style="color: #38a169"
                                     @elseif($appointment->status === 'rejected') style="color: #e53e3e"
-                                    @elseif($appointment->status === 'completed') style="color: #3182ce" @endif></i>
+                                    @elseif($appointment->status === 'completed') style="color: #3182ce" @endif>
+                                </i>
                                 {{ strtoupper($appointment->status) }}
                             </div>
+
+                            <!-- Follow-up Badge (Only if follow_up == 1) -->
+                            @if($appointment->follow_up == 1)
+                            <div class="font-medium flex text-[12px] mt-2 justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
+    bg-yellow-100 border-yellow-600">
+                                Follow-up
+                            </div>
+                            @endif
                         </td>
+
                         <td class="py-3 px-4 border-b">
                             <!-- Approve Action -->
                             <div class='flex gap-2'>
@@ -117,40 +128,79 @@
                                 </form>
 
                                 <!-- Reject Action -->
-                                <form action="{{ route('appointments.reject', $appointment->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="relative group cursor-pointer"
+                                <!-- Reject Action -->
+                                <button type="button" class="relative group cursor-pointer" onclick="toggleRescheduleModal(true)">
+                                    <div class="bg-white py-1 px-2 border border-[#0074CB] rounded-md 
+        @if($appointment->status === 'rejected' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif"
                                         @if($appointment->status === 'rejected' || $appointment->status === 'completed') disabled @endif>
-                                        <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
-                    @if($appointment->status === ' rejected' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
-                                            <i class="fa-solid fa-thumbs-down" style="color: #d02525;"></i>
+                                        <i class="fa-solid fa-thumbs-down" style="color: #d02525;"></i>
+                                    </div>
+                                    <!-- Tooltip for Reject -->
+                                    <span class="absolute bottom-full mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
+                                        Reject
+                                    </span>
+                                </button>
+
+
+                                <!-- Reschedule Modal -->
+                                <div id="rescheduleModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50">
+                                    <div class="modal-dialog bg-white rounded-lg w-[90%] sm:w-[650px] shadow-lg">
+                                        <div class="modal-content text-center p-6">
+                                            <h5 class="text-[24px] font-bold mb-3">Reschedule Appointment</h5>
+                                            <form id="rescheduleAppointmentForm" method="POST" action="{{ route('appointments.reject', $appointment->id) }}">
+                                                @csrf
+                                                <!-- Date and Time Input Fields -->
+                                                <div class="flex justify-between mb-6 px-4 py-4">
+                                                    <div class="w-[48%]">
+                                                        <label for="appointment_date" class="block text-left text-sm font-semibold text-gray-500 mb-1">Date</label>
+                                                        <input type="date" id="appointment_date" name="appointment_date" class="block w-full text-gray-600 font-medium bg-white rounded-md p-3 border border-gray-300 focus:outline-none">
+                                                    </div>
+                                                    <div class="w-[48%]">
+                                                        <label for="appointment_time" class="block text-left text-sm font-semibold text-gray-500 mb-1">Time</label>
+                                                        <input type="time" id="appointment_time" name="appointment_time" class="block w-full text-gray-600 font-medium bg-white rounded-md p-3 border border-gray-300 focus:outline-none">
+                                                    </div>
+                                                </div>
+
+                                                <!-- Buttons -->
+                                                <div class="flex border-t border-gray-200">
+                                                    <button type="button" class="w-1/2 py-3 bg-gray-300 font-semibold border-r border-gray-200 hover:bg-gray-400 rounded-bl-md" onclick="toggleRescheduleModal(false)">
+                                                        Cancel
+                                                    </button>
+                                                    <button type="submit" class="w-1/2 py-3 bg-[#0074CB] text-white font-semibold hover:bg-[#005ea6] rounded-br-md">
+                                                        Confirm Reschedule
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
-                                        <!-- Tooltip for Reject -->
-                                        <span class="absolute bottom-full mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
-                                            Reject
-                                        </span>
-                                    </button>
-                                </form>
+                                    </div>
+                                </div>
+
                             </div>
                         </td>
 
                         <td class="cursor-pointer border-b pr-5 text-center">
-                            
-                            
+
+
 
                             <div class="flex justify-center items-center gap-3">
-                                <a href="{{ route('appointments.followUp', $appointment->id) }}" class="">
-                                    <button 
-                                        class="bg-white shadow-md px-3 py-2 rounded focus:outline-none {{ $appointment->status !== 'completed' ? 'cursor-not-allowed opacity-50' : '' }}" 
+                                <a href="{{ route('appointments.followUp', $appointment->id) }}">
+                                    <button type="button" class="relative group cursor-pointer"
                                         @if($appointment->status !== 'completed') disabled @endif>
-                                        <i class="fa-solid fa-notes-medical"></i>
+                                        <div class="bg-white py-1 px-2 border border-gray-300 shadow-md rounded-md 
+            @if($appointment->status !== 'completed') cursor-not-allowed opacity-50 @endif">
+                                            <i class="fa-solid fa-notes-medical"></i>
+                                        </div>
+
+                                        <!-- Tooltip -->
+                                        <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 w-max mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
+                                            Follow-up check up
+                                        </span>
                                     </button>
-                                    <span class="absolute bottom-full w-[70px] mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
-                                        Follow-up check up
-                                    </span>
                                 </a>
+
+
                                 <!-- Ellipsis Icon -->
-                               <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                                <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"></i>
 
                                 <!-- Dropdown Menu -->
                                 <ul class="dropdown-menu font-medium absolute right-0 z-10 hidden text-left bg-white shadow-lg rounded-lg w-40" aria-labelledby="dropdownMenuButton">
@@ -405,12 +455,12 @@
                             <label for="doctor" class="form-label">Doctor</label>
                             <select class="form-select" id="doctor" name="doctor" required>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
                         </div>
 
-    
+
                         <!-- Gender -->
                         <div class="col-md-4 mb-3">
                             <label for="gender" class="form-label">Gender</label>
@@ -462,6 +512,24 @@
         </div>
     </div>
     <script>
+        function toggleRescheduleModal(show) {
+            const modal = document.getElementById("rescheduleModal");
+            if (show) {
+                modal.classList.remove("hidden");
+            } else {
+                modal.classList.add("hidden");
+            }
+        }
+
+        function toggleRescheduleModal(show) {
+            const modal = document.getElementById("rescheduleModal");
+            if (show) {
+                modal.classList.remove("hidden");
+            } else {
+                modal.classList.add("hidden");
+            }
+        }
+
         function openViewModal(appointment) {
             document.getElementById('viewTransactionNumber').value = appointment.transaction_number; // Set transaction number
             document.getElementById('viewPatientName').value = appointment.first_name + ' ' + appointment.last_name;

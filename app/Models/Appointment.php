@@ -31,6 +31,8 @@ class Appointment extends Model
         'complete_address',
         'amount',
         'discount',
+        'id_number',
+        'id_type',
         'status',
         'notes',
         'description', // Add this if you want to store the invoice description

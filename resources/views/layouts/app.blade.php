@@ -29,6 +29,7 @@
                     <button x-on:click="notifyShow = !notifyShow" class="bg-white shadow-md px-3 py-2 rounded focus:outline-none">
                         <i class="fa-solid fa-bell text-xl"></i>
                     </button>
+                   
                     <!-- Notifications dropdown -->
                     <div x-show="notifyShow" x-transition:enter="transition ease-out duration-200"
                         x-transition:enter-start="opacity-0 transform scale-95"
@@ -39,20 +40,27 @@
                         x-cloak class="absolute right-0 mt-2 z-10 w-72 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                         role="menu" aria-orientation="vertical" tabindex="-1">
                         <div class="py-2 px-4 text-sm text-gray-700">
+                            @foreach ($pendingAppointments as $appointment)
                             <a href="{{ route('appointments.pending') }}" class="flex justify-between items-center border-b py-2 border-b-gray-300">
                                 <div class="flex justify-center items-center gap-3">
                                     <i class="fa-regular fa-circle-user text-[32px]" style="color: #0074cb;"></i>
                                     <div>
-                                        <span class="font-bold text-[15px]">Jan, New appointment scheduled</span>
-                                        <br><span>October 17, 2024 at 9:00 AM</span>
+                                        <span class="font-bold text-[15px]">{{ $appointment->first_name }}, New appointment scheduled</span>
+                                        <br><span>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F d, Y') }} at {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}</span>
                                     </div>
                                 </div>
                             </a>
+                            @endforeach
                         </div>
                     </div>
+
+                    <!-- Notification Counter Badge -->
+                    @if($appointmentCount > 0)
                     <div class="absolute top-[-5px] right-[-5px] bg-red-600 rounded-full h-5 w-5 flex items-center justify-center">
-                        <span class="text-white text-xs">20</span>
+                        <span class="text-white text-xs">{{ $appointmentCount }}</span>
                     </div>
+                    @endif
+
 
                 </div>
 
@@ -142,10 +150,10 @@
                                 <li>User</li>
                             </a>
                             <a href="{{ route('doctor') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('doctor') ? 'bg-[#0074C8] text-white' : '' }}">
-                                <li>Doctor</li> 
+                                <li>Doctor</li>
                             </a>
                             <a href="{{ route('cashier') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('cashier') ? 'bg-[#0074C8] text-white' : '' }}">
-                                <li>cashier</li> 
+                                <li>cashier</li>
                             </a>
                         </div>
                     </div>
@@ -220,7 +228,7 @@
 
                 <!-- Sign out -->
                 <div class='mx-2 my-2 rounded-md py-2 text-center bg-[#0074C8] cursor-pointer text-white' onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
                     Sign out

@@ -112,7 +112,7 @@
                             We are writing to confirm that your appointment on
                             {{
                             \Carbon\Carbon::parse($details['appointment_date'])->format('F
-                            j, Y') }} Dr. Malyn Basbas-Uy at St. Benedict
+                            j, Y') }} Dr. {{ $details['doctor'] }} at St. Benedict
                             Medical Clinic & Pharmacy has been successfully
                             completed.
                         </div>

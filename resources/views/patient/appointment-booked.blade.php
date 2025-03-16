@@ -480,15 +480,15 @@
             </div>
             <div>
                 <label class="block text-gray-700 font-medium">Appointment Date:</label>
-                <input id="appointmentDate" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
+                <input id="appointmentDates" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
             </div>
             <div>
                 <label class="block text-gray-700 font-medium">Appointment Time:</label>
-                <input id="appointmentTime" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
+                <input id="appointmentTimes" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
             </div>
             <div>
                 <label class="block text-gray-700 font-medium">Visit Type:</label>
-                <input id="visitType" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
+                <input id="visitTypes" type="text" class="w-full px-3 py-2 border rounded-md" readonly>
             </div>
             <div class="col-span-2 md:col-span-3">
                 <label class="block text-gray-700 font-medium">Additional Information:</label>
@@ -767,14 +767,14 @@ function toggleDeleteModal(show) {
 }
 
 
-function openViewModal(transactionNumber, patientName, doctorName, appointmentDate, appointmentTime, visitType, additionalInfo, dob, gender, contactNumber, email, complete_address) {
+function openViewModal(transactionNumber, patientName, doctorName, appointmentDates, appointmentTimes, visitTypes, additionalInfo, dob, gender, contactNumber, email, complete_address) {
     // Populate the modal fields with the appointment details
     document.getElementById('transactionNumber').value = transactionNumber;
     document.getElementById('patientName').value = patientName;
     document.getElementById('doctorName').value = doctorName;
-    document.getElementById('appointmentDate').value = appointmentDate;
-    document.getElementById('appointmentTime').value = appointmentTime;
-    document.getElementById('visitType').value = visitType;
+    document.getElementById('appointmentDates').value = appointmentDates;
+    document.getElementById('appointmentTimes').value = appointmentTimes;
+    document.getElementById('visitTypes').value = visitTypes;
     document.getElementById('additionalInfo').value = additionalInfo;
     document.getElementById('dob').value = dob;
     document.getElementById('gender').value = gender;

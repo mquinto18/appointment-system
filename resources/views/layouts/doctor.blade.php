@@ -30,6 +30,7 @@
                         <i class="fa-solid fa-bell text-xl"></i>
                     </button>
                     <!-- Notifications dropdown -->
+                  
                     <div x-show="notifyShow" x-transition:enter="transition ease-out duration-200"
                         x-transition:enter-start="opacity-0 transform scale-95"
                         x-transition:enter-end="opacity-100 transform scale-100"
@@ -38,21 +39,37 @@
                         x-transition:leave-end="opacity-0 transform scale-95"
                         x-cloak class="absolute right-0 mt-2 z-10 w-72 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                         role="menu" aria-orientation="vertical" tabindex="-1">
+
                         <div class="py-2 px-4 text-sm text-gray-700">
-                            <a href="{{ route('appointments.pending') }}" class="flex justify-between items-center border-b py-2 border-b-gray-300">
+                            @if ($pendingAppointments->isEmpty())
+                            <p class="text-gray-500 text-center">No new pending appointments.</p>
+                            @else
+                            @foreach ($pendingAppointments as $appointment)
+                            <a href="{{ route('doctorAppointment') }}"
+                                class="flex justify-between items-center border-b py-2 border-b-gray-300 hover:bg-gray-100 transition">
                                 <div class="flex justify-center items-center gap-3">
                                     <i class="fa-regular fa-circle-user text-[32px]" style="color: #0074cb;"></i>
                                     <div>
-                                        <span class="font-bold text-[15px]">Jan, New appointment scheduled</span>
-                                        <br><span>October 17, 2024 at 9:00 AM</span>
+                                        <span class="font-bold text-[15px]">{{ $appointment->first_name }}, New appointment scheduled</span>
+                                        <br>
+                                        <span>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F d, Y') }} at
+                                            {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}
+                                        </span>
                                     </div>
-                                </div>
+                                </div>  
                             </a>
+                            @endforeach
+                            @endif
                         </div>
                     </div>
+
+                    <!-- Notification Badge -->
+                    @if ($pendingAppointments->count() > 0)
                     <div class="absolute top-[-5px] right-[-5px] bg-red-600 rounded-full h-5 w-5 flex items-center justify-center">
-                        <span class="text-white text-xs">20</span>
+                        <span class="text-white text-xs">{{ $pendingAppointments->count() }}</span>
                     </div>
+                    @endif
+
 
                 </div>
 

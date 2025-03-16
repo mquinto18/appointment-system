@@ -90,12 +90,12 @@
                             <!-- Dropdown Menu -->
                             <ul class="dropdown-menu font-medium absolute right-0 z-10 hidden text-left bg-white shadow-lg rounded-lg w-40" aria-labelledby="dropdownMenuButton">
                                 <!-- Edit Option -->
-                                <!-- <a href="{{ route('appointments.edit', $appointment->id) }}" class="block">
+                                <a href="{{ route('appointments.doctorEdit', $appointment->id) }}" class="block">
                                     <div class="px-4 py-2 flex items-center hover:bg-gray-100">
                                         <i class="fa-regular fa-pen-to-square mr-2 text-gray-600"></i>
                                         <span class="text-sm">Edit</span>
                                     </div>
-                                </a> -->
+                                </a>
                                 <!-- View Option -->
                                 <a href="#" onclick="openViewModal({{ $appointment }})" class="block">
                                     <li class="px-4 py-2 flex items-center hover:bg-gray-100">

@@ -155,7 +155,7 @@
     <p class="text0button">This is to certify that the above-named patient was evaluated with the following findings.</p>
 
     <div class="info">
-        <strong>Diagnosis:</strong> <br>The patient was evaluated and diagnosed with Acute Upper Respiratory Tract Infection (URTI), presenting with symptoms of cough, nasal congestion, mild fever, and sore throat. The condition appears to be non-specific and manageable with symptomatic treatment. The patient has been advised to rest, stay hydrated, and take prescribed medications. Follow-up consultation is recommended if symptoms persist or worsen.<br>
+        <strong>Diagnosis:</strong> <br>{{ $diagnosis }}<br>
         <strong>Remarks:</strong><br>
     </div>
 

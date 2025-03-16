@@ -19,7 +19,6 @@
         .header {
             display: flex;
             justify-content: space-between;
-            
             align-items: center;
             margin-bottom: 30px;
         }
@@ -78,12 +77,25 @@
             font-size: 12px;
             color: #666;
         }
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: url('{{ public_path('images/logo.png') }}') no-repeat center;
+            background-size: 500px;
+            opacity: 0.1;
+        }
     </style>
 </head>
 <body>
+    <div class="background"></div> <!-- Background image with opacity -->
+
     <div class="container">
         <div class="header">
-            <img src="{{ asset('images/logo.png') }}" alt="Clinic Logo" class="w-[65px]">
+            <img src="{{ public_path('images/logo.png') }}" alt="Clinic Logo">
             <h1>Medical Billing Invoice</h1>
         </div>
 
@@ -137,8 +149,16 @@
                     <td>{{ number_format(collect($quantities)->zip($amounts)->sum(fn($pair) => $pair[0] * $pair[1]), 2) }}</td>
                 </tr>
                 <tr>
+                    <td colspan="4" class="invoice-total">ID Number</td>
+                    <td>{{ $id_number }}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="invoice-total">ID Type</td>
+                    <td>{{ $id_type }}</td>
+                </tr>
+                <tr>
                     <td colspan="4" class="invoice-total">Discount</td>
-                    <td><p>{{ $discount }}%</p></td>
+                    <td>{{ $discount }}%</td>
                 </tr>
                 <tr>
                     <td colspan="4" class="invoice-total">Total Amount</td>
@@ -148,7 +168,7 @@
         </table>    
 
         <div class="footer">
-            <p class='text-red-500'><strong>Prepared by:</strong> [Admin Name]</p>
+            <p><strong>Prepared by:</strong> {{ auth()->user()->name }}</p>
             <p><strong>Date of Issue:</strong> {{ now()->toDateString() }}</p>
             <p>Thank you for choosing St. Benedict Medical Clinic & Pharmacy!</p>
         </div>

@@ -45,9 +45,24 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="appointmentTime" class="form-label font-medium text-gray-700 block mb-2">Appointment Time</label>
-                    <input type="time" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="appointmentTime" name="appointment_time" value="" required>
-                </div>
+    <label for="appointmentTime" class="form-label font-medium text-gray-700 block mb-2">Appointment Time</label>
+    <select class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="appointmentTime" name="appointment_time" required>
+        <option value="">Select a time</option>
+        <option value="09:00 AM">9:00 AM</option>
+        <option value="09:30 AM">9:30 AM</option>
+        <option value="10:00 AM">10:00 AM</option>
+        <option value="10:30 AM">10:30 AM</option>
+        <option value="11:00 AM">11:00 AM</option>
+        <option value="11:30 AM">11:30 AM</option>
+        <option value="01:00 PM">1:00 PM</option>
+        <option value="01:30 PM">1:30 PM</option>
+        <option value="02:00 PM">2:00 PM</option>
+        <option value="02:30 PM">2:30 PM</option>
+        <option value="03:00 PM">3:00 PM</option>
+        <option value="03:30 PM">3:30 PM</option>
+    </select>
+</div>
+
 
                 <div class="mb-4">
                     <label for="visitType" class="form-label font-medium text-gray-700 block mb-2">Visit Type</label>

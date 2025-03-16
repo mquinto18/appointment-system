@@ -35,13 +35,16 @@ class HomeController extends Controller
 
     public function adminIndex()
 {
-
     $appointmentStatus = Appointment::where('user_id', auth()->id())
-    ->where('status', 'pending')
-    ->get();
+        ->where('status', 'pending')
+        ->get();
 
     $appointmentCount = $appointmentStatus->count();
 
+    $pendingAppointments = Appointment::where('status', 'pending')
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
 
     $totalUsers = User::count();
     $totalAppointment = Appointment::count();
@@ -57,7 +60,6 @@ class HomeController extends Controller
     foreach ($appointments as $appointment) {
         $amounts = json_decode($appointment->amount, true);
 
-        // Sum the decoded amounts
         if (is_array($amounts)) {
             $appointmentTotal = array_sum($amounts);
             $totalAmount += $appointmentTotal;
@@ -72,7 +74,6 @@ class HomeController extends Controller
             $totalCompleted++;
         }
 
-        // Group total earnings by month
         $month = \Carbon\Carbon::parse($appointment->created_at)->format('m-d-y');
         if (!isset($monthlyEarnings[$month])) {
             $monthlyEarnings[$month] = 0;
@@ -96,11 +97,16 @@ class HomeController extends Controller
         ->pluck('count', 'rating')
         ->toArray();
 
-    // Ensure all ratings (1-5) are present, even if 0
     $ratingsData = [];
     for ($i = 1; $i <= 5; $i++) {
-        $ratingsData[$i] = $ratings[$i] ?? 0; // Default to 0 if no ratings for that star
+        $ratingsData[$i] = $ratings[$i] ?? 0;
     }
+
+    // **Share variables globally so layouts can access them**
+    view()->share([
+        'pendingAppointments' => $pendingAppointments,
+        'appointmentCount' => $appointmentCount
+    ]);
 
     return view('dashboard', compact(
         'totalUsers',
@@ -112,10 +118,11 @@ class HomeController extends Controller
         'monthlyEarnings',
         'statusCounts',
         'ratingsData',
-        'appointmentStatus', 
-        'appointmentCount' 
+        'appointmentStatus'
     ));
 }
+
+
 
 
 
@@ -182,50 +189,55 @@ class HomeController extends Controller
     }
 
     public function storePatientDetails(Request $request)
-{
-    // Validate the input data
-    $validated = $request->validate([
-        'first_name' => 'required|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-        'mobile_number' => 'required|string|max:15',
-        'address' => 'required|string|max:255',
-        'birthday' => 'required|date',
-        'gender' => 'required|string|in:male,female',
-        'visit_type' => 'required|string',
-        'amount' => 'required|string', // Change to string as the input is JSON-encoded
-        'medical_certificate' => 'nullable|string',
-    ]);
-
-    // Decode the JSON string into an associative array
-    $amountData = json_decode($validated['amount'], true);
-
-    // Store patient details and appointment details in the session
-    $date = session('appointment_date');
-    $time = session('appointment_time');
-    $doctorName = session('appointment_doctor'); // This is now the doctor's name
-
-    session([
-        'patient_details' => [
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
-            'email' => $validated['email'],
-            'mobile_number' => $validated['mobile_number'],
-            'address' => $validated['address'],
-            'birthday' => $validated['birthday'],
-            'gender' => $validated['gender'],
-            'visit_type' => $validated['visit_type'],
-            'amount' => $amountData, // Store the decoded amount
-            'medical_certificate' => $request->has('medical_certificate') ? 'Medical Certificate' : null,
-            'appointment_date' => $date,
-            'appointment_time' => $time,
-            'appointment_doctor' => $doctorName,
-        ]
-    ]);
-
-    // Redirect to the next step (adjust the route as necessary)
-    return redirect()->route('appointments.confirmDetails'); // Define this route in your web.php
-}
+    {
+        // Validate the input data
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'mobile_number' => 'required|string|max:15',
+            'address' => 'required|string|max:255',
+            'birthday' => 'required|date',
+            'gender' => 'required|string|in:male,female',
+            'visit_type' => 'required|string',
+            'amount' => 'required|string', // Change to string as the input is JSON-encoded
+            'medical_certificate' => 'nullable|string',
+        ]);
+    
+        // Ensure the mobile number starts with +63
+        $mobileNumber = ltrim($validated['mobile_number'], '0'); 
+        $mobileNumber = '+63' . $mobileNumber;
+    
+      
+        $amountData = json_decode($validated['amount'], true);
+    
+      
+        $date = session('appointment_date');
+        $time = session('appointment_time');
+        $doctorName = session('appointment_doctor'); 
+    
+        session([
+            'patient_details' => [
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
+                'email' => $validated['email'],
+                'mobile_number' => $mobileNumber, 
+                'address' => $validated['address'],
+                'birthday' => $validated['birthday'],
+                'gender' => $validated['gender'],
+                'visit_type' => $validated['visit_type'],
+                'amount' => $amountData, 
+                'medical_certificate' => $request->has('medical_certificate') ? 'Medical Certificate' : null,
+                'appointment_date' => $date,
+                'appointment_time' => $time,
+                'appointment_doctor' => $doctorName,
+            ]
+        ]);
+    
+      
+        return redirect()->route('appointments.confirmDetails'); 
+    }
+    
 
 
     public function confirmDetails()
@@ -297,15 +309,16 @@ class HomeController extends Controller
 
 
 
-    public function appointmentBooked()
-    {
-        // Retrieve the currently authenticated user's appointments, sorted by created_at in descending order
-        $appointments = Appointment::where('user_id', auth()->id())
-            ->orderBy('created_at', 'desc') // Sort by created_at in descending order
-            ->get();
+public function appointmentBooked()
+{
+    // Retrieve the currently authenticated user's appointments, sorted by appointment_date and appointment_time in descending order
+    $appointments = Appointment::where('user_id', auth()->id())
+        ->orderBy('appointment_date', 'desc') // Sort by latest appointment date
+        ->orderBy('appointment_time', 'desc') // Sort by latest appointment time
+        ->get();
 
-        return view('patient.appointment-booked', compact('appointments'));
-    }
+    return view('patient.appointment-booked', compact('appointments'));
+}
 
 
     public function appointmentCancel($id)

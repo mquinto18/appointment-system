@@ -25,12 +25,12 @@ use Illuminate\Support\Facades\Request;
 */
 //set side bar active dynamic
 
-function set_active($route){
-    if(is_array($route)){
-        return is_array(Request::path(), $route) ? 'active' : '';
-    }
-    return Request::path() == $route ? 'active' : '';
-}
+// function set_active($route){
+//     if(is_array($route)){
+//         return is_array(Request::path(), $route) ? 'active' : '';
+//     }
+//     return Request::path() == $route ? 'active' : '';
+// }
 
 
 // Public route for the welcome page
@@ -69,6 +69,9 @@ Route::middleware(['auth', 'doctor'])->group(function () {
     Route::put('doctor/update', [DoctorController::class, 'securitydoctorUpdate'])->name('doctorSecurity.update');
     Route::put('doctor/profile/security/update', [DoctorController::class, 'changeuserPassword'])->name('doctorchangePassword.update');
     Route::delete('doctor/profile/security/delete', [DoctorController::class, 'accountDelete'])->name('doctorAccount.delete');
+    Route::get('doctor/appointments/edit/{id}', [DoctorController::class, 'appointmentEdit'])->name('appointments.doctorEdit');
+    Route::put('doctor/appointments/update/{id}', [DoctorController::class, 'appointmentDoctorUpdate'])->name('appointments.doctorUpdate');
+
 });
 Route::middleware(['auth', 'cashier'])->group(function () {
     Route::get('cashier/home', [CashierController::class, 'cashierIndex'])->name('cashier/home');
@@ -174,6 +177,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/appointments/canceled', [AppointmentController::class, 'canceledAppoint'])->name('appointments.canceled');
 
     Route::get('admin/appointments/edit/{id}', [AppointmentController::class, 'appointmentEdit'])->name('appointments.edit');
+   
     Route::get('admin/appointments/follow-up/{id}', [AppointmentController::class, 'appointmentFollowUp'])->name('appointments.followUp');
     Route::post('admin/appointments/follow-up/save/{id}', [AppointmentController::class, 'appointmentFollowUpSave'])->name('appointments.followUpPost');
     Route::put('admin/appointments/update/{id}', [AppointmentController::class, 'appointmentUpdate'])->name('appointments.update');

@@ -82,7 +82,7 @@
                     <div class="email-content">
                         <p>
                             We are pleased to inform you that your appointment with
-                            Dr. Malyn Basbas-Uy has been successfully approved.
+                            Dr. {{ $details['doctor'] }} has been successfully approved.
                             Below are the details of your appointment:
                         </p>
 

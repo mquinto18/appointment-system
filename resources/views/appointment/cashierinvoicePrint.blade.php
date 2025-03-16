@@ -166,17 +166,34 @@
                                         </button>
                                     </div> -->
                                     <thead>
-                                        <div class="p-2">
-                                            <span class="font-bold">Add Discount</span>
-                                            <select name="discount" class="mt-2 w-80 border border-gray-300 rounded-lg p-2">
-                                                <option value="0" {{ isset($appointment) && $appointment->discount == 0 ? 'selected' : '' }}>0%</option>
-                                                <option value="50" {{ isset($appointment) && $appointment->discount == 50 ? 'selected' : '' }}>50%</option>
-                                                <option value="40" {{ isset($appointment) && $appointment->discount == 40 ? 'selected' : '' }}>40%</option>
-                                                <option value="30" {{ isset($appointment) && $appointment->discount == 30 ? 'selected' : '' }}>30%</option>
-                                                <option value="20" {{ isset($appointment) && $appointment->discount == 20 ? 'selected' : '' }}>20%</option>
-                                                <option value="10" {{ isset($appointment) && $appointment->discount == 10 ? 'selected' : '' }}>10%</option>
-                                            </select>
+                                        <div class="flex justify-center items-center">
+                                            <div class="p-2">
+                                                <span class="font-bold">ID Number</span>
+                                                <input value="{{ $appointment->id_number }}" type="text" id="idNumber" name="id_number" class="mt-2 w-80 border border-gray-300 rounded-lg p-2">
+                                            </div>
+
+                                            <div class="p-2">
+                                                <span class="font-bold">ID Type</span>
+                                                <select id="idType" name="id_type" class="mt-2 w-80 border border-gray-300 rounded-lg p-2">
+                                                    <option value="">Select ID Type</option>
+                                                    <option value="PWD" {{ isset($appointment) && $appointment->id_type == 'PWD' ? 'selected' : '' }}>PWD (Person with Disability)</option>
+                                                    <option value="Senior Citizen" {{ isset($appointment) && $appointment->id_type == 'Senior Citizen' ? 'selected' : '' }}>Senior Citizen</option>
+                                                </select>
+                                            </div>
+                                            <div class="p-2">
+                                                <span class="font-bold">Add Discount</span>
+                                                <select name="discount" class="mt-2 w-80 border border-gray-300 rounded-lg p-2">
+                                                    <option value="" {{ isset($appointment) && $appointment->discount == 0 ? 'selected' : '' }}>0%</option>
+                                                    <option value="50" {{ isset($appointment) && $appointment->discount == 50 ? 'selected' : '' }}>50%</option>
+                                                    <option value="40" {{ isset($appointment) && $appointment->discount == 40 ? 'selected' : '' }}>40%</option>
+                                                    <option value="30" {{ isset($appointment) && $appointment->discount == 30 ? 'selected' : '' }}>30%</option>
+                                                    <option value="20" {{ isset($appointment) && $appointment->discount == 20 ? 'selected' : '' }}>20%</option>
+                                                    <option value="10" {{ isset($appointment) && $appointment->discount == 10 ? 'selected' : '' }}>10%</option>
+                                                </select>
+                                            </div>
                                         </div>
+
+
                                         <tr>
                                             <th class="p-2 border-t">Description</th>
                                             <th class="p-2 border-t">Qty</th>

@@ -14,7 +14,7 @@
             <div class='my-5 flex flex-col justify-center items-center '>
                     <img src="{{ asset('images/logo.png') }}" alt="Image" class='w-[120px] '>
                     <h1 class='text-[25px] font-medium'>Login to your Account</h1>
-                    <a href="" class=''>Welcome black!</a>
+                    <a href="" class=''>Welcome back!</a>
             </div>
             @if ($errors->any())
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">

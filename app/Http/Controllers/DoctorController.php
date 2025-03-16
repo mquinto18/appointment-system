@@ -13,106 +13,111 @@ use Illuminate\Validation\ValidationException;
 class DoctorController extends Controller
 {
 
-   public function doctorIndex()
-{
-    $totalUsers = User::count();
-    $totalAppointment = Appointment::count();
-
-    // Get the current logged-in doctor's name
-    $doctorName = auth()->user()->name; // Assuming the doctor is logged in
-
-    // Set the current time to Philippine Time
-    $currentDateTime = now('Asia/Manila');
-
-    // Fetch appointments that are completed and assigned to the logged-in doctor by their name
-    $appointments = Appointment::where('status', 'completed')
-        ->where('doctor', $doctorName) // Match by doctor name
-        ->paginate(5);
-
-    $appointmentsAll = Appointment::all();
-    $totalAmount = 0;
-    $totalCompleted = Appointment::where('status', 'completed')->count();
-
-    // Array to store monthly earnings
-    $monthlyEarnings = [];
-
-    foreach ($appointments as $appointment) {
-        $amounts = json_decode($appointment->amount, true);
-
-        // Sum the decoded amounts
-        if (is_array($amounts)) {
-            $appointmentTotal = array_sum($amounts);
-            $totalAmount += $appointmentTotal;
-        } elseif (is_numeric($appointment->amount)) {
-            $appointmentTotal = $appointment->amount;
-            $totalAmount += $appointment->amount;
-        } else {
-            $appointmentTotal = 0;
-        }
-
-        // Group total earnings by month
-        $month = \Carbon\Carbon::parse($appointment->created_at)->format('m-d-y');
-        if (!isset($monthlyEarnings[$month])) {
-            $monthlyEarnings[$month] = 0;
-        }
-        $monthlyEarnings[$month] += $appointmentTotal;
-    }
-
-    $totalAmount = number_format($totalAmount, 2, '.', ',');
-
-    $statusCounts = [
-        'pending' => $appointmentsAll->where('status', 'pending')->count(),
-        'approved' => $appointmentsAll->where('status', 'approved')->count(),
-        'completed' => $appointmentsAll->where('status', 'completed')->count(),
-        'rejected' => $appointmentsAll->where('status', 'rejected')->count(),
-    ];
-
-    // Retrieve and count ratings
-    $ratings = DB::table('ratings')
-        ->select('rating', DB::raw('COUNT(*) as count'))
-        ->groupBy('rating')
-        ->pluck('count', 'rating')
-        ->toArray();
-
-    // Ensure all ratings (1-5) are present, even if 0
-    $ratingsData = [];
-    for ($i = 1; $i <= 5; $i++) {
-        $ratingsData[$i] = $ratings[$i] ?? 0;
-    }
-
-    // Calculate new and old appointments
-    $newAppointments = Appointment::where('created_at', '>=', now()->subDays(30))->count(); // Last 30 days
-    $oldAppointments = $totalAppointment - $newAppointments; // Remaining are old appointments
-
-    // Ongoing patient details with 5-minute condition
-    $ongoingPatient = Appointment::where('status', 'pending')
-        ->where('appointment_date', $currentDateTime->toDateString())
-        ->whereBetween('appointment_time', [
-            $currentDateTime->toTimeString(), // From now
-            $currentDateTime->addMinutes(10)->toTimeString() // Until 5 minutes later
-        ])
-        ->first();
-
-    return view('doctor', compact(
-        'totalUsers',
-        'totalAppointment',
-        'totalAmount',
-        'totalCompleted',
-        'appointments',
-        'appointmentsAll',
-        'monthlyEarnings',
-        'statusCounts',
-        'ratingsData',
-        'newAppointments',
-        'oldAppointments',
-        'ongoingPatient'
-    ));
-}
-
-
-
+    public function doctorIndex()
+    {
+        $totalUsers = User::count();
+        $totalAppointment = Appointment::count();
     
+        // Get the current logged-in doctor's name
+        $doctorName = auth()->user()->name; // Assuming the doctor is logged in
     
+        // Set the current time to Philippine Time
+        $currentDateTime = now('Asia/Manila');
+    
+        // Fetch appointments that are completed and assigned to the logged-in doctor by their name
+        $appointments = Appointment::where('status', 'completed')
+            ->where('doctor', $doctorName) // Match by doctor name
+            ->paginate(5);
+    
+        $appointmentsAll = Appointment::all();
+        $totalAmount = 0;
+        $totalCompleted = Appointment::where('status', 'completed')->count();
+    
+        // Array to store monthly earnings
+        $monthlyEarnings = [];
+    
+        foreach ($appointments as $appointment) {
+            $amounts = json_decode($appointment->amount, true);
+    
+            // Sum the decoded amounts
+            if (is_array($amounts)) {
+                $appointmentTotal = array_sum($amounts);
+                $totalAmount += $appointmentTotal;
+            } elseif (is_numeric($appointment->amount)) {
+                $appointmentTotal = $appointment->amount;
+                $totalAmount += $appointment->amount;
+            } else {
+                $appointmentTotal = 0;
+            }
+    
+            // Group total earnings by month
+            $month = \Carbon\Carbon::parse($appointment->created_at)->format('m-d-y');
+            if (!isset($monthlyEarnings[$month])) {
+                $monthlyEarnings[$month] = 0;
+            }
+            $monthlyEarnings[$month] += $appointmentTotal;
+        }
+    
+        $totalAmount = number_format($totalAmount, 2, '.', ',');
+    
+        $statusCounts = [
+            'pending' => $appointmentsAll->where('status', 'pending')->count(),
+            'approved' => $appointmentsAll->where('status', 'approved')->count(),
+            'completed' => $appointmentsAll->where('status', 'completed')->count(),
+            'rejected' => $appointmentsAll->where('status', 'rejected')->count(),
+        ];
+    
+        // Retrieve and count ratings
+        $ratings = DB::table('ratings')
+            ->select('rating', DB::raw('COUNT(*) as count'))
+            ->groupBy('rating')
+            ->pluck('count', 'rating')
+            ->toArray();
+    
+        // Ensure all ratings (1-5) are present, even if 0
+        $ratingsData = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $ratingsData[$i] = $ratings[$i] ?? 0;
+        }
+    
+        // Calculate new and old appointments
+        $newAppointments = Appointment::where('created_at', '>=', now()->subDays(30))->count(); // Last 30 days
+        $oldAppointments = $totalAppointment - $newAppointments; // Remaining are old appointments
+    
+        // Ongoing patient details with 5-minute condition
+        $ongoingPatient = Appointment::where('status', 'approved')
+            ->where('appointment_date', $currentDateTime->toDateString())
+            ->whereBetween('appointment_time', [
+                $currentDateTime->toTimeString(), // From now
+                $currentDateTime->addMinutes(10)->toTimeString() // Until 5 minutes later
+            ])
+            ->first();
+    
+        // Fetch pending appointments assigned to the logged-in doctor
+        $pendingAppointments = Appointment::where('status', 'pending')
+            ->where('doctor', $doctorName) // Filter by doctor name
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        return view('doctor', compact(
+            'totalUsers',
+            'totalAppointment',
+            'totalAmount',
+            'totalCompleted',
+            'appointments',
+            'appointmentsAll',
+            'monthlyEarnings',
+            'statusCounts',
+            'ratingsData',
+            'newAppointments',
+            'oldAppointments',
+            'ongoingPatient',
+            'pendingAppointments' // Added pending appointments to be displayed
+        ));
+    }
+    
+
+
 
     public function doctorAcc(Request $request){
          // Fetch the search input from the request (if any)
@@ -192,10 +197,9 @@ class DoctorController extends Controller
     {
         $doctorName = auth()->user()->name; // Get the authenticated doctor's name
         $search = $request->input('search');
-
-        // Query appointments with search functionality and filter by doctor and status
+    
+        // Query appointments with search functionality and filter by doctor
         $appointments = Appointment::where('doctor', $doctorName)
-            ->where('status', 'completed') // Filter for completed appointments
             ->where(function ($query) use ($search) {
                 if ($search) {
                     $query->where('first_name', 'like', '%' . $search . '%')
@@ -204,14 +208,18 @@ class DoctorController extends Controller
                 }
             })
             ->paginate(10); // Pagination with 10 rows per page
-
-        $totalAppointments = Appointment::where('doctor', $doctorName)
-            ->where('status', 'completed')
-            ->count(); // Count total number of completed appointments for the specific doctor
-
-        // Pass the appointments data and total count to the view
-        return view('appointment.doctorTotalAppointment', compact('appointments', 'totalAppointments', 'search'));
+    
+        // Count all appointments assigned to the doctor
+        $totalAppointments = Appointment::where('doctor', $doctorName)->count();
+    
+        // Pass the data to the view
+        return view('appointment.doctorTotalAppointment', compact(
+            'appointments',
+            'totalAppointments', // Ensure this variable is passed
+            'search'
+        ));
     }
+    
 
     public function appointmentdoctorDelete($id)
     {
@@ -323,5 +331,40 @@ class DoctorController extends Controller
     
         Auth::logout();
         return redirect('/')->with('success', 'Your account has been deleted successfully.');
+    }
+    public function appointmentEdit($id){
+        $appointment = Appointment::findOrFail($id);
+    
+        // Pass the admin details to the view
+        return view('appointment.appointmentdoctorEdit', compact('appointment'));
+    }
+    public function appointmentDoctorUpdate(Request $request, $id){
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
+            'appointment_date' => 'required|date',
+            'appointment_time' => 'required',
+            'visit_type' => 'required|string',
+            'additional' => 'nullable|string|max:255',
+            'doctor' => 'required|string',
+            'gender' => 'required|string',
+            'marital_status' => 'required|string',
+            'contact_number' => 'required|string|max:15',
+            'email_address' => 'required|email|max:255',
+            'complete_address' => 'required|string|max:255',
+            'notes' => 'nullable|string',
+            'diagnosis' => 'nullable|string',
+        ]);
+
+        // Find the appointment by ID
+        $appointment = Appointment::findOrFail($id);
+
+        // Update the appointment with the validated data
+        $appointment->update($request->all());
+
+        // Redirect back with a success message
+        notify()->success('Appointment updated successfully!');
+        return redirect()->back()->with('success', 'Appointment updated successfully!');
     }
 }
