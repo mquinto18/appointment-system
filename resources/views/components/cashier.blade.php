@@ -106,7 +106,7 @@
                                 <!-- Edit Action -->
                                 <div class='relative group cursor-pointer'>
                                     <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md'>
-                                        <a href="{{ route('user.edit', $user->id) }}" class="text-blue-600">
+                                        <a href="{{ route('cashier.edit', $user->id) }}" class="text-blue-600">
                                             <i class="fa-regular fa-pen-to-square"></i>
                                         </a>
                                     </div>
@@ -220,7 +220,7 @@
             </div>
             </div>
             <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save User</button>
+            <button type="submit" class="btn btn-primary">Save Cashier</button>
             </div>
         </form>
         </div>
@@ -237,7 +237,7 @@
             <div class="modal-content p-0">
                 <div class="modal-body text-center mb-5 mx-4">
                     <i class="fa-solid fa-triangle-exclamation text-[55px] my-4" style="color: #ff0000;"></i>
-                    <h5 class="modal-title mb-3 text-[25px] font-bold" id="deleteAdminModalLabel">Delete Administrator</h5>
+                    <h5 class="modal-title mb-3 text-[25px] font-bold" id="deleteAdminModalLabel">Delete Cashier</h5>
                     <p id="deleteAdminMessage">Are you sure you want to delete <strong></strong>? Once deleted, it cannot be recovered.</p>
                 </div>
                 <div class=" p-0 m-0">
@@ -259,7 +259,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewAdminModalLabel">Admin Details</h5>
+                <h5 class="modal-title" id="viewAdminModalLabel">Cashier Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

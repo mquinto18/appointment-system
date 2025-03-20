@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-@notifyCss
+    @notifyCss
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -16,6 +16,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+<style>
+    html {
+    scroll-behavior: smooth;
+}
+</style>
 
 <body class="bg-gray-100">
     <div class=''>
@@ -40,7 +45,7 @@
 
                     <div id="navbar" class="hidden space-x-4">
                         <a href="{{ url('/') }}" class="text-white px-3 py-2 rounded-md text-sm">Home</a>
-                        <a href="#" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">About Us</a>
+                        <a href="{{ route('appointment.aboutMore') }}" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">About Us</a>
                         <a href="#" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">Contact Us</a>
                     </div>
 
@@ -48,13 +53,13 @@
                         <div class="flex-grow flex justify-center ">
                             <div class="ml-10 flex items-baseline space-x-4 font-medium">
                                 <a href="{{ url('/') }}" class="text-white px-3 py-2 rounded-md text-sm">Home</a>
-                                <a href="" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">About Us</a>
-                                <a href="#" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">Contact Us</a>
+                                <a href="{{ route('appointment.aboutMore') }}" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">About Us</a>
+                                <a href="{{ url('/#contact-section') }}" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">Contact Us</a>
                             </div>
                         </div>
                     </div>
 
-                   
+
                     <div class="hidden md:block">
                         <div class="ml-4 flex items-center md:ml-6">
                             @if (Route::has('login'))
@@ -62,7 +67,7 @@
                             <!-- Dropdown Appintment -->
                             <!-- Dropdown Notification -->
                             <div class="relative group">
-                                <a  href="{{ route('appointments.booked') }}">
+                                <a href="{{ route('appointments.booked') }}">
                                     <button class="bg-white shadow-md px-3 py-2 rounded focus:outline-none">
                                         <i class="fa-solid fa-calendar-check text-xl"></i>
                                     </button>
@@ -77,8 +82,8 @@
 
 
 
-                           
-                            
+
+
 
 
 
@@ -148,11 +153,11 @@
             </div>
         </nav>
 
-        
-            <div class="">  
-                <div>@yield('contents')</div>
-                @yield('scripts')
-            </div>
+
+        <div class="">
+            <div>@yield('contents')</div>
+            @yield('scripts')
+        </div>
         </main>
     </div>
 
@@ -165,6 +170,20 @@
 
             // Toggle the 'hidden' class to show or hide the navbar
             navbar.classList.toggle("hidden");
+        });
+        l4
+        document.addEventListener("DOMContentLoaded", function() {
+            if (window.location.hash) {
+                let target = document.querySelector(window.location.hash);
+                if (target) {
+                    setTimeout(() => {
+                        target.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start"
+                        });
+                    }, 100); // Small delay to ensure rendering
+                }
+            }
         });
     </script>
 </body>

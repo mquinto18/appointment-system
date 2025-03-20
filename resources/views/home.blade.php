@@ -81,7 +81,18 @@
 
                 <div class="flex flex-col sm:flex-row justify-center items-center gap-10 my-10">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
-                        
+                        <div class="rounded overflow-hidden shadow-lg">
+                            <img src="{{ asset('images/pic1.jpg') }}" alt="Image 1" class="w-[500px] h-auto object-cover rounded">
+                        </div>
+                        <div class="rounded overflow-hidden shadow-lg">
+                            <img src="{{ asset('images/pic2.jpg') }}" alt="Image 2" class="w-[500px] h-auto object-cover rounded">
+                        </div>
+                        <div class="rounded overflow-hidden shadow-lg">
+                            <img src="{{ asset('images/pic3.jpg') }}" alt="Image 3" class="w-[500px] h-auto object-cover rounded">
+                        </div>
+                        <div class="rounded overflow-hidden shadow-lg">
+                            <img src="{{ asset('images/pic3.jpg') }}" alt="Image 4" class="w-[500px] h-auto object-cover rounded">
+                        </div>
                     </div>
                     <div class="flex flex-col gap-8">
                         <h1 class="font-semibold text-[22px]">In St. Benedict Medical Clinic you are safe!</h1>
@@ -166,7 +177,7 @@
             </div>
         </div>
 
-        <div class="p-5 lg:p-10 max-w-[1800px] mx-auto">
+        <div id="contact-section" class="p-5 lg:p-10 max-w-[1800px] mx-auto">
             <div class="mt-[30px]">
                 <h1 class="font-bold text-[20px] sm:text-2xl md:text-3xl lg:text-3xl">Location</h1>
             </div>
@@ -268,5 +279,7 @@
     L.marker([14.5478319634832, 121.10441019387086]).addTo(map)
         .bindPopup('St. Benedict Medical Clinic & Pharmacy')
         .openPopup();
+
+        
 </script>
 @endsection

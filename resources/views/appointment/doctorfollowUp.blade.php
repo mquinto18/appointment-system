@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.doctor')
 
-@section('title', 'Admin')
+@section('title', 'Doctor')
 
 @section('contents')
 
@@ -19,7 +19,7 @@
             <span class='font-medium text-[#0074C8]'>Patient Details</span>
         </div>
 
-        <form action="{{ route('appointments.followUpPost', $appointment->id) }}" method="POST">
+        <form action="{{ route('appointments.doctorfollowUpPost', $appointment->id) }}" method="POST">
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-2">

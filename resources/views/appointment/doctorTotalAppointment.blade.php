@@ -5,7 +5,7 @@
 @section('contents')
 
 <div>
-    <h1 class='font-medium text-2xl ml-3'>Administrator</h1>
+    <h1 class='font-medium text-2xl ml-3'>Doctor Appointment</h1>
 </div>
 <div class='w-full h-32 mt-5 rounded-lg' style="background: linear-gradient(to bottom, #0074C8, #151A5C);"></div>
 
@@ -55,6 +55,7 @@
                         <th class="py-3 px-4 border-b">Appointment Date</th>
                         <th class="py-3 px-4 border-b">Appointment Time</th>
                         <th class="py-3 px-4 border-b">Status</th>
+                        <th class="py-3 px-4 border-b">Actions</th>
                         <th class="py-3 px-4 border-b"></th>
                     </tr>
                 </thead>
@@ -67,21 +68,48 @@
                         <td class="py-3 px-4 border-b">{{ $appointment->doctor }}</td>
                         <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
                         <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}</td>
-                        <td class="py-3 px-4 border-b">
+                        <td class="py-3 px-4 border-b ">
+                            <!-- Status Badge -->
                             <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
-                                    @if($appointment->status === 'pending') bg-orange-100 border-orange-700 
-                                    @elseif($appointment->status === 'approved') bg-green-100 border-green-700 
-                                    @elseif($appointment->status === 'rejected') bg-red-100 border-red-700 
-                                    @elseif($appointment->status === 'completed') bg-blue-100 border-blue-700 @endif">
+        @if($appointment->status === 'pending') bg-orange-100 border-orange-700 
+        @elseif($appointment->status === 'approved') bg-green-100 border-green-700 
+        @elseif($appointment->status === 'rejected') bg-red-100 border-red-700 
+        @elseif($appointment->status === 'completed') bg-blue-100 border-blue-700 @endif">
                                 <i class="fa-solid fa-circle fa-2xs"
                                     @if($appointment->status === 'pending') style="color: #c05621"
                                     @elseif($appointment->status === 'approved') style="color: #38a169"
                                     @elseif($appointment->status === 'rejected') style="color: #e53e3e"
-                                    @elseif($appointment->status === 'completed') style="color: #3182ce" @endif></i>
+                                    @elseif($appointment->status === 'completed') style="color: #3182ce" @endif>
+                                </i>
                                 {{ strtoupper($appointment->status) }}
                             </div>
+
+                            <!-- Follow-up Badge (Only if follow_up == 1) -->
+                            @if($appointment->follow_up == 1)
+                            <div class="font-medium flex text-[12px] mt-2 justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
+    bg-yellow-100 border-yellow-600">
+                                Follow-up
+                            </div>
+                            @endif
                         </td>
-                        
+                        <td class="py-3 px-4 border-b">
+                            <a href="{{ route('appointments.doctorfollowUp', $appointment->id) }}">
+                                <button type="button" class="relative group cursor-pointer"
+                                    @if($appointment->status !== 'completed') disabled @endif>
+                                    <div class="bg-white py-1 px-2 border border-gray-300 shadow-md rounded-md 
+            @if($appointment->status !== 'completed') cursor-not-allowed opacity-50 @endif">
+                                        <i class="fa-solid fa-notes-medical"></i>
+                                    </div>
+
+                                    <!-- Tooltip -->
+                                    <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 w-max mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
+                                        Follow-up check up
+                                    </span>
+                                </button>
+                            </a>
+                        </td>
+
+
 
                         <td class="cursor-pointer relative border-b text-center">
                             <!-- Ellipsis Icon -->

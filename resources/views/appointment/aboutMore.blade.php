@@ -6,7 +6,7 @@
 
 <div class=" max-w-[1800px] mx-auto ">
     <div class="p-5 lg:p-10">
-    <div class="my-20">
+    <div class="my-10">
         <div class="mt-[10px]">
             <h1 class="font-bold text-[20px] sm:text-2xl md:text-3xl lg:text-3xl">ABOUT</h1>
             <p class="italic text-[20px]">St. Benedict Medical Clinic</p>

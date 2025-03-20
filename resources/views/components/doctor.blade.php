@@ -235,7 +235,7 @@
             <div class="modal-content p-0">
                 <div class="modal-body text-center mb-5 mx-4">
                     <i class="fa-solid fa-triangle-exclamation text-[55px] my-4" style="color: #ff0000;"></i>
-                    <h5 class="modal-title mb-3 text-[25px] font-bold" id="deleteAdminModalLabel">Delete Administrator</h5>
+                    <h5 class="modal-title mb-3 text-[25px] font-bold" id="deleteAdminModalLabel">Delete Doctor</h5>
                     <p id="deleteAdminMessage">Are you sure you want to delete <strong></strong>? Once deleted, it cannot be recovered.</p>
                 </div>
                 <div class=" p-0 m-0">
@@ -257,7 +257,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewAdminModalLabel">Admin Details</h5>
+                <h5 class="modal-title" id="viewAdminModalLabel">Doctor Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

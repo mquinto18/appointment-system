@@ -71,6 +71,9 @@ Route::middleware(['auth', 'doctor'])->group(function () {
     Route::delete('doctor/profile/security/delete', [DoctorController::class, 'accountDelete'])->name('doctorAccount.delete');
     Route::get('doctor/appointments/edit/{id}', [DoctorController::class, 'appointmentEdit'])->name('appointments.doctorEdit');
     Route::put('doctor/appointments/update/{id}', [DoctorController::class, 'appointmentDoctorUpdate'])->name('appointments.doctorUpdate');
+    Route::get('doctor/appointments/follow-up/{id}', [DoctorController::class, 'appointmentdoctorFollowUp'])->name('appointments.doctorfollowUp');
+    Route::post('doctor/appointments/follow-up/save/{id}', [DoctorController::class, 'appointmentdoctorFollowUpSave'])->name('appointments.doctorfollowUpPost');
+
 
 });
 Route::middleware(['auth', 'cashier'])->group(function () {
@@ -156,6 +159,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('admin/cashierAcc', [CashierController::class, 'CashierAcc'])->name('cashier');
     Route::post('admin/cashierAcc/save', [CashierController::class, 'cashierSave'])->name('cashier.save');
+    Route::get('admin/cashierAcc/edit/{id}', [CashierController::class, 'cashierEdit'])->name('cashier.edit');
+    Route::put('admin/cashierAcc/update/{id}', [CashierController::class, 'cashierUpdate'])->name('cashier.update');
 
     Route::get('admin/reports', [ReportsController::class, 'reports'])->name('reports');
     

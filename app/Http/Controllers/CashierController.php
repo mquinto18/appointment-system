@@ -363,4 +363,32 @@ class CashierController extends Controller
         // Return Excel file for download
         return response()->download($filePath)->deleteFileAfterSend(true);
     }
+
+    public function cashierEdit($id){
+        $user = User::findOrFail($id);
+    
+        // Pass the admin details to the view
+        return view('components.cashierEdit', compact('user'));
+    }
+
+    public function cashierUpdate(Request $request, $id){
+        $user = User::findOrFail($id);
+    
+        // Validate the incoming request data
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone_number' => 'nullable|string|max:20',
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|string',
+            'address' => 'nullable|string',
+        ]);
+    
+        // Update the admin details
+        $user->update($request->all());
+    
+        // Redirect back with success message
+        notify()->success('Cashier updated successfully!');
+        return redirect()->route('cashier')->with('success', 'User updated successfully.'); 
+    }
 }

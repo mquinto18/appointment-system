@@ -143,7 +143,7 @@
         <div class="modal-content p-0">
             <div class="modal-body text-center mb-5 mx-4">
                 <i class="fa-solid fa-triangle-exclamation text-[55px] my-4" style="color: #ff0000;"></i>
-                <h5 class="modal-title mb-3 text-[25px] font-bold" id="deleteAdminModalLabel">Delete Appointment</h5>
+                <h5 class="modal-title mb-3 text-[25px] font-bold" id="deleteAdminModalLabel">Delete Invoice</h5>
                 <p id="deleteAdminMessage">Are you sure you want to delete <strong></strong>? Once deleted, it cannot be recovered.</p>
             </div>
             <div class="p-0 m-0">

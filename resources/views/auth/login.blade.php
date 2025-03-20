@@ -1,3 +1,9 @@
+@extends('layouts.user')
+
+@section('title', 'Home')
+
+@section('contents')
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,3 +63,4 @@
     </div>
 </body>
 </html>
+@endsection

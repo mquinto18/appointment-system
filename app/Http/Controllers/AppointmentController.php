@@ -244,60 +244,60 @@ class AppointmentController extends Controller
     }
 
     public function appointmentFollowUpSave(Request $request, $id)
-{
-    $transactionNumber = 'TRX-' . strtoupper(Str::random(10));
+    {
+        $transactionNumber = 'TRX-' . strtoupper(Str::random(10));
 
-    $request->validate([
-        'first_name' => 'required|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'date_of_birth' => 'required|date',
-        'appointment_date' => 'required|date',
-        'appointment_time' => 'required',
-        'visit_type' => 'required|string|max:255',
-        'doctor' => 'required|string|max:255',
-        'gender' => 'required|string',
-        'marital_status' => 'required|string',
-        'contact_number' => 'required|string|max:20',
-        'email_address' => 'required|email|max:255',
-        'complete_address' => 'required|string|max:255',
-        'notes' => 'nullable|string',
-        'diagnosis' => 'nullable|string',
-    ]);
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
+            'appointment_date' => 'required|date',
+            'appointment_time' => 'required',
+            'visit_type' => 'required|string|max:255',
+            'doctor' => 'required|string|max:255',
+            'gender' => 'required|string',
+            'marital_status' => 'required|string',
+            'contact_number' => 'required|string|max:20',
+            'email_address' => 'required|email|max:255',
+            'complete_address' => 'required|string|max:255',
+            'notes' => 'nullable|string',
+            'diagnosis' => 'nullable|string',
+        ]);
 
-    // Convert 12-hour format to 24-hour format
-    $appointmentTime24 = Carbon::createFromFormat('h:i A', $request->input('appointment_time'))->format('H:i:s');
+        // Convert 12-hour format to 24-hour format
+        $appointmentTime24 = Carbon::createFromFormat('h:i A', $request->input('appointment_time'))->format('H:i:s');
 
-    // Find the existing appointment
-    $appointment = Appointment::findOrFail($id);
+        // Find the existing appointment
+        $appointment = Appointment::findOrFail($id);
 
-    // Update fields
-    $appointment->update([
-        'first_name' => $request->input('first_name'),
-        'last_name' => $request->input('last_name'),
-        'date_of_birth' => $request->input('date_of_birth'),
-        'appointment_date' => $request->input('appointment_date'),
-        'appointment_time' => $appointmentTime24,
-        'visit_type' => $request->input('visit_type'),
-        'doctor' => $request->input('doctor'),
-        'gender' => $request->input('gender'),
-        'marital_status' => $request->input('marital_status'),
-        'contact_number' => $request->input('contact_number'),
-        'email_address' => $request->input('email_address'),
-        'complete_address' => $request->input('complete_address'),
-        'notes' => $request->input('notes'),
-        'diagnosis' => $request->input('diagnosis'),
-        'transaction_number' => $transactionNumber,
-        'status' => 'approved',
-    ]);
+        // Update fields
+        $appointment->update([
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'date_of_birth' => $request->input('date_of_birth'),
+            'appointment_date' => $request->input('appointment_date'),
+            'appointment_time' => $appointmentTime24,
+            'visit_type' => $request->input('visit_type'),
+            'doctor' => $request->input('doctor'),
+            'gender' => $request->input('gender'),
+            'marital_status' => $request->input('marital_status'),
+            'contact_number' => $request->input('contact_number'),
+            'email_address' => $request->input('email_address'),
+            'complete_address' => $request->input('complete_address'),
+            'notes' => $request->input('notes'),
+            'diagnosis' => $request->input('diagnosis'),
+            'transaction_number' => $transactionNumber,
+            'status' => 'approved',
+        ]);
 
-    // Explicitly set follow_up to 1
-    $appointment->follow_up = 1;
-    $appointment->save();
+        // Explicitly set follow_up to 1
+        $appointment->follow_up = 1;
+        $appointment->save();
 
-    notify()->success('Appointment follow-up updated successfully!');
-    return redirect()->route('appointment')
-        ->with('success', 'Appointment follow-up updated successfully');
-}
+        notify()->success('Appointment follow-up updated successfully!');
+        return redirect()->route('appointment')
+            ->with('success', 'Appointment follow-up updated successfully');
+    }
 
 
     public function appointmentUpdate(Request $request, $id)

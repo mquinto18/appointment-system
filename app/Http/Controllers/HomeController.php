@@ -558,7 +558,7 @@ public function appointmentBooked()
         return redirect()->back()->with('success', 'Password updated successfully!');
     }
     public function accountDelete(){
-            /** @var User $user */
+        /** @var User $user */
         $user = Auth::user();
         $user->delete();
 
