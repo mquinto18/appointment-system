@@ -15,6 +15,7 @@ use App\Http\Controllers\CashierProfileController;
 use App\Http\Controllers\MedicalController;
 use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\AppointmentSlotController;
+use App\Http\Controllers\DoctorSlotController;
 use App\Http\Middleware\Cashier;
 use Illuminate\Support\Facades\Request;
 
@@ -73,6 +74,7 @@ Route::middleware(['auth', 'doctor'])->group(function () {
     Route::put('doctor/appointments/update/{id}', [DoctorController::class, 'appointmentDoctorUpdate'])->name('appointments.doctorUpdate');
     Route::get('doctor/appointments/follow-up/{id}', [DoctorController::class, 'appointmentdoctorFollowUp'])->name('appointments.doctorfollowUp');
     Route::post('doctor/appointments/follow-up/save/{id}', [DoctorController::class, 'appointmentdoctorFollowUpSave'])->name('appointments.doctorfollowUpPost');
+    Route::get('/doctor/monthly-slots', [DoctorSlotController::class, 'getMonthlySlotsDoctor']);
 
 
 });
