@@ -33,6 +33,7 @@ class Appointment extends Model
         'discount',
         'id_number',
         'id_type',
+        'follow_up',
         'status',
         'notes',
         'description', // Add this if you want to store the invoice description

@@ -68,20 +68,30 @@
                             <td class="py-3 px-4 border-b">{{ $appointment->doctor }}</td>
                             <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
                             <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}</td>
-                            <td class="py-3 px-4 border-b">
-                                <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
-                                    @if($appointment->status === 'pending') bg-orange-100 border-orange-700 
-                                    @elseif($appointment->status === 'approved') bg-green-100 border-green-700 
-                                    @elseif($appointment->status === 'rejected') bg-red-100 border-red-700 
-                                    @elseif($appointment->status === 'completed') bg-blue-100 border-blue-700 @endif">
-                                    <i class="fa-solid fa-circle fa-2xs" 
-                                        @if($appointment->status === 'pending') style="color: #c05621" 
-                                        @elseif($appointment->status === 'approved') style="color: #38a169" 
-                                        @elseif($appointment->status === 'rejected') style="color: #e53e3e" 
-                                        @elseif($appointment->status === 'completed') style="color: #3182ce" @endif></i>
-                                    {{ strtoupper($appointment->status) }}
-                                </div>
-                            </td>
+                            <td class="py-3 px-4 border-b ">
+                            <!-- Status Badge -->
+                            <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
+        @if($appointment->status === 'pending') bg-orange-100 border-orange-700 
+        @elseif($appointment->status === 'approved') bg-green-100 border-green-700 
+        @elseif($appointment->status === 'rejected') bg-red-100 border-red-700 
+        @elseif($appointment->status === 'completed') bg-blue-100 border-blue-700 @endif">
+                                <i class="fa-solid fa-circle fa-2xs"
+                                    @if($appointment->status === 'pending') style="color: #c05621"
+                                    @elseif($appointment->status === 'approved') style="color: #38a169"
+                                    @elseif($appointment->status === 'rejected') style="color: #e53e3e"
+                                    @elseif($appointment->status === 'completed') style="color: #3182ce" @endif>
+                                </i>
+                                {{ strtoupper($appointment->status) }}
+                            </div>
+
+                            <!-- Follow-up Badge (Only if follow_up == 1) -->
+                            @if($appointment->follow_up == 1)
+                            <div class="font-medium flex text-[12px] mt-2 justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
+    bg-yellow-100 border-yellow-600">
+                                Follow-up
+                            </div>
+                            @endif
+                        </td>
                             <td class="py-3 px-4 border-b">
                             <div class='flex gap-2'>
                                 <form action="{{ route('appointments.approve', $appointment->id) }}" method="POST">

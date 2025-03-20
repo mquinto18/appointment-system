@@ -17,6 +17,7 @@ use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\AppointmentSlotController;
 use App\Http\Controllers\DoctorSlotController;
 use App\Http\Middleware\Cashier;
+use App\Http\Middleware\Doctor;
 use Illuminate\Support\Facades\Request;
 
 /*
@@ -73,7 +74,7 @@ Route::middleware(['auth', 'doctor'])->group(function () {
     Route::get('doctor/appointments/edit/{id}', [DoctorController::class, 'appointmentEdit'])->name('appointments.doctorEdit');
     Route::put('doctor/appointments/update/{id}', [DoctorController::class, 'appointmentDoctorUpdate'])->name('appointments.doctorUpdate');
     Route::get('doctor/appointments/follow-up/{id}', [DoctorController::class, 'appointmentdoctorFollowUp'])->name('appointments.doctorfollowUp');
-    Route::post('doctor/appointments/follow-up/save/{id}', [DoctorController::class, 'appointmentdoctorFollowUpSave'])->name('appointments.doctorfollowUpPost');
+    Route::put('doctor/followup/update/{id}', [DoctorController::class, 'appointmentdoctorFollowUpSave'])->name('appointments.doctorfollowUpPost');
     Route::get('/doctor/monthly-slots', [DoctorSlotController::class, 'getMonthlySlotsDoctor']);
 
 
@@ -95,6 +96,7 @@ Route::middleware(['auth', 'cashier'])->group(function () {
     Route::put('cashier/update', [CashierProfileController::class, 'securityUpdate'])->name('cashierSecurity.update');
     Route::put('cashier/profile/security/update', [CashierProfileController::class, 'changePassword'])->name('cashierchangePassword.update');
     Route::delete('cashier/profile/security/delete', [CashierProfileController::class, 'accountDelete'])->name('cashierAccount.delete');
+    Route::delete('cashier/invoice/delete/{id}', [CashierController::class, 'appointmentDelete'])->name('appointmentsinvoice.destroy');
 });
 
 // User dashboard (protected with middleware)
@@ -148,7 +150,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('admin/adminAcc/destroy/{id}', [AdminController::class, 'adminDestroy'])->name('admin.delete');
     Route::get('admin/adminAcc/edit{id}', [AdminController::class, 'adminEdit'])->name('admin.edit');
     Route::put('admin/adminAcc/update{id}', [AdminController::class, 'adminUpdate'])->name('admin.update');
-
     Route::get('admin/userAcc', [UserController::class, 'userAcc'])->name('user');
     Route::post('admin/userAcc/save', [UserController::class, 'userSave'])->name('user.save');
     Route::get('admin/userAcc/edit/{id}', [UserController::class, 'userEdit'])->name('user.edit');

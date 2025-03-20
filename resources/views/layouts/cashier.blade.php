@@ -188,12 +188,12 @@
                 </div>
 
                 <!-- Sign out -->
-                <div class='mx-2 my-2 rounded-md py-2 text-center bg-[#0074C8] cursor-pointer text-white' onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <!-- <div class='mx-2 my-2 rounded-md py-2 text-center bg-[#0074C8] cursor-pointer text-white' onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
                     Sign out
-                </div>
+                </div> -->
             </div>
         </div>
 

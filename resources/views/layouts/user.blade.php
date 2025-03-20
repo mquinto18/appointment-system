@@ -59,7 +59,7 @@
                         <div class="flex-grow flex justify-center ">
                             <div class="ml-10 flex items-baseline space-x-4 font-medium">
                                 <a href="{{ url('/') }}" class="text-white px-3 py-2 rounded-md text-sm">Home</a>
-                                <a href="{{ route('appointment.aboutMore') }}" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">About Us</a>
+                                <a href="{{ url('/#about-section') }}" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">About Us</a>
                                 <a href="{{ url('/#contact-section') }}" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">Contact Us</a>
                             </div>
                         </div>

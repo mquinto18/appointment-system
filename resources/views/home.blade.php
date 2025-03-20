@@ -25,55 +25,78 @@
                 <p class="italic text-[20px]">Services</p>
             </div>
 
-            <div class=" flex-col lg:flex-row gap-5 lg:m-10 border-l-8 rounded px-4 border-[#0074cb] my-3">
-                <h1 class="font-semibold text-[25px]">Patients</h1>
+            <div class=" flex-col lg:flex-row gap-5 lg:m-10 rounded px-4 my-3">
+                <div class="flex flex-col gap-5 lg:flex-row lg:gap-10 py-10 items-start">
 
-                <div class="flex flex-col gap-5 lg:flex-row lg:gap-10 py-10">
-                    <div class="flex flex-col gap-3">
+                    <div class="flex flex-col gap-3 flex-1 self-start border-l-8 rounded px-4 border-[#0074cb]">
+                        <h1 class="font-semibold text-[25px]">Safety</h1>
                         <i class="fa-solid fa-heart-pulse text-[35px]" style="color: #0074cb;"></i>
                         <div>
                             <p class="lg:text-[20px] text-[15px]">
-                                Comprehensive Healthcare Services for Every Stage of LifeServices for Every Stage of LifeStage of Life
+                                Avoiding harm to patients, including preventing medical errors and infections.
+
                             </p>
                         </div>
                     </div>
-                    <div class="flex flex-col gap-3">
+
+
+                    <div class="flex flex-col gap-3 flex-1 self-start border-l-8 rounded px-4 border-[#0074cb]">
+                        <h1 class="font-semibold text-[25px]">Effectiveness</h1>
                         <i class="fa-solid fa-heart-pulse text-[35px]" style="color: #0074cb;"></i>
                         <div>
                             <p class="lg:text-[20px] text-[15px]">
-                                Comprehensive Healthcare Services for Every Comprehensive Healthcare Services for Every Stage of LifeStage of LifeServices for Every Stage of LifeStage of LifeServices for Every Stage of LifeStage of Life
+                                Providing evidence-based care that produces the best possible outcomes for patients.
                             </p>
                         </div>
                     </div>
-                </div>
-            </div>
 
-
-            <div class=" flex-col lg:flex-row gap-5 lg:m-10 border-l-8 rounded px-4 border-[#0074cb]    ">
-                <h1 class="font-semibold text-[25px]">Clinic</h1>
-                <div class="flex flex-col gap-5 lg:flex-row lg:gap-10 py-10">
-                    <div class="flex flex-col gap-3">
+                    <div class="flex flex-col gap-3 flex-1 self-start border-l-8 rounded px-4 border-[#0074cb]">
+                        <h1 class="font-semibold text-[25px]">Patient-Centeredness</h1>
                         <i class="fa-solid fa-heart-pulse text-[35px]" style="color: #0074cb;"></i>
                         <div>
                             <p class="lg:text-[20px] text-[15px]">
-                                Comprehensive Healthcare Services for Every Stage of LifeServices for Every Stage of LifeStage of Life
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-3">
-                        <i class="fa-solid fa-heart-pulse text-[35px]" style="color: #0074cb;"></i>
-                        <div>
-                            <p class="lg:text-[20px] text-[15px]">
-                                Comprehensive Healthcare Services for Every Comprehensive Healthcare Services for Every Stage of LifeStage of LifeServices for Every Stage of LifeStage of LifeServices for Every Stage of LifeStage of Life
+                                Respecting patient preferences, needs, and values, and ensuring that care is tailored.
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <div class="flex-col lg:flex-row gap-5 lg:m-10 rounded px-4 my-3">
+                <div class="flex flex-col gap-5 lg:flex-row lg:gap-10 py-10 items-start">
+
+                    <div class="flex flex-col gap-3 flex-1 self-start border-l-8 rounded px-4 border-[#0074cb]">
+                        <h1 class="font-semibold text-[25px]">Timeliness</h1>
+                        <i class="fa-solid fa-heart-pulse text-[35px]" style="color: #0074cb;"></i>
+                        <div>
+                            <p class="lg:text-[20px] text-[15px]">
+                                Providing care in a timely manner, reducing unnecessary waiting times and delays.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-3 flex-1 self-start border-l-8 rounded px-4 border-[#0074cb]">
+                        <h1 class="font-semibold text-[25px]">Efficiency</h1>
+                        <i class="fa-solid fa-heart-pulse text-[35px]" style="color: #0074cb;"></i>
+                        <div>
+                            <p class="lg:text-[20px] text-[15px]">
+                                Maximizing the use of resources to provide the best possible care while minimizing waste.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-3 flex-1 self-start border-l-8 rounded px-4 border-[#0074cb]">
+                        <h1 class="font-semibold text-[25px]">Equity</h1>
+                        <i class="fa-solid fa-heart-pulse text-[35px]" style="color: #0074cb;"></i>
+                        <div>
+                            <p class="lg:text-[20px] text-[15px]">
+                                Ensuring that all individuals receive the same quality of care.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
-            <div class="my-20">
+
+            <div class="my-20" id="about-section">
                 <div class="mt-[30px]">
                     <h1 class="font-bold text-[20px] sm:text-2xl md:text-3xl lg:text-3xl">ABOUT</h1>
                     <p class="italic text-[20px]">St. Benedict Medical Clinic</p>
@@ -155,27 +178,26 @@
         </div>
         <div class="bg-blue-700 h-auto lg:h-90 my-10">
             <div class="p-5 lg:p-10 max-w-[1800px] mx-auto">
+                <h2 class="text-center text-white text-3xl font-bold mb-10">Clinic Operations</h2>
                 <div>
                     <div class="flex flex-col md:flex-row gap-10 justify-between items-center">
                         <!-- Card 1 -->
                         <div class="w-full md:w-96 text-center text-white border-2 border-white py-8 px-10 rounded-lg">
-                            <p class="font-medium text-[20px] mb-4">Streamlining <br> Clinic Operations</p>
-                            <p>Discover how our comprehensive solutions can optimize your clinic's daily operations, reduce administrative burdens, and allow healthcare professionals to focus on what truly matters—providing exceptional patient care.</p>
+                            <p>Enhance your clinic's productivity with our seamless management solutions. From appointment scheduling to patient record management, we streamline operations for better patient experiences.</p>
                         </div>
                         <!-- Card 2 -->
                         <div class="w-full md:w-96 text-center text-white border-2 border-white py-8 px-10 rounded-lg">
-                            <p class="font-medium text-[20px] mb-4">Streamlining <br> Clinic Operations</p>
-                            <p>Discover how our comprehensive solutions can optimize your clinic's daily operations, reduce administrative burdens, and allow healthcare professionals to focus on what truly matters—providing exceptional patient care.</p>
+                            <p>Reduce administrative tasks and empower your healthcare team with our efficient clinic management system. Focus on patient care while we handle the complexities of day-to-day operations.</p>
                         </div>
                         <!-- Card 3 -->
                         <div class="w-full md:w-96 text-center text-white border-2 border-white py-8 px-10 rounded-lg">
-                            <p class="font-medium text-[20px] mb-4">Streamlining <br> Clinic Operations</p>
-                            <p>Discover how our comprehensive solutions can optimize your clinic's daily operations, reduce administrative burdens, and allow healthcare professionals to focus on what truly matters—providing exceptional patient care.</p>
+                            <p>Experience a smarter way to manage your clinic. Our comprehensive tools ensure smooth workflows, minimized paperwork, and improved communication for optimized healthcare delivery.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
 
         <div id="contact-section" class="p-5 lg:p-10 max-w-[1800px] mx-auto">
             <div class="mt-[30px]">
@@ -279,7 +301,5 @@
     L.marker([14.5478319634832, 121.10441019387086]).addTo(map)
         .bindPopup('St. Benedict Medical Clinic & Pharmacy')
         .openPopup();
-
-        
 </script>
 @endsection

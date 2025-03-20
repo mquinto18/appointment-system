@@ -21,7 +21,7 @@
 
 
         <div class="">
-            <form action="{{ route('appointments.userUpdate', $appointment->id) }}" method="POST">
+            <form action="{{ route('appointments.doctorfollowUpPost', $appointment->id) }}" method="POST">
                 @csrf
                 @method('PUT') <!-- Indicate that this is a PUT request for updating -->
 
@@ -43,7 +43,7 @@
                             </div>
                             <div>
                                 <label for="appointment_time" class="font-medium">Time</label>
-                                <select id="appointment_time" name="appointment_time" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                <select id="appointment_time" name="appointment_time" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
                                     <option value="">Select a time</option>
                                     <option value="09:00 AM">9:00 AM</option>
                                     <option value="09:30 AM">9:30 AM</option>
