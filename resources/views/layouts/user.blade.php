@@ -18,13 +18,18 @@
 </head>
 <style>
     html {
-    scroll-behavior: smooth;
+        scroll-behavior: smooth;
+    }
+    .bg-background {
+    position: relative;
+    z-index: 10;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 </style>
 
 <body class="bg-gray-100">
     <div class=''>
-        <nav class="bg-[#0074C8] ">
+        <nav class="bg-[#0074C8] bg-background">
             <div class="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex items-center">
