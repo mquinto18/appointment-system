@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminSlotController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\AppointmentController;
@@ -187,7 +188,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/appointments/edit/{id}', [AppointmentController::class, 'appointmentEdit'])->name('appointments.edit');
    
     Route::get('admin/appointments/follow-up/{id}', [AppointmentController::class, 'appointmentFollowUp'])->name('appointments.followUp');
-    Route::post('admin/appointments/follow-up/save/{id}', [AppointmentController::class, 'appointmentFollowUpSave'])->name('appointments.followUpPost');
+    Route::put('admin/appointments/follow-up/save/{id}', [AppointmentController::class, 'appointmentFollowUpSave'])->name('appointments.followUpPost');
     Route::put('admin/appointments/update/{id}', [AppointmentController::class, 'appointmentUpdate'])->name('appointments.update');
     Route::delete('admin/appointments/delete/{id}', [AppointmentController::class, 'appointmentDelete'])->name('appointments.destroy');
 
@@ -207,4 +208,5 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('admin/prescription/save/{id}', [PrescriptionController::class, 'prescriptionSave'])->name('prescription.items');
     Route::get('admin/prescription/generate/{id}', [PrescriptionController::class, 'printPrescription'])->name('prescription.generate');
 
+    Route::get('/admin/monthly-slots', [AdminSlotController::class, 'getMonthlySlotsAdmin']);
 }); 

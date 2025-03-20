@@ -15,129 +15,186 @@
     </div>
 
     <div class='bg-white w-full rounded-lg shadow-md p-8'>
-        <div class='mb-4'>
+        <div class=''>
             <span class='font-medium text-[#0074C8]'>Patient Details</span>
         </div>
 
-        <form action="{{ route('appointments.followUpPost', $appointment->id) }}" method="POST">
-            @csrf
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <div class="">
+            <form action="{{ route('appointments.followUpPost', $appointment->id) }}" method="POST">
+                @csrf
+                @method('PUT') <!-- Indicate that this is a PUT request for updating -->
 
-                <div class="mb-4">
-                    <label for="firstName" class="form-label font-medium text-gray-700 block mb-2">First Name</label>
-                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="firstName" name="first_name" value="{{ old('first_name', $appointment->first_name) }}" required>
-                </div>
+                <div class="flex flex-col lg:flex-row gap-8 mt-5">
+                    <!-- Calendar Section -->
+                    <div class="w-full lg:w-[50%]">
+                        <h2 class="font-medium text-xl mb-3">Select Date</h2>
+                        <div id="calendar" class="w-full max-w-[700px]"></div>
+                        <!-- Hidden input for selected date -->
+                        <input type="hidden" name="selected_date" id="selected_date" value="{{ $appointment->appointment_date }}">
+                    </div>
 
-                <div class="mb-4">
-                    <label for="lastName" class="form-label font-medium text-gray-700 block mb-2">Last Name</label>
-                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="lastName" name="last_name" value="{{ old('last_name', $appointment->last_name) }}" required>
-                </div>
+                    <!-- Appointment Details Section -->
+                    <div class="w-full lg:w-[50%]">
+                        <div class="grid grid-cols-1 gap-4">
+                            <div>
+                                <label for="transaction_number" class="font-medium">Transaction Number</label>
+                                <input type="text" id="transaction_number" name="transaction_number" class="w-full border border-gray-300 rounded-md px-3 py-2" value="{{ $appointment->transaction_number }}" readonly disabled>
+                            </div>
+                            <div>
+                                <label for="appointment_time" class="font-medium">Time</label>
+                                <select id="appointment_time" name="appointment_time" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
+                                    <option value="">Select a time</option>
+                                    <option value="09:00 AM">9:00 AM</option>
+                                    <option value="09:30 AM">9:30 AM</option>
+                                    <option value="10:00 AM">10:00 AM</option>
+                                    <option value="10:30 AM">10:30 AM</option>
+                                    <option value="11:00 AM">11:00 AM</option>
+                                    <option value="11:30 AM">11:30 AM</option>
+                                    <option value="01:00 PM">1:00 PM</option>
+                                    <option value="01:30 PM">1:30 PM</option>
+                                    <option value="02:00 PM">2:00 PM</option>
+                                    <option value="02:30 PM">2:30 PM</option>
+                                    <option value="03:00 PM">3:00 PM</option>
+                                    <option value="03:30 PM">3:30 PM</option>
+                                </select>
+                            </div>
 
-                <div class="mb-4">
-                    <label for="dateOfBirth" class="form-label font-medium text-gray-700 block mb-2">Date of Birth</label>
-                    <input type="date" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="dateOfBirth" name="date_of_birth" value="{{ old('date_of_birth', $appointment->date_of_birth) }}" required>
-                </div>
-
-                <div class="mb-4">
-                    <label for="appointmentDate" class="form-label font-medium text-gray-700 block mb-2">Appointment Date</label>
-                    <input type="date" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="appointmentDate" name="appointment_date" value="" required>
-                </div>
-
-                <div class="mb-4">
-                    <label for="appointmentTime" class="form-label font-medium text-gray-700 block mb-2">Appointment Time</label>
-                    <select class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="appointmentTime" name="appointment_time" required>
-                        <option value="">Select a time</option>
-                        <option value="09:00 AM">9:00 AM</option>
-                        <option value="09:30 AM">9:30 AM</option>
-                        <option value="10:00 AM">10:00 AM</option>
-                        <option value="10:30 AM">10:30 AM</option>
-                        <option value="11:00 AM">11:00 AM</option>
-                        <option value="11:30 AM">11:30 AM</option>
-                        <option value="01:00 PM">1:00 PM</option>
-                        <option value="01:30 PM">1:30 PM</option>
-                        <option value="02:00 PM">2:00 PM</option>
-                        <option value="02:30 PM">2:30 PM</option>
-                        <option value="03:00 PM">3:00 PM</option>
-                        <option value="03:30 PM">3:30 PM</option>
-                    </select>
-                </div>
-
-
-                <div class="mb-4">
-                    <label for="visitType" class="form-label font-medium text-gray-700 block mb-2">Visit Type</label>
-                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="visitType" name="visit_type" value="{{ old('visit_type', $appointment->visit_type) }}" required>
-                </div>
-
-                <div class="mb-4">
-                    <label for="additional" class="form-label font-medium text-gray-700 block mb-2">Additional Information</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" id="medicalCertificate" name="additional" value="Medical Certificate" {{ old('additional', $appointment->additional) == 'Medical Certificate' ? 'checked' : '' }}>
-                        <label class="form-check-label" for="medicalCertificate">Medical Certificate</label>
+                            <div>
+                                <label for="first_name" class="font-medium">First Name</label>
+                                <input type="text" id="first_name" name="first_name" class="w-full border border-gray-300 rounded-md px-3 py-2" value="{{ $appointment->first_name }}">
+                            </div>
+                            <div>
+                                <label for="last_name" class="font-medium">Last Name</label>
+                                <input type="text" id="last_name" name="last_name" class="w-full border border-gray-300 rounded-md px-3 py-2" value="{{ $appointment->last_name }}">
+                            </div>
+                            <div>
+                                <label for="visit_type" class="font-medium">Visit Type</label>
+                                <input type="text" id="visit_type" name="visit_type" class="w-full border border-gray-300 rounded-md px-3 py-2" value="{{ $appointment->visit_type }}">
+                            </div>
+                            <div>
+                                <label for="mobile_number" class="font-medium">Mobile Number</label>
+                                <input type="text" id="mobile_number" name="mobile_number" class="w-full border border-gray-300 rounded-md px-3 py-2" value="{{ $appointment->contact_number }}">
+                            </div>
+                            <div>
+                                <label for="email_address" class="font-medium">Email Address</label>
+                                <input type="email" id="email_address" name="email_address" class="w-full border border-gray-300 rounded-md px-3 py-2" value="{{ $appointment->email_address }}">
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium px-5 py-3 rounded-md">Update</button>
+                        </div>
                     </div>
                 </div>
-
-
-                <div class="mb-4">
-                    <label for="doctor" class="form-label font-medium text-gray-700 block mb-2">Doctor</label>
-                    <input type="text"
-                        class="form-input block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        id="doctor"
-                        name="doctor"
-                        value="{{ old('doctor', $appointment->doctor) }}"
-                        readonly>
-                </div>
-
-                <div class="mb-4">
-                    <label for="gender" class="form-label font-medium text-gray-700 block mb-2">Gender</label>
-                    <select class="form-select block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="gender" name="gender" required>
-                        <option value="Male" {{ old('gender', $appointment->gender) == 'Male' ? 'selected' : '' }}>Male</option>
-                        <option value="Female" {{ old('gender', $appointment->gender) == 'Female' ? 'selected' : '' }}>Female</option>
-                        <option value="Other" {{ old('gender', $appointment->gender) == 'Other' ? 'selected' : '' }}>Other</option>
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label for="maritalStatus" class="form-label font-medium text-gray-700 block mb-2">Marital Status</label>
-                    <select class="form-select block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="maritalStatus" name="marital_status" required>
-                        <option value="Single" {{ old('marital_status', $appointment->marital_status) == 'Single' ? 'selected' : '' }}>Single</option>
-                        <option value="Married" {{ old('marital_status', $appointment->marital_status) == 'Married' ? 'selected' : '' }}>Married</option>
-                        <option value="Divorced" {{ old('marital_status', $appointment->marital_status) == 'Divorced' ? 'selected' : '' }}>Divorced</option>
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label for="contactNumber" class="form-label font-medium text-gray-700 block mb-2">Contact Number</label>
-                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="contactNumber" name="contact_number" value="{{ old('contact_number', $appointment->contact_number) }}" required>
-                </div>
-
-                <div class="mb-4">
-                    <label for="emailAddress" class="form-label font-medium text-gray-700 block mb-2">Email Address</label>
-                    <input type="email" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="emailAddress" name="email_address" value="{{ old('email_address', $appointment->email_address) }}" required>
-                </div>
-
-                <div class="mb-4">
-                    <label for="completeAddress" class="form-label font-medium text-gray-700 block mb-2">Complete Address</label>
-                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="completeAddress" name="complete_address" value="{{ old('complete_address', $appointment->complete_address) }}" required>
-                </div>
-
-                <div class="col-span-1 md:col-span-3 mb-4">
-                    <label for="notes" class="form-label font-medium text-gray-700 block mb-2">Notes</label>
-                    <textarea class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="notes" name="notes">{{ old('notes', $appointment->notes) }}</textarea>
-                </div>
-                <div class="col-span-1 md:col-span-3 mb-4">
-                    <label for="diagnosis" class="form-label font-medium text-gray-700 block mb-2">Diagnosis</label>
-                    <textarea class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="diagnosis" name="diagnosis">{{ old('diagnosis', $appointment->diagnosis) }}</textarea>
-                </div>
-
-
-            </div>
-
-            <div class="flex justify-end mt-4">
-                <button type="submit" class="bg-blue-500 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-600">Update Appointment</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet' />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+    var today = new Date();
+    var todayString = today.toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
+    var preselectedDate = document.getElementById('selected_date').value; // Pre-selected date from the hidden input
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next',
+            center: 'title',
+            right: ''
+        },
+        validRange: {
+            start: todayString // Disable past dates
+        },
+        events: function (fetchInfo, successCallback, failureCallback) {
+            fetch(`/admin/monthly-slots?month=${fetchInfo.startStr.substring(0, 7)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const events = data.map(slot => ({
+                        title: slot.status === 'fully_booked' ? 'Fully Booked' : `${slot.available_slots} Slot${slot.available_slots > 1 ? 's' : ''} Available`,
+                        start: slot.start,
+                        className: slot.status, // Set status to apply different styles
+                        available_slots: slot.available_slots,
+                        status: slot.status,
+                        date: slot.date, // Add date for comparison
+                    }));
+                    successCallback(events);
+                })
+                .catch(error => {
+                    console.error('Error fetching slot data:', error);
+                    failureCallback(error);
+                });
+        },
+        dateClick: function (info) {
+            const selectedDate = info.dateStr;
+
+            // Prevent selecting the current date
+            if (selectedDate === todayString) {
+                alert('You cannot select today\'s date.');
+                return;
+            }
+
+            fetch(`/admin/monthly-slots?month=${selectedDate.substring(0, 7)}`)
+                .then(response => response.json())
+                .then(events => {
+                    const event = events.find(e => e.date === selectedDate);
+                    if (event && event.status === 'fully_booked') {
+                        alert('This date is fully booked.');
+                    } else {
+                        document.getElementById('selected_date').value = selectedDate; // Set the hidden input for the selected date
+                        highlightDate(selectedDate); // Highlight selected date
+                    }
+                });
+        },
+        datesSet: function () {
+            // Highlight the preselected date when the calendar view changes
+            if (preselectedDate) {
+                highlightDate(preselectedDate);
+            }
+        }
+    });
+
+    calendar.render();
+
+    // Highlight the pre-selected date on load
+    if (preselectedDate) {
+        highlightDate(preselectedDate);
+    }
+});
+
+function highlightDate(date) {
+    const dateElements = document.querySelectorAll('.fc-day'); // Select all date elements in the calendar
+    dateElements.forEach(el => {
+        if (el.dataset.date === date) {
+            el.classList.add('bg-blue-500', 'text-white'); // Highlight the selected date
+        } else {
+            el.classList.remove('bg-blue-500', 'text-white'); // Remove highlight from unselected dates
+        }
+    });
+}
+
+</script>
+<style>
+    /* Style events based on their status */
+    .fc-event.available {
+        background-color: #07CC62;
+        /* Green */
+        border-color: #07CC62;
+    }
+
+    .fc-event.fully_booked {
+        background-color: #FF0000;
+        /* Red */
+        border-color: #FF0000;
+        pointer-events: none;
+        /* Disable clicking */
+        opacity: 0.5;
+        /* Visual indication that the date is fully booked */
+    }
+</style>
 
 @endsection
