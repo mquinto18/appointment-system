@@ -227,6 +227,34 @@ class DoctorController extends Controller
         ));
     }
 
+    public function todayAppointment(Request $request)
+    {
+
+        $doctorName = auth()->user()->name; // Get the authenticated doctor's name
+        $search = $request->input('search');
+
+        $appointments = Appointment::where('doctor', $doctorName)
+            ->whereDate('appointment_date', Carbon::today()) // Filter for today's appointments
+            ->where(function ($query) use ($search) {
+                if ($search) {
+                    $query->where('first_name', 'like', '%' . $search . '%')
+                        ->orWhere('last_name', 'like', '%' . $search . '%')
+                        ->orWhere('visit_type', 'like', '%' . $search . '%');
+                }
+            })
+            ->paginate(10);
+
+        $totalAppointments = Appointment::where('doctor', $doctorName)
+            ->whereDate('appointment_date', Carbon::today())
+            ->count();
+
+        return view('appointment.todayAppointment', compact(
+            'appointments',
+            'totalAppointments',
+            'search'
+        ));
+    }
+
 
     public function appointmentdoctorDelete($id)
     {

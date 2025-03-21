@@ -65,6 +65,7 @@ Route::middleware(['auth', 'doctor'])->group(function () {
     Route::get('doctor/home', [DoctorController::class, 'doctorIndex'])->name('doctor/home');
 
     Route::get('doctor/appointment', [DoctorController::class, 'doctorAppointment'])->name('doctorAppointment');
+    Route::get('doctor/appointment/today', [DoctorController::class, 'todayAppointment'])->name('todayAppointment');
     Route::delete('doctor/appointments/delete/{id}', [DoctorController::class, 'appointmentdoctorDelete'])->name('appointments.doctoDestroy');
     Route::get('doctor/profile', [DoctorController::class, 'profiledoctorSettings'])->name('doctorProfile.settings');
     Route::put('doctor/profile', [DoctorController::class, 'profiledoctorUpdate'])->name('doctorProfile.update');

@@ -143,7 +143,7 @@
                     </a>
 
                     <div class="relative">
-                        <a href="javascript:void(0);" class="group nav-link {{ Request::routeIs('doctorAppointment') ? 'bg-[#0074C8] text-white' : '' }}" onclick="toggleDropdown('appointment-dropdown');">
+                        <a href="javascript:void(0);" class="group nav-link {{ in_array(request()->route()->getName(), ['doctorAppointment', 'todayAppointment']) ? 'bg-[#0074C8] text-white' : '' }}" onclick="toggleDropdown('appointment-dropdown');">
                             <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-[#0074C8] {{ Request::is('admin/appointments/*') ? 'bg-[#0074C8] text-white' : '' }}">
                                 <i class="fa-solid fa-calendar-days"></i>
                                 <span class="text-[15px] ml-4 font-bold">Appointment</span>
@@ -152,7 +152,7 @@
                         </a>
                         <!-- Dropdown for Appointment (open by default if a child link is active) -->
                         <div id="appointment-dropdown" class="relative w-full text-left rounded-md mt-1 space-y-1 px-2 py-1 {{ Request::is('admin/appointments/*') ? '' : 'hidden' }}">
-                            <a href="{{ route('doctorAppointment') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('doctorAppointment') ? 'bg-[#0074C8] text-white' : '' }}">
+                            <a href="{{ route('todayAppointment') }}" class="block px-4 py-2 rounded hover:bg-[#0074C8] hover:text-white {{ Request::routeIs('doctorAppointment') ? 'bg-[#0074C8] text-white' : '' }}">
                                 <li>Total Appointment</li>
                             </a>
                         </div>
