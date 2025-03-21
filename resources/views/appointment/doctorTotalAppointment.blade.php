@@ -30,12 +30,22 @@
                         <option value="10">10 records per page</option>
                     </select>
                 </div>
-                <div class="flex items-center">
-                    <!-- Search form -->
-                    <form method="GET" action="{{ route('doctorAppointment') }}">
-                        <input type="text" name="search" value="{{ request('search') }}" class="border border-gray-300 p-2 rounded" placeholder="Search by patient, doctor or visit type">
-                        <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Search</button>
-                    </form>
+                <div class="flex gap-2 ">
+                    <div class="flex items-center">
+                        <!-- Search form -->
+                        <form method="GET" action="{{ route('doctorAppointment') }}">
+                            <input type="text" name="search" value="{{ request('search') }}" class="border border-gray-300 p-2 rounded" placeholder="Search by patient, doctor or visit type">
+                            <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Search</button>
+                        </form>
+                    </div>
+                    <div class="flex items-center">
+                        <!-- Date filter form -->
+                        <form method="GET" action="{{ route('doctorAppointment') }}" class="flex items-center gap-2">
+                            <input type="date" name="date" value="{{ request('date') }}" class="border border-gray-300 p-2 rounded">
+                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Filter Date</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
 

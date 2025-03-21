@@ -200,32 +200,50 @@ class DoctorController extends Controller
         return redirect()->route('doctor')->with('success', 'Doctor updated successfully.');
     }
 
-    public function doctorAppointment(Request $request)
-    {
-        $doctorName = auth()->user()->name; // Get the authenticated doctor's name
-        $search = $request->input('search');
 
-        // Query appointments with search functionality and filter by doctor
-        $appointments = Appointment::where('doctor', $doctorName)
-            ->where(function ($query) use ($search) {
-                if ($search) {
-                    $query->where('first_name', 'like', '%' . $search . '%')
-                        ->orWhere('last_name', 'like', '%' . $search . '%')
-                        ->orWhere('visit_type', 'like', '%' . $search . '%');
-                }
-            })
-            ->paginate(10); // Pagination with 10 rows per page
+public function doctorAppointment(Request $request)
+{
+    $doctorName = auth()->user()->name; // Get the authenticated doctor's name
+    $search = $request->input('search'); // Get the search query
+    $date = $request->input('date'); // Get the selected date
 
-        // Count all appointments assigned to the doctor
-        $totalAppointments = Appointment::where('doctor', $doctorName)->count();
+    // Query appointments, filter by doctor, search, and date if provided
+    $appointments = Appointment::where('doctor', $doctorName)
+        ->when($date, function ($query) use ($date) {
+            $query->whereDate('appointment_date', $date);
+        })
+        ->when($search, function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', '%' . $search . '%')
+                  ->orWhere('last_name', 'like', '%' . $search . '%')
+                  ->orWhere('visit_type', 'like', '%' . $search . '%');
+            });
+        })
+        ->paginate(10); // Pagination with 10 rows per page
 
-        // Pass the data to the view
-        return view('appointment.doctorTotalAppointment', compact(
-            'appointments',
-            'totalAppointments', // Ensure this variable is passed
-            'search'
-        ));
-    }
+    // Count all appointments assigned to the doctor, applying filters
+    $totalAppointments = Appointment::where('doctor', $doctorName)
+        ->when($date, function ($query) use ($date) {
+            $query->whereDate('appointment_date', $date);
+        })
+        ->when($search, function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', '%' . $search . '%')
+                  ->orWhere('last_name', 'like', '%' . $search . '%')
+                  ->orWhere('visit_type', 'like', '%' . $search . '%');
+            });
+        })
+        ->count();
+
+    // Pass the data to the view
+    return view('appointment.doctorTotalAppointment', compact(
+        'appointments',
+        'totalAppointments',
+        'search',
+        'date' // Pass date to retain the selected value in the form
+    ));
+}
+
 
     public function todayAppointment(Request $request)
     {
