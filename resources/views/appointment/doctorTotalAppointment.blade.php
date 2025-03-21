@@ -43,6 +43,7 @@
                         <form method="GET" action="{{ route('doctorAppointment') }}" class="flex items-center gap-2">
                             <input type="date" name="date" value="{{ request('date') }}" class="border border-gray-300 p-2 rounded">
                             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Filter Date</button>
+                            <a href="{{ route('doctorAppointment') }}" class="px-2 py-2 bg-gray-400 text-white rounded"><i class="fa-solid fa-arrows-rotate"></i></a>
                         </form>
                     </div>
 
