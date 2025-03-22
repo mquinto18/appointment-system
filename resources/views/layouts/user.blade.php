@@ -177,7 +177,6 @@
             // Toggle the 'hidden' class to show or hide the navbar
             navbar.classList.toggle("hidden");
         });
-        l4
         document.addEventListener("DOMContentLoaded", function() {
             if (window.location.hash) {
                 let target = document.querySelector(window.location.hash);

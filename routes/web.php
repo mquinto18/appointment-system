@@ -41,7 +41,7 @@ Route::get('/', function () {
     return view('home');
 });
 
-
+Route::get('user/dashboard/about', [HomeController::class, 'aboutMore'])->name('appointment.aboutMore');
 
 // Authentication routes (register, login, etc.)
 Route::controller(AuthController::class)->group(function () {
@@ -131,8 +131,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::put('user/profile/security/update', [HomeController::class, 'changeuserPassword'])->name('userchangePassword.update');
     Route::delete('user/profile/security/delete', [HomeController::class, 'accountDelete'])->name('userAccount.delete');
     Route::post('user/dashboard/contactSend', [HomeController::class, 'contactSend'])->name('appointment.contactSend');
-    Route::get('user/dashboard/about', [HomeController::class, 'aboutMore'])->name('appointment.aboutMore');
-
+    
     
 });
 
