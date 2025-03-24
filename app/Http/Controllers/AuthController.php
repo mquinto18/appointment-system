@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ForgotPasswordMail;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;    
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -132,5 +134,52 @@ class AuthController extends Controller
 
         // Redirect to the login page (or wherever you'd like)
         return redirect('/login');
+    }
+
+    public function forgotPassword(){
+        return view('auth.forgotPassword');
+    }
+
+    public function sendResetLink(Request $request)
+    {
+        $request->validate(['email' => 'required|email|exists:users,email']);
+
+        $user = User::where('email', $request->email)->first();
+        $token = Password::getRepository()->create($user); // ✅ Correct way to create token
+
+        $resetUrl = url('/reset-password/' . $token . '?email=' . $request->email);
+
+        // Send email
+        Mail::to($request->email)->send(new ForgotPasswordMail($resetUrl));
+
+        return back()->with('success', 'Email sent successfully!');
+    }
+
+    public function showResetForm($token)
+    {
+        return view('auth.reset-password', ['token' => $token]);
+    }
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+            'token' => 'required'
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->save();
+            }
+        );
+
+        if ($status == Password::PASSWORD_RESET) {
+            return redirect()->route('login')->with('status', 'Your password has been reset.');
+        }
+
+        return back()->withErrors(['email' => __($status)]);
     }
 }

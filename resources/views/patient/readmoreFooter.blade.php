@@ -47,12 +47,12 @@
             </div>
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-mobile-screen"></i>
-                <p>09695194016</p>
+                <p>0950-723-1382</p>
             </div>
             <div class="flex items-center gap-2 text-center lg:text-left">
                 <i class="fa-solid fa-location-dot"></i>
                 <p>
-                    Downtown Medical Plaza, 123 Main Street, <br> Suite 4B, Chicago, IL 60601
+                    Villa Cuana Phase 1 Brgy. San Andres <br> Cainta Rizal
                 </p>
             </div>
         </div>

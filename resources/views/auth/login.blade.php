@@ -56,7 +56,7 @@
                     </div>
                         <button type="submit" class="flex w-full justify-center rounded-md bg-[#0074C8] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#0074C8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
                         <p class="text-sm font-light text-gray-500 dark:text-gray-400 text-center">
-                            Don’t have an account yet? <a href="{{ route('register') }}" class="font-medium text-primary-600 text-[#0074C8] hover:underline dark:text-primary-500">Sign up</a>
+                            Don’t have an account yet? <a href="{{ route('register') }}" class="font-medium text-primary-600 text-[#0074C8] hover:underline dark:text-primary-500">Sign up</a> or <a href="{{ route('forgotPassword') }}" class="font-medium text-primary-600 text-[#0074C8] hover:underline dark:text-primary-500">Forgot Password? </a>
                         </p>
          </form>
         </div>
