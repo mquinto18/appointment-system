@@ -20,29 +20,9 @@
                 <p class="text-sm text-gray-500 text-center">Enter your email to reset your password.</p>
 
                 @if(session('success'))
-                <div x-data="{ show: true }"
-                    x-show="show"
-                    x-transition:enter="transition ease-out duration-300 transform opacity-0 scale-90"
-                    x-transition:enter-start="opacity-0 scale-90"
-                    x-transition:enter-end="opacity-100 scale-100"
-                    x-transition:leave="transition ease-in duration-300 transform opacity-100 scale-100"
-                    x-transition:leave-start="opacity-100 scale-100"
-                    x-transition:leave-end="opacity-0 scale-90"
-                    class="fixed top-5 right-5 bg-green-500 text-white p-4 rounded-lg shadow-lg flex items-center space-x-2"
-                    x-init="setTimeout(() => show = false, 3000)">
-
-                    <!-- Check Icon -->
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
-                    </svg>
-
-                    <span class="font-medium">{{ session('success') }}</span>
-
-                    <!-- Close Button -->
-                    <button @click="show = false" class="ml-auto text-white hover:text-gray-200 focus:outline-none">
-                        &times;
-                    </button>
-                </div>
+                <div class="bg-green-500 text-white p-3 mt-2 rounded-lg">
+                {{ session('success') }}
+                    </div>
                 @endif
 
 
