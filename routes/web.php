@@ -50,7 +50,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('forgotPassword', 'forgotPassword')->name('forgotPassword');
     Route::post('register', 'registerSave')->name('register.save');
     Route::get('/authentication', 'authentication')->name('authentication');
-    Route::post('/verify-pin', 'verifyPin')->name('verify.pin');
+    Route::post('/verify-pin', 'verifyPin')->name('verify.pin');    
     Route::post('/forgot-password', 'sendResetLink')->name('password.email');
     Route::post('/reset-password', 'updatePassword')->name('password.update');
     Route::get('/reset-password/{token}', 'showResetForm')->name('password.reset');

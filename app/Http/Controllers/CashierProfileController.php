@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;  
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;  
@@ -30,20 +32,20 @@ class CashierProfileController extends Controller
 
         // Check if a profile picture is being uploaded
         if ($request->hasFile('profile_picture')) {
-            // If the user already has a profile picture, delete the old one
+            // Delete old image if exists
             if ($user->profile_picture) {
-                $oldImagePath = public_path('profile_pictures/' . $user->profile_picture);
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath); // Delete the old image from the public directory
-                }
+                Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
             }
-
-            // Store the new profile picture in the public directory
+        
+            // Generate a secure filename
             $filename = $user->id . '_' . time() . '.' . $request->profile_picture->extension();
-            $request->profile_picture->move(public_path('profile_pictures'), $filename);
-
-            // Update the user with the new profile picture filename
+            
+            // Store in storage/app/public/profile_pictures
+            $request->profile_picture->storeAs('profile_pictures', $filename, 'public');
+        
+            // Update the user record
             $user->profile_picture = $filename;
+            $user->save();
         }
 
         // Update the other user fields
