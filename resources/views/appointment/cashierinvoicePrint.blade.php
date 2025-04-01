@@ -213,7 +213,7 @@
 
                                             <td style="width: 15%;" class='mb-2'>
                                                 <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    name="amount[]" value="{{ json_decode($appointment->amount)[0] ?? '0'}}">
+                                                    name="amount[]" value="{{ json_decode($appointment->amount)[0] ?? '0'}}" disabled>
                                             </td>
                                         </tr>
 
@@ -230,7 +230,7 @@
 
                                             <td style="width: 15%;" class='mb-2'>
                                                 <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    name="amount[]" value="300">
+                                                    name="amount[]" value="300" disabled>
                                             </td>
                                         </tr>
                                         @endif

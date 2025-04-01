@@ -32,10 +32,10 @@
         <!-- Main Navigation -->
         <div class="flex flex-col items-center lg:items-start gap-5">
             <h1 class="font-semibold text-[20px] text-center lg:text-left">Main</h1>
-            <a href="" class="hover:underline">Home</a>
-            <a href="" class="hover:underline">Services</a>
-            <a href="" class="hover:underline">About</a>
-            <a href="" class="hover:underline">Contacts</a>
+            <a href="{{ url('/') }}" class="hover:underline">Home</a>
+            <a href="{{ url('/#services-section') }}" class="hover:underline">Services</a>
+            <a href="{{ url('/#about-section') }}" class="hover:underline">About</a>
+            <a href="{{ url('/#contact-section') }}" class="hover:underline">Contacts</a>
         </div>
 
         <!-- Contacts Section -->
@@ -43,7 +43,7 @@
             <h1 class="font-semibold text-[20px] text-center lg:text-left">Contacts</h1>
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-envelope text-white"></i>
-                <p>quintom53@gmail.com</p>
+                <p>stbenedictClinic@gmail.com</p>
             </div>
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-mobile-screen"></i>

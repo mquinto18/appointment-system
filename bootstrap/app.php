@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'user' => \App\Http\Middleware\User::class,
             'cashier' => \App\Http\Middleware\Cashier::class,
             'doctor' => \App\Http\Middleware\Doctor::class,
+            'csp' => \App\Http\Middleware\ContentSecurityPolicy::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

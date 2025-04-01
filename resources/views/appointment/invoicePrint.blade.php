@@ -160,76 +160,77 @@
                                 @method('PUT')
 
                                 <table class="w-full text-left border-collapse">
-                                    <!-- <div class="flex justify-end mt-4 gap-2 mb-3"> Flex container for Add button
-                                        <button type="button" id="addRow" class="bg-[#0074C8] text-white rounded-lg px-3 py-2">
-                                            <i class="fa-solid fa-plus" style="color: #ffffff;"></i>
-                                        </button>
-                                    </div> -->
                                     <thead>
-                                        <!-- <div class="p-2">
-                                            <span class="font-bold">Add Discount</span>
-                                            <select name="discount" class="mt-2 w-80 border border-gray-300 rounded-lg p-2">
-                                                <option value="0" {{ isset($appointment) && $appointment->discount == 0 ? 'selected' : '' }}>0%</option>
-                                                <option value="50" {{ isset($appointment) && $appointment->discount == 50 ? 'selected' : '' }}>50%</option>
-                                                <option value="40" {{ isset($appointment) && $appointment->discount == 40 ? 'selected' : '' }}>40%</option>
-                                                <option value="30" {{ isset($appointment) && $appointment->discount == 30 ? 'selected' : '' }}>30%</option>
-                                                <option value="20" {{ isset($appointment) && $appointment->discount == 20 ? 'selected' : '' }}>20%</option>
-                                                <option value="10" {{ isset($appointment) && $appointment->discount == 10 ? 'selected' : '' }}>10%</option>
-                                            </select>
-                                        </div> -->
                                         <div class="font-medium flex text-[14px] justify-center items-center gap-1 border-[1px] my-2 px-2 rounded-full py-2 text-center w-[200px] 
-                                            {{ empty($appointment->descriptions) ? 'bg-red-100 border-red-700 text-red-700' : 'bg-green-100 border-green-700 text-green-700' }}">
+            {{ empty($appointment->descriptions) ? 'bg-red-100 border-red-700 text-red-700' : 'bg-green-100 border-green-700 text-green-700' }}">
                                             <i class="fa-solid fa-circle fa-2xs"></i>
                                             {{ empty($appointment->descriptions) ? 'NOT PAID' : 'PAID' }}
                                         </div>
 
+                                        @php
+                                        $descriptions = json_decode($appointment->descriptions) ?? [];
+                                        $quantities = json_decode($appointment->qty) ?? [];
+                                        $amounts = json_decode($appointment->amount) ?? [];
 
+                                        // Ensure the amounts array contains numeric values
+                                        $totalAmount = (!empty($amounts) && is_array($amounts)) ? array_sum(array_map('floatval', $amounts)) : 0;
+                                        $discount = isset($appointment) ? (float) $appointment->discount : 0;
+                                        $discountedAmount = $totalAmount - ($totalAmount * ($discount / 100));
+                                        @endphp
+
+                                        <div class="flex items-center">
+                                            
+                                           <div class="p-2">
+                                                <span class="font-bold">Total Amount:</span>
+                                                <span class="mt-2 w-80 border border-gray-300 rounded-lg p-2 inline-block">
+                                                    ₱{{ number_format($discountedAmount, 2) }}
+                                                </span>
+                                            </div>
+
+                                         
+                                            <div class="p-2">
+                                                <span class="font-bold">Discount:</span>
+                                                <span class="mt-2 w-80 border border-gray-300 rounded-lg p-2 inline-block">
+                                                    {{ $discount }}%
+                                                </span>
+                                            </div>
+
+                                            
+                                        </div>
 
                                         <tr>
                                             <th class="p-2 border-t">Description</th>
                                             <th class="p-2 border-t">Qty</th>
                                             <th class="p-2 border-t">Amount</th>
-                                            <!-- <th class="p-2 border-t">Action</th> A dded Action column for Add/Remove buttons -->
                                         </tr>
                                     </thead>
                                     <tbody id="invoiceTableBody">
-                                        @php
-                                            $descriptions = json_decode($appointment->descriptions) ?? [];
-                                            $quantities = json_decode($appointment->qty) ?? [];
-                                            $amounts = json_decode($appointment->amount) ?? [];
-                                        @endphp
-
                                         @if(empty($descriptions))
-                                            <tr>
-                                                <td colspan="4" class="text-center border p-7">
-                                                    Transaction still on process...
-                                                </td>
-                                            </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-center border p-7">
+                                                Transaction still on process...
+                                            </td>
+                                        </tr>
                                         @else
-                                            @foreach($descriptions as $index => $description)
-                                            <tr>
-                                                <td style="width: 33%;" class='pr-6 mb-2'>
-                                                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                        name="descriptions[]" value="{{ $description }}">
-                                                </td>
-                                                <td style="width: 15%;" class='mb-2'>
-                                                    <input type="number" name="qty[]" value="{{ $quantities[$index] }}" min="1" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                </td>
-                                                <td style="width: 15%;" class='mb-2'>
-                                                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                        name="amount[]" value="{{ $amounts[$index] }}">
-                                                </td>
-                                                <!-- <td style="width: 10%;">
-                                                    <button type="button" class="removeRow bg-red-500 text-white rounded-lg px-3 py-1">
-                                                        <i class="fa-solid fa-x" style="color: #ffffff;"></i>
-                                                    </button>
-                                                </td> -->
-                                            </tr>
-                                            @endforeach
+                                        @foreach($descriptions as $index => $description)
+                                        <tr>
+                                            <td style="width: 33%;" class='pr-6 mb-2'>
+                                                <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    name="descriptions[]" value="{{ $description }}">
+                                            </td>
+                                            <td style="width: 15%;" class='mb-2'>
+                                                <input type="number" name="qty[]" value="{{ $quantities[$index] }}" min="1" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            </td>
+                                            <td style="width: 15%;" class='mb-2'>
+                                                <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    name="amount[]" value="{{ $amounts[$index] }}">
+                                            </td>
+                                        </tr>
+                                        @endforeach
                                         @endif
                                     </tbody>
-
                                 </table>
+
 
                                 <!-- <div class="mt-3 w-full flex gap-2">
                                     <button type="submit" class="block w-full rounded-md bg-[#0074C8] text-white px-3 py-2">Save</button>

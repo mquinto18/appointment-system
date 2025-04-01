@@ -22,30 +22,31 @@ use Illuminate\Support\Str; // Import the Str class
 class AppointmentController extends Controller
 {
     public function appointment(Request $request)
-    {
+{
+    $users = User::where('type', 2)
+        ->where('status', 'active')
+        ->get();
 
-        $users = User::where('type', 2)
-            ->where('status', 'active')
-            ->get(); // Retrieves all users with type 1
-        // Get search query
-        $search = $request->input('search');
+    // Get search query
+    $search = trim($request->input('search'));
 
-        // Query appointments with search functionality
-        $appointments = Appointment::where(function ($query) use ($search) {
-            if ($search) {
-                $query->where('first_name', 'like', '%' . $search . '%')
-                    ->orWhere('last_name', 'like', '%' . $search . '%')
-                    ->orWhere('doctor', 'like', '%' . $search . '%')
-                    ->orWhere('visit_type', 'like', '%' . $search . '%');
-            }
-        })
-            ->paginate(10); // Pagination with 5 rows per page
+    // Query appointments with search functionality
+    $appointments = Appointment::where(function ($query) use ($search) {
+        if ($search) {
+            $query->where('first_name', 'like', '%' . $search . '%')
+                ->orWhere('last_name', 'like', '%' . $search . '%')
+                ->orWhere('doctor', 'like', '%' . $search . '%')
+                ->orWhere('visit_type', 'like', '%' . $search . '%')
+                ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%$search%"]); // Search full name
+        }
+    })
+        ->paginate(10);
 
-        $totalAppointments = Appointment::count(); // Count total number of appointments
+    $totalAppointments = Appointment::count();
 
-        // Pass the appointments data and total count to the view
-        return view('appointment.totalAppointment', compact('appointments', 'totalAppointments', 'search', 'users'));
-    }
+    return view('appointment.totalAppointment', compact('appointments', 'totalAppointments', 'search', 'users'));
+}
+
 
     public function appointmentSave(Request $request)
     {

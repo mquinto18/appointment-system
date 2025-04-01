@@ -105,16 +105,16 @@
                 <div class="flex flex-col sm:flex-row justify-center items-center gap-10 my-10">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
                         <div class="rounded overflow-hidden shadow-lg">
-                            <img src="{{ asset('images/pic1.jpg') }}" alt="Image 1" class="w-[500px] h-auto object-cover rounded">
+                            <img src="{{ asset('images/clinic1.jpg') }}" alt="Image 1" class="w-[500px] h-auto object-cover rounded">
                         </div>
                         <div class="rounded overflow-hidden shadow-lg">
-                            <img src="{{ asset('images/pic2.jpg') }}" alt="Image 2" class="w-[500px] h-auto object-cover rounded">
+                            <img src="{{ asset('images/clinic2.jpg') }}" alt="Image 2" class="w-[500px] h-auto object-cover rounded">
                         </div>
                         <div class="rounded overflow-hidden shadow-lg">
-                            <img src="{{ asset('images/pic3.jpg') }}" alt="Image 3" class="w-[500px] h-auto object-cover rounded">
+                            <img src="{{ asset('images/clinic3.jpg') }}" alt="Image 3" class="w-[500px] h-auto object-cover rounded">
                         </div>
                         <div class="rounded overflow-hidden shadow-lg">
-                            <img src="{{ asset('images/pic3.jpg') }}" alt="Image 4" class="w-[500px] h-auto object-cover rounded">
+                            <img src="{{ asset('images/clinic4.jpg') }}" alt="Image 4" class="w-[500px] h-auto object-cover rounded">
                         </div>
                     </div>
                     <div class="flex flex-col gap-8">
@@ -129,7 +129,7 @@
             </div>
 
 
-            <div class="my-20">
+            <div class="my-20" id="services-section">
                 <div class="mt-[30px] text-center">
                     <h1 class="font-bold text-[20px] sm:text-2xl md:text-3xl lg:text-3xl">Our Medical Services</h1>
                     <p class="italic text-[20px]">Great doctor if you need your family member to get effective immediate <br> assistance, emergency treatment or a simple consultation.</p>

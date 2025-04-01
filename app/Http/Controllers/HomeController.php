@@ -351,35 +351,21 @@ public function appointmentBooked()
 
     public function appointmentQrcode($id)
     {
-        // Find the appointment by ID
-        $appointmentqr = Appointment::findOrFail($id);  // Changed variable name to appointmentqr
-
-        // Generate QR code using a unique field, e.g., appointment transaction number
-        $qrCode = new QrCode($appointmentqr->transaction_number); // Using appointmentqr instead of appointments
+        $appointmentqr = Appointment::findOrFail($id);  
+        $qrCode = new QrCode($appointmentqr->transaction_number); 
         $writer = new PngWriter();
-
-        // Write the QR code to a string (PNG format)
         $qrCodeImage = $writer->write($qrCode);
-
-        // Return the QR code as a response (image/png)
         return response($qrCodeImage->getString())
             ->header('Content-Type', 'image/png');
     }
     public function downloadQRPdf($appointmentId)
     {
         $appointment = Appointment::findOrFail($appointmentId);
-    
-        // Create QR code using transaction number
-        $qrCode = new QrCode($appointment->transaction_number);// Use create() method for the new syntax
+        $qrCode = new QrCode($appointment->transaction_number);
         $writer = new PngWriter();
-    
-        // Generate QR code image
         $qrCodeImage = $writer->write($qrCode);
-    
-        // Convert QR code binary to base64 string for embedding in PDF
         $qrCodeDataUri = 'data:image/png;base64,' . base64_encode($qrCodeImage->getString());
     
-        // Generate PDF with QR code
         $pdf = Pdf::loadView('patient.qr-code', compact('appointment', 'qrCodeDataUri'));
         return $pdf->download('appointment_qr_code.pdf');
     }

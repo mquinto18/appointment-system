@@ -68,7 +68,7 @@
         </div>
         <div class="email-footer">
             <p>This message was sent from the contact form on your website.</p>
-            <p><a href="#">Visit Your Website</a></p>
+            <p><a href="https://stbenedictmedicalclinic.com/">Visit Your Website</a></p>
         </div>
     </div>
 </body>

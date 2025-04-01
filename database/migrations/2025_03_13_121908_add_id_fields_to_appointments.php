@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('id_number')->nullable()->after('discount');
             $table->string('id_type')->nullable()->after('id_number');
             $table->integer('follow_up')->default(0)->after('id_type'); // Add follow_up column
-        });
+        }); 
     }
 
     /**

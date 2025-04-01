@@ -43,8 +43,9 @@
                                 class="mt-1 block w-full rounded-r-md border border-gray-300 p-2"
                                 pattern="[0-9]{10}"
                                 placeholder="9123456789"
-                                required>
+                                required maxlength="10">
                         </div>
+                        <span id="mobileError" class="text-red-600 hidden">Please enter exactly 10 digits.</span>
                     </div>
 
                     <!-- Address -->
@@ -322,6 +323,24 @@
                 document.getElementById('selected_visit_amount').value = jsonData;
             });
 
+        });
+
+        document.getElementById("mobile_number").addEventListener("input", function() {
+            // Remove non-numeric characters
+            this.value = this.value.replace(/\D/g, "");
+
+            // Ensure it's only 10 digits
+            if (this.value.length > 10) {
+                this.value = this.value.slice(0, 10);
+            }
+
+            // Show error if it's not exactly 10 digits
+            const errorSpan = document.getElementById("mobileError");
+            if (this.value.length !== 10) {
+                errorSpan.classList.remove("hidden");
+            } else {
+                errorSpan.classList.add("hidden");
+            }
         });
     </script>
 

@@ -5,6 +5,7 @@
 @section('contents')
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,10 +28,12 @@
             opacity: 0;
             transition: visibility 0.3s, opacity 0.3s;
         }
+
         #loading-modal.active {
             visibility: visible;
             opacity: 1;
         }
+
         .loading-spinner {
             width: 50px;
             height: 50px;
@@ -39,12 +42,19 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
+
 <body class="font-sans text-gray-900 antialiased">
 
     <!-- Loading Modal -->
@@ -74,14 +84,22 @@
                     <span class="text-red-600">{{ $message }}</span>
                     @enderror
                 </div>
-                <div>
-                    <input type="password" name="password" id="password" placeholder="Password" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                <div class="relative">
+                    <input type="password" name="password" id="password" placeholder="Password" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="" pattern="(?=.*[A-Z])(?=.*\d).{8,}" title="Password must be at least 8 characters long and include at least one uppercase letter and one number.">
+                    <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600 dark:text-gray-300">
+                        👁️
+                    </button>
                     @error('password')
                     <span class="text-red-600">{{ $message }}</span>
                     @enderror
                 </div>
-                <div>
-                    <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirm password" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                <span id="passwordError" class="text-red-600 hidden">Password must be at least 8 characters long, contain an uppercase letter, and a number.</span>
+
+                <div class="relative">
+                    <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirm password" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                    <button type="button" id="toggleConfirmPassword" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600 dark:text-gray-300">
+                        👁️
+                    </button>
                     @error('password_confirmation')
                     <span class="text-red-600">{{ $message }}</span>
                     @enderror
@@ -117,7 +135,39 @@
             const modal = document.getElementById('loading-modal');
             modal.classList.remove('active');
         });
+
+        function togglePasswordVisibility(inputId, buttonId) {
+        const inputField = document.getElementById(inputId);
+        const toggleButton = document.getElementById(buttonId);
+
+        toggleButton.addEventListener("click", function () {
+            if (inputField.type === "password") {
+                inputField.type = "text";
+                this.textContent = "🙈"; // Change icon to closed eye
+            } else {
+                inputField.type = "password";
+                this.textContent = "👁️"; // Change back to open eye
+            }
+        });
+    }
+
+    togglePasswordVisibility("password", "togglePassword");
+    togglePasswordVisibility("password_confirmation", "toggleConfirmPassword");
+
+    // Client-side validation
+    document.getElementById("password").addEventListener("input", function () {
+        const password = this.value;
+        const errorSpan = document.getElementById("passwordError");
+
+        const regex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+        if (!regex.test(password)) {
+            errorSpan.classList.remove("hidden");
+        } else {
+            errorSpan.classList.add("hidden");
+        }
+    });
     </script>
 </body>
+
 </html>
 @endsection
