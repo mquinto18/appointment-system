@@ -25,16 +25,21 @@
             <div class='flex justify-between items-center mb-4'>
                 <div>
                     <!-- Records per page dropdown (optional, not implemented in the controller yet) -->
-                    <select name="records_per_page" class="border border-gray-300 p-2 rounded">
-                        <option value="5">5 records per page</option>
-                        <option value="10">10 records per page</option>
-                    </select>
+                    <form method="GET" action="{{ route('doctorAppointment') }}">
+                        <select name="records_per_page" class="border border-gray-300 p-2 rounded" onchange="this.form.submit()">
+                            <option value="5" {{ request('records_per_page', 10) == 5 ? 'selected' : '' }}>5 records per page</option>
+                            <option value="10" {{ request('records_per_page', 10) == 10 ? 'selected' : '' }}>10 records per page</option>
+                        </select>
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                        <input type="hidden" name="date" value="{{ request('date') }}">
+                    </form>
+
                 </div>
                 <div class="flex gap-2 ">
                     <div class="flex items-center">
                         <!-- Search form -->
                         <form method="GET" action="{{ route('doctorAppointment') }}">
-                            <input type="text" name="search" value="{{ request('search') }}" class="border border-gray-300 p-2 rounded" placeholder="Search by patient, doctor or visit type">
+                            <input type="text" name="search" value="{{ request('search') }}" class="border border-gray-300 p-2 rounded" placeholder="Search by patient name">
                             <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Search</button>
                         </form>
                     </div>

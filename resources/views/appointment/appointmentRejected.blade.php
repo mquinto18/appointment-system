@@ -7,9 +7,9 @@
 <div>
     <h1 class='font-medium text-2xl ml-3'>Administrator</h1>
 </div>
-<div class='w-full h-32 mt-5 rounded-lg' style="background: linear-gradient(to bottom, #0074C8, #151A5C);"></div>   
+<div class='w-full h-32 mt-5 rounded-lg' style="background: linear-gradient(to bottom, #0074C8, #151A5C);"></div>
 
-<div class='mx-10 -mt-16'>  
+<div class='mx-10 -mt-16'>
     <div class='flex justify-between mb-2'>
         <span class='text-[20px] text-white font-medium'>All Rejected | {{ $totalAppointments }}</span>
         <div class='bg-white px-3 py-2 rounded-md cursor-pointer' data-bs-toggle="modal" data-bs-target="#addAdminModal">
@@ -19,32 +19,33 @@
     </div>
 
     <div class='bg-white w-full rounded-lg shadow-md p-8'>
-    <div class="overflow-x-auto">
-       
-        @include('appointment.navigation')
-        <div class='flex justify-between items-center mb-4'>
-            <div>
-                <!-- Records per page dropdown (optional, not implemented in the controller yet) -->
-                <select name="records_per_page" class="border border-gray-300 p-2 rounded">
-                    <option value="5">5 records per page</option>
-                    <option value="10">10 records per page</option>
-                </select>
-            </div>
-            <div class="flex items-center">
-                <!-- Search form -->
-                <form method="GET" action="{{ route('appointment') }}">
-                    <input type="text" name="search" value="{{ request('search') }}" class="border border-gray-300 p-2 rounded" placeholder="Search by patient, doctor or visit type">
-                    <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Search</button>
-                </form>
-            </div>
-        </div>
+        <div class="overflow-x-auto">
 
-        <!-- If no appointments are found, display a message -->
-        @if($appointments->isEmpty())
+            @include('appointment.navigation')
+            <div class='flex justify-between items-center mb-4'>
+                <div>
+                    <!-- Records per page dropdown (optional, not implemented in the controller yet) -->
+                    <select name="records_per_page" class="border border-gray-300 p-2 rounded">
+                        <option value="5">5 records per page</option>
+                        <option value="10">10 records per page</option>
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <!-- Search form -->
+                    <form method="GET" action="{{ route('appointment') }}">
+                        <input type="text" name="search" value="{{ request('search') }}" class="border border-gray-300 p-2 rounded" placeholder="Search by patient, doctor or visit type">
+                        <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Search</button>
+                    </form>
+                    <a href="{{ route('appointment') }}" class="bg-gray-600 px-4 py-2 rounded"><i class="fa-solid fa-rotate" style="color: #ffffff;"></i></a>
+                </div>
+            </div>
+
+            <!-- If no appointments are found, display a message -->
+            @if($appointments->isEmpty())
             <div class="text-center text-gray-500 mt-4">
                 No appointments found for the search query "{{ request('search') }}".
             </div>
-        @else
+            @else
             <table id='myTable' class="min-w-full bg-white border mt-3">
                 <thead>
                     <tr class="text-left">
@@ -61,28 +62,28 @@
                 </thead>
                 <tbody>
                     @foreach($appointments as $appointment)
-                        <tr class="hover:bg-gray-100">
-                            <td class="py-3 px-4 border-b">{{ $loop->iteration + ($appointments->currentPage() - 1) * $appointments->perPage() }}</td>
-                            <td class="py-3 px-4 border-b">{{ $appointment->first_name }} {{ $appointment->last_name }}</td>
-                            <td class="py-3 px-4 border-b">{{ $appointment->visit_type }}</td>
-                            <td class="py-3 px-4 border-b">{{ $appointment->doctor }}</td>
-                            <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
-                            <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}</td>
-                            <td class="py-3 px-4 border-b">
-                                <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
+                    <tr class="hover:bg-gray-100">
+                        <td class="py-3 px-4 border-b">{{ $loop->iteration + ($appointments->currentPage() - 1) * $appointments->perPage() }}</td>
+                        <td class="py-3 px-4 border-b">{{ $appointment->first_name }} {{ $appointment->last_name }}</td>
+                        <td class="py-3 px-4 border-b">{{ $appointment->visit_type }}</td>
+                        <td class="py-3 px-4 border-b">{{ $appointment->doctor }}</td>
+                        <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
+                        <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}</td>
+                        <td class="py-3 px-4 border-b">
+                            <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
                                     @if($appointment->status === 'pending') bg-orange-100 border-orange-700 
                                     @elseif($appointment->status === 'approved') bg-green-100 border-green-700 
                                     @elseif($appointment->status === 'rejected') bg-red-100 border-red-700 
                                     @elseif($appointment->status === 'completed') bg-blue-100 border-blue-700 @endif">
-                                    <i class="fa-solid fa-circle fa-2xs" 
-                                        @if($appointment->status === 'pending') style="color: #c05621" 
-                                        @elseif($appointment->status === 'approved') style="color: #38a169" 
-                                        @elseif($appointment->status === 'rejected') style="color: #e53e3e" 
-                                        @elseif($appointment->status === 'completed') style="color: #3182ce" @endif></i>
-                                    {{ strtoupper($appointment->status) }}
-                                </div>
-                            </td>
-                            <td class="py-3 px-4 border-b">
+                                <i class="fa-solid fa-circle fa-2xs"
+                                    @if($appointment->status === 'pending') style="color: #c05621"
+                                    @elseif($appointment->status === 'approved') style="color: #38a169"
+                                    @elseif($appointment->status === 'rejected') style="color: #e53e3e"
+                                    @elseif($appointment->status === 'completed') style="color: #3182ce" @endif></i>
+                                {{ strtoupper($appointment->status) }}
+                            </div>
+                        </td>
+                        <td class="py-3 px-4 border-b">
                             <div class='flex gap-2'>
                                 <form action="{{ route('appointments.approve', $appointment->id) }}" method="POST">
                                     @csrf
@@ -131,42 +132,42 @@
                                     </button>
                                 </form>
                             </div>
-                            </td>
-                            <td class="cursor-pointer relative">
-                                <!-- Ellipsis Icon -->
-                                <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"></i>   
+                        </td>
+                        <td class="cursor-pointer relative">
+                            <!-- Ellipsis Icon -->
+                            <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"></i>
 
-                                <!-- Dropdown Menu -->
-                                <ul class="dropdown-menu font-medium absolute right-0 z-10 hidden text-left bg-white shadow-lg rounded-lg w-40" aria-labelledby="dropdownMenuButton">
-                                    <!-- Edit Option -->
-                                    <a href="{{ route('appointments.edit', $appointment->id) }}" class="block">
-                                        <div class="px-4 py-2 flex items-center hover:bg-gray-100">
-                                            <i class="fa-regular fa-pen-to-square mr-2 text-gray-600"></i>
-                                            <span class="text-sm">Edit</span>
-                                        </div>
-                                    </a>
-                                    <!-- View Option -->
-                                    <a href="#" onclick="openViewModal({{ $appointment }})" class="block">
-                                        <li class="px-4 py-2 flex items-center hover:bg-gray-100">
-                                            <i class="fa-regular fa-eye mr-2 text-gray-600"></i>
-                                            <span class="text-sm">View</span>
-                                        </li>
-                                    </a>
-                                    <!-- Delete Option -->
+                            <!-- Dropdown Menu -->
+                            <ul class="dropdown-menu font-medium absolute right-0 z-10 hidden text-left bg-white shadow-lg rounded-lg w-40" aria-labelledby="dropdownMenuButton">
+                                <!-- Edit Option -->
+                                <a href="{{ route('appointments.edit', $appointment->id) }}" class="block">
                                     <div class="px-4 py-2 flex items-center hover:bg-gray-100">
-                                        <form action="#" method="POST" class="flex items-center w-full" onsubmit="return false;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <i class="fa-regular fa-trash-can mr-2 text-gray-600"></i>
-                                            <button type="button" onclick="openDeleteModal('{{ $appointment->first_name }} {{ $appointment->last_name }}', '{{ route('appointments.destroy', $appointment->id) }}')" class="text-sm">
-                                                Delete
-                                            </button>
-                                        </form>
+                                        <i class="fa-regular fa-pen-to-square mr-2 text-gray-600"></i>
+                                        <span class="text-sm">Edit</span>
                                     </div>
-                                </ul>
-                            </td>
-   
-                        </tr>
+                                </a>
+                                <!-- View Option -->
+                                <a href="#" onclick="openViewModal({{ $appointment }})" class="block">
+                                    <li class="px-4 py-2 flex items-center hover:bg-gray-100">
+                                        <i class="fa-regular fa-eye mr-2 text-gray-600"></i>
+                                        <span class="text-sm">View</span>
+                                    </li>
+                                </a>
+                                <!-- Delete Option -->
+                                <div class="px-4 py-2 flex items-center hover:bg-gray-100">
+                                    <form action="#" method="POST" class="flex items-center w-full" onsubmit="return false;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <i class="fa-regular fa-trash-can mr-2 text-gray-600"></i>
+                                        <button type="button" onclick="openDeleteModal('{{ $appointment->first_name }} {{ $appointment->last_name }}', '{{ route('appointments.destroy', $appointment->id) }}')" class="text-sm">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </ul>
+                        </td>
+
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -175,9 +176,9 @@
             <div class="mt-4">
                 {{ $appointments->appends(['search' => request('search')])->links() }}
             </div>
-        @endif
+            @endif
+        </div>
     </div>
-</div>
 
 
 </div>
@@ -437,42 +438,44 @@
     </div>
     <script>
         function openViewModal(appointment) {
-    document.getElementById('viewTransactionNumber').value = appointment.transaction_number; 
-    document.getElementById('viewPatientName').value = appointment.first_name + ' ' + appointment.last_name;
-    document.getElementById('viewDoctor').value = appointment.doctor;
-    document.getElementById('viewAppointmentDate').value = new Date(appointment.appointment_date).toLocaleDateString();
-    document.getElementById('viewAppointmentTime').value = new Date('1970-01-01T' + appointment.appointment_time + 'Z').toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    document.getElementById('viewVisitType').value = appointment.visit_type;
-    document.getElementById('viewStatus').value = appointment.status;
-    document.getElementById('viewAdditionalInfo').value = appointment.additional || 'N/A';
-    document.getElementById('viewDateOfBirth').value = new Date(appointment.date_of_birth).toLocaleDateString();
-    document.getElementById('viewGender').value = appointment.gender;
-    document.getElementById('viewMaritalStatus').value = appointment.marital_status;
-    document.getElementById('viewContactNumber').value = appointment.contact_number;
-    document.getElementById('viewEmailAddress').value = appointment.email_address;
-    document.getElementById('viewCompleteAddress').value = appointment.complete_address;
-    document.getElementById('viewNotes').value = appointment.notes || 'N/A';
+            document.getElementById('viewTransactionNumber').value = appointment.transaction_number;
+            document.getElementById('viewPatientName').value = appointment.first_name + ' ' + appointment.last_name;
+            document.getElementById('viewDoctor').value = appointment.doctor;
+            document.getElementById('viewAppointmentDate').value = new Date(appointment.appointment_date).toLocaleDateString();
+            document.getElementById('viewAppointmentTime').value = new Date('1970-01-01T' + appointment.appointment_time + 'Z').toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('viewVisitType').value = appointment.visit_type;
+            document.getElementById('viewStatus').value = appointment.status;
+            document.getElementById('viewAdditionalInfo').value = appointment.additional || 'N/A';
+            document.getElementById('viewDateOfBirth').value = new Date(appointment.date_of_birth).toLocaleDateString();
+            document.getElementById('viewGender').value = appointment.gender;
+            document.getElementById('viewMaritalStatus').value = appointment.marital_status;
+            document.getElementById('viewContactNumber').value = appointment.contact_number;
+            document.getElementById('viewEmailAddress').value = appointment.email_address;
+            document.getElementById('viewCompleteAddress').value = appointment.complete_address;
+            document.getElementById('viewNotes').value = appointment.notes || 'N/A';
 
-    var myModal = new bootstrap.Modal(document.getElementById('viewAppointmentModal'), {
-        keyboard: false
-    });
-    myModal.show();
-}
-
+            var myModal = new bootstrap.Modal(document.getElementById('viewAppointmentModal'), {
+                keyboard: false
+            });
+            myModal.show();
+        }
     </script>
     <script>
-    function openDeleteModal(name, url) {
-        // Set the confirmation message
-        document.getElementById('deleteAdminMessage').innerHTML = 'Are you sure you want to delete <strong>' + name + '</strong>? Once deleted, it cannot be recovered.';
-        // Set the form action to the correct URL
-        document.getElementById('deleteAdminForm').action = url;
-        // Show the modal
-        var myModal = new bootstrap.Modal(document.getElementById('deleteAdminModal'), {
-            keyboard: false
-        });
-        myModal.show();
-    }
-</script>
+        function openDeleteModal(name, url) {
+            // Set the confirmation message
+            document.getElementById('deleteAdminMessage').innerHTML = 'Are you sure you want to delete <strong>' + name + '</strong>? Once deleted, it cannot be recovered.';
+            // Set the form action to the correct URL
+            document.getElementById('deleteAdminForm').action = url;
+            // Show the modal
+            var myModal = new bootstrap.Modal(document.getElementById('deleteAdminModal'), {
+                keyboard: false
+            });
+            myModal.show();
+        }
+    </script>
 
 </div>
 

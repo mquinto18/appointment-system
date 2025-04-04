@@ -26,6 +26,12 @@
     z-index: 10;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
+.notify {
+    position: fixed;
+    top: 20px; /* Adjust as needed */
+    right: 20px; /* Adjust as needed */
+    z-index: 9999; /* Ensure it stays on top */
+}
 </style>
 
 <body class="bg-gray-100">
@@ -59,7 +65,7 @@
                         <div class="flex-grow flex justify-center ">
                             <div class="ml-10 flex items-baseline space-x-4 font-medium">
                                 <a href="{{ url('/') }}" class="text-white px-3 py-2 rounded-md text-sm">Home</a>
-                                <a href="" class="text-white px-3 py-2 rounded-md text-sm">Services</a>
+                                <a href="{{ url('/#services-section') }}" class="text-white px-3 py-2 rounded-md text-sm">Services</a>
                                 <a href="{{ url('/#about-section') }}" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">About Us</a>
                                 <a href="{{ url('/#contact-section') }}" class="text-white hover:text-white px-3 py-2 rounded-md text-sm">Contact Us</a>
                             </div>

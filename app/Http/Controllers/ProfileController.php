@@ -1,63 +1,67 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;  
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Hash;  
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
     public function profileUpdate(Request $request)
+{
+    // Validate the input (exclude profile_picture from here)
+    $request->validate([
+        'date_of_birth'   => 'nullable|date',
+        'phone_number'    => 'nullable|string|max:15',
+        'address'         => 'nullable|string|max:255',
+        'gender'          => 'nullable|in:male,female',
+        'status'          => 'required|in:active,inactive',
+    ]);
+
+    /** @var User $user */
+    $user = Auth::user();
+
+    // Only update fields that have changed
+    $user->update($request->only(['date_of_birth', 'phone_number', 'address', 'gender', 'status']));
+
+    notify()->success('Profile updated successfully!');
+    return redirect()->back()->with('status', 'Profile updated successfully!');
+}
+
+    public function updateProfilePicture(Request $request)
     {
-        // Validate the input
         $request->validate([
-            'date_of_birth'   => 'nullable|date',
-            'phone_number'    => 'nullable|string|max:15',
-            'address'         => 'nullable|string|max:255',
-            'gender'          => 'nullable|in:male,female',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max for profile picture
-            'status'          => 'required|in:active,inactive', // Add status validation
+            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Get the authenticated user
-         /** @var User $user */
+        /** @var User $user */
         $user = Auth::user();
 
-        // Check if a profile picture is being uploaded
-        if ($request->hasFile('profile_picture')) {
-            // Delete old image if exists
-            if ($user->profile_picture) {
-                Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
-            }
-        
-            // Generate a secure filename
-            $filename = $user->id . '_' . time() . '.' . $request->profile_picture->extension();
-            
-            // Store in storage/app/public/profile_pictures
-            $request->profile_picture->storeAs('profile_pictures', $filename, 'public');
-        
-            // Update the user record
-            $user->profile_picture = $filename;
-            $user->save();
+        // Delete old image if exists
+        if ($user->profile_picture) {
+            Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
         }
-        // Update the other user fields
-        $user->update([
-            'date_of_birth' => $request->date_of_birth,
-            'phone_number'  => $request->phone_number,
-            'address'       => $request->address,
-            'gender'        => $request->gender,
-            'status'        => $request->status, // Update the status field
-        ]);
 
-        // Redirect back with a success message
-        notify()->success('Profile updated successfully!');
-        return redirect()->back()->with('status', 'Profile updated successfully!');
+        // Generate a secure filename
+        $filename = $user->id . '_' . time() . '.' . $request->profile_picture->extension();
+
+        // Store in storage/app/public/profile_pictures
+        $request->profile_picture->storeAs('profile_pictures', $filename, 'public');
+
+        // Update user profile picture
+        $user->profile_picture = $filename;
+        $user->save();
+
+        notify()->success('Profile picture updated successfully!');
+        return redirect()->back()->with('status', 'Profile picture updated successfully!');
     }
 
 
-    public function securityUpdate(Request $request){
-         /** @var User $user */
+    public function securityUpdate(Request $request)
+    {
+        /** @var User $user */
         $user = Auth::user();
 
         $request->validate([
@@ -74,14 +78,15 @@ class ProfileController extends Controller
         return redirect()->back()->with('success', 'Profile updated successfully!');
     }
 
-    public function changePassword(Request $request){
+    public function changePassword(Request $request)
+    {
         $request->validate([
             'current_password' => ['required', 'current_password'],  // Laravel will verify this automatically
             'new_password' => ['required', 'string', 'min:8', 'confirmed'],  // 'confirmed' requires a matching '_confirmation' field
         ]);
 
-         // Update password
-          /** @var User $user */
+        // Update password
+        /** @var User $user */
         $user = Auth::user();
         $user->password = Hash::make($request->new_password);
         $user->save();
@@ -90,7 +95,8 @@ class ProfileController extends Controller
         return redirect()->back()->with('success', 'Password updated successfully!');
     }
 
-    public function accountDelete(Request $request){
+    public function accountDelete(Request $request)
+    {
         /** @var User $user */
         $user = Auth::user();
         $user->delete();

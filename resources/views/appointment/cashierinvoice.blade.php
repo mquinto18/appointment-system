@@ -7,36 +7,42 @@
 <div>
     <h1 class='font-medium text-2xl ml-3'>Medical Billing Invoice</h1>
 </div>
-<div class='w-full h-32 mt-5 rounded-lg' style="background: linear-gradient(to bottom, #0074C8, #151A5C);"></div>   
+<div class='w-full h-32 mt-5 rounded-lg' style="background: linear-gradient(to bottom, #0074C8, #151A5C);"></div>
 
-<div class='mx-10 -mt-16'>  
+<div class='mx-10 -mt-16'>
     <div class='flex justify-between mb-2'>
         <span class='text-[20px] text-white font-medium'>All Completed | {{ $totalAppointments }}</span>
     </div>
 
     <div class='bg-white w-full rounded-lg shadow-md p-8'>
-    <div class="overflow-x-auto">
-       
-        <div class='flex justify-between items-center mb-4'>
-            <div>
-                <!-- Records per page dropdown (optional, not implemented in the controller yet) -->
-                
-            </div>
-            <div class="flex items-center">
-                <!-- Search form -->
-                <form method="GET" action="{{ route('cashier.invoice') }}">
-                    <input type="text" name="search" value="{{ request('search') }}" class="border border-gray-300 p-2 rounded" placeholder="Search ">
-                    <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Search</button>
-                </form>
-            </div>
-        </div>
+        <div class="overflow-x-auto">
 
-        <!-- If no appointments are found, display a message -->
-        @if($appointments->isEmpty())
+            <div class='flex justify-between items-center mb-4'>
+                <div>
+                    <form method="GET" action="{{ route('cashier.invoice') }}">
+                        <select name="records_per_page" class="border border-gray-300 p-2 rounded" onchange="this.form.submit()">
+                            <option value="5" {{ request('records_per_page') == 5 ? 'selected' : '' }}>5 records per page</option>
+                            <option value="10" {{ request('records_per_page') == 10 ? 'selected' : '' }}>10 records per page</option>
+                        </select>
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                    </form>
+                </div>
+                <div class="flex items-center gap-2">
+                    <!-- Search form -->
+                    <form method="GET" action="{{ route('cashier.invoice') }}">
+                        <input type="text" name="search" value="{{ request('search') }}" class="border border-gray-300 p-2 rounded" placeholder="Search ">
+                        <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Search</button>
+                    </form>
+                    <a href="{{ route('cashier.invoice') }}" class="bg-gray-600 px-4 py-2 rounded"><i class="fa-solid fa-rotate" style="color: #ffffff;"></i></a>
+                </div>
+            </div>
+
+            <!-- If no appointments are found, display a message -->
+            @if($appointments->isEmpty())
             <div class="text-center text-gray-500 mt-4">
                 No appointments found for the search query "{{ request('search') }}".
             </div>
-        @else
+            @else
             <table id='myTable' class="min-w-full bg-white border mt-3">
                 <thead>
                     <tr class="text-left">
@@ -48,34 +54,34 @@
                         <th class="py-3 px-4 border-b">Appointment Time</th>
                         <th class="py-3 px-4 border-b">Status</th>
                         <th class="py-3 px-4 border-b">Actions</th>
-                       
+
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($appointments as $appointment)
-                        <tr class="hover:bg-gray-100">
-                            <td class="py-3 px-4 border-b">{{ $loop->iteration + ($appointments->currentPage() - 1) * $appointments->perPage() }}</td>
-                            <td class="py-3 px-4 border-b">{{ $appointment->first_name }} {{ $appointment->last_name }}</td>
-                            <td class="py-3 px-4 border-b">{{ $appointment->visit_type }}</td>
-                            <td class="py-3 px-4 border-b">{{ $appointment->doctor }}</td>
-                            <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
-                            <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}</td>
-                            <td class="py-3 px-4 border-b">
-                                <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
+                    <tr class="hover:bg-gray-100">
+                        <td class="py-3 px-4 border-b">{{ $loop->iteration + ($appointments->currentPage() - 1) * $appointments->perPage() }}</td>
+                        <td class="py-3 px-4 border-b">{{ $appointment->first_name }} {{ $appointment->last_name }}</td>
+                        <td class="py-3 px-4 border-b">{{ $appointment->visit_type }}</td>
+                        <td class="py-3 px-4 border-b">{{ $appointment->doctor }}</td>
+                        <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
+                        <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}</td>
+                        <td class="py-3 px-4 border-b">
+                            <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
                                     @if($appointment->status === 'pending') bg-orange-100 border-orange-700 
                                     @elseif($appointment->status === 'approved') bg-green-100 border-green-700 
                                     @elseif($appointment->status === 'rejected') bg-red-100 border-red-700 
                                     @elseif($appointment->status === 'completed') bg-blue-100 border-blue-700 @endif">
-                                    <i class="fa-solid fa-circle fa-2xs" 
-                                        @if($appointment->status === 'pending') style="color: #c05621" 
-                                        @elseif($appointment->status === 'approved') style="color: #38a169" 
-                                        @elseif($appointment->status === 'rejected') style="color: #e53e3e" 
-                                        @elseif($appointment->status === 'completed') style="color: #3182ce" @endif></i>
-                                    {{ strtoupper($appointment->status) }}
-                                </div>
-                            </td>
-                            <td class="py-3 px-4  gap-5 border-b">
-                                <div class='flex justify-center items-center gap-3'>
+                                <i class="fa-solid fa-circle fa-2xs"
+                                    @if($appointment->status === 'pending') style="color: #c05621"
+                                    @elseif($appointment->status === 'approved') style="color: #38a169"
+                                    @elseif($appointment->status === 'rejected') style="color: #e53e3e"
+                                    @elseif($appointment->status === 'completed') style="color: #3182ce" @endif></i>
+                                {{ strtoupper($appointment->status) }}
+                            </div>
+                        </td>
+                        <td class="py-3 px-4  gap-5 border-b">
+                            <div class='flex justify-center items-center gap-3'>
                                 <div class='relative group cursor-pointer'>
                                     <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md'>
                                         <a href="{{ route('cashierinvoince.print', $appointment->id) }}" class="text-blue-600 ">
@@ -88,7 +94,7 @@
                                 </div>
 
                                 <div class='cursor-pointer'>
-                                <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"></i>   
+                                    <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"></i>
                                     <!-- Dropdown Menu -->
                                     <ul class="dropdown-menu font-medium absolute right-0 z-10 hidden text-left bg-white shadow-lg rounded-lg w-40" aria-labelledby="dropdownMenuButton">
                                         <!-- Edit Option -->
@@ -118,11 +124,11 @@
                                         </div>
                                     </ul>
                                 </div>
-                                </div>
-                            </td>
-                            
-   
-                        </tr>
+                            </div>
+                        </td>
+
+
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -131,9 +137,9 @@
             <div class="mt-4">
                 {{ $appointments->appends(['search' => request('search')])->links() }}
             </div>
-        @endif
+            @endif
+        </div>
     </div>
-</div>
 
 
 </div>
@@ -384,41 +390,43 @@
     </div>
     <script>
         function openViewModal(appointment) {
-    document.getElementById('viewPatientName').value = appointment.first_name + ' ' + appointment.last_name;
-    document.getElementById('viewDoctor').value = appointment.doctor;
-    document.getElementById('viewAppointmentDate').value = new Date(appointment.appointment_date).toLocaleDateString();
-    document.getElementById('viewAppointmentTime').value = new Date('1970-01-01T' + appointment.appointment_time + 'Z').toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    document.getElementById('viewVisitType').value = appointment.visit_type;
-    document.getElementById('viewStatus').value = appointment.status;
-    document.getElementById('viewAdditionalInfo').value = appointment.additional || 'N/A';
-    document.getElementById('viewDateOfBirth').value = new Date(appointment.date_of_birth).toLocaleDateString();
-    document.getElementById('viewGender').value = appointment.gender;
-    document.getElementById('viewMaritalStatus').value = appointment.marital_status;
-    document.getElementById('viewContactNumber').value = appointment.contact_number;
-    document.getElementById('viewEmailAddress').value = appointment.email_address;
-    document.getElementById('viewCompleteAddress').value = appointment.complete_address;
-    document.getElementById('viewNotes').value = appointment.notes || 'N/A';
+            document.getElementById('viewPatientName').value = appointment.first_name + ' ' + appointment.last_name;
+            document.getElementById('viewDoctor').value = appointment.doctor;
+            document.getElementById('viewAppointmentDate').value = new Date(appointment.appointment_date).toLocaleDateString();
+            document.getElementById('viewAppointmentTime').value = new Date('1970-01-01T' + appointment.appointment_time + 'Z').toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('viewVisitType').value = appointment.visit_type;
+            document.getElementById('viewStatus').value = appointment.status;
+            document.getElementById('viewAdditionalInfo').value = appointment.additional || 'N/A';
+            document.getElementById('viewDateOfBirth').value = new Date(appointment.date_of_birth).toLocaleDateString();
+            document.getElementById('viewGender').value = appointment.gender;
+            document.getElementById('viewMaritalStatus').value = appointment.marital_status;
+            document.getElementById('viewContactNumber').value = appointment.contact_number;
+            document.getElementById('viewEmailAddress').value = appointment.email_address;
+            document.getElementById('viewCompleteAddress').value = appointment.complete_address;
+            document.getElementById('viewNotes').value = appointment.notes || 'N/A';
 
-    var myModal = new bootstrap.Modal(document.getElementById('viewAppointmentModal'), {
-        keyboard: false
-    });
-    myModal.show();
-}
-
+            var myModal = new bootstrap.Modal(document.getElementById('viewAppointmentModal'), {
+                keyboard: false
+            });
+            myModal.show();
+        }
     </script>
     <script>
-    function openDeleteModal(name, url) {
-        // Set the confirmation message
-        document.getElementById('deleteAdminMessage').innerHTML = 'Are you sure you want to delete <strong>' + name + '</strong>? Once deleted, it cannot be recovered.';
-        // Set the form action to the correct URL
-        document.getElementById('deleteAdminForm').action = url;
-        // Show the modal
-        var myModal = new bootstrap.Modal(document.getElementById('deleteAdminModal'), {
-            keyboard: false
-        });
-        myModal.show();
-    }
-</script>
+        function openDeleteModal(name, url) {
+            // Set the confirmation message
+            document.getElementById('deleteAdminMessage').innerHTML = 'Are you sure you want to delete <strong>' + name + '</strong>? Once deleted, it cannot be recovered.';
+            // Set the form action to the correct URL
+            document.getElementById('deleteAdminForm').action = url;
+            // Show the modal
+            var myModal = new bootstrap.Modal(document.getElementById('deleteAdminModal'), {
+                keyboard: false
+            });
+            myModal.show();
+        }
+    </script>
 
 </div>
 

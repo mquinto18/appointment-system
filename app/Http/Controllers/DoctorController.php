@@ -11,6 +11,7 @@ use App\Models\Appointment;
 use App\Models\AppointmentSlot;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -201,48 +202,54 @@ class DoctorController extends Controller
     }
 
 
-public function doctorAppointment(Request $request)
-{
-    $doctorName = auth()->user()->name; // Get the authenticated doctor's name
-    $search = $request->input('search'); // Get the search query
-    $date = $request->input('date'); // Get the selected date
+    public function doctorAppointment(Request $request)
+    {
+        $doctorName = auth()->user()->name;
+        $search = $request->input('search');
+        $date = $request->input('date');
+        $recordsPerPage = $request->input('records_per_page', 10); // Default to 10
 
-    // Query appointments, filter by doctor, search, and date if provided
-    $appointments = Appointment::where('doctor', $doctorName)
-        ->when($date, function ($query) use ($date) {
-            $query->whereDate('appointment_date', $date);
-        })
-        ->when($search, function ($query) use ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('first_name', 'like', '%' . $search . '%')
-                  ->orWhere('last_name', 'like', '%' . $search . '%')
-                  ->orWhere('visit_type', 'like', '%' . $search . '%');
-            });
-        })
-        ->paginate(10); // Pagination with 10 rows per page
+        // Ensure recordsPerPage is a valid number
+        if (!in_array($recordsPerPage, [5, 10, 20])) {
+            $recordsPerPage = 10;
+        }
 
-    // Count all appointments assigned to the doctor, applying filters
-    $totalAppointments = Appointment::where('doctor', $doctorName)
-        ->when($date, function ($query) use ($date) {
-            $query->whereDate('appointment_date', $date);
-        })
-        ->when($search, function ($query) use ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('first_name', 'like', '%' . $search . '%')
-                  ->orWhere('last_name', 'like', '%' . $search . '%')
-                  ->orWhere('visit_type', 'like', '%' . $search . '%');
-            });
-        })
-        ->count();
+        // Query appointments with filters
+        $appointments = Appointment::where('doctor', $doctorName)
+            ->when($date, function ($query) use ($date) {
+                return $query->whereDate('appointment_date', $date);
+            })
+            ->when($search, function ($query) use ($search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $search . '%'])
+                        ->orWhere('visit_type', 'like', '%' . $search . '%');
+                });
+            })
+            ->paginate($recordsPerPage)->appends(['search' => $search, 'date' => $date, 'records_per_page' => $recordsPerPage]);
 
-    // Pass the data to the view
-    return view('appointment.doctorTotalAppointment', compact(
-        'appointments',
-        'totalAppointments',
-        'search',
-        'date' // Pass date to retain the selected value in the form
-    ));
-}
+        // Total appointments count with filters
+        $totalAppointments = Appointment::where('doctor', $doctorName)
+            ->when($date, function ($query) use ($date) {
+                return $query->whereDate('appointment_date', $date);
+            })
+            ->when($search, function ($query) use ($search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $search . '%'])
+                        ->orWhere('visit_type', 'like', '%' . $search . '%');
+                });
+            })
+            ->count();
+
+        return view('appointment.doctorTotalAppointment', compact(
+            'appointments',
+            'totalAppointments',
+            'search',
+            'date',
+            'recordsPerPage'
+        ));
+    }
+
+
 
 
     public function todayAppointment(Request $request)
@@ -292,49 +299,52 @@ public function doctorAppointment(Request $request)
     public function profiledoctorUpdate(Request $request)
     {
         // Validate the input
+        // Validate the input (exclude profile_picture from here)
         $request->validate([
             'date_of_birth'   => 'nullable|date',
             'phone_number'    => 'nullable|string|max:15',
             'address'         => 'nullable|string|max:255',
             'gender'          => 'nullable|in:male,female',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max for profile picture
-            'status'          => 'required|in:active,inactive', // Add status validation
+            'status'          => 'required|in:active,inactive',
         ]);
 
-        // Get the authenticated user
         /** @var User $user */
         $user = Auth::user();
 
-        // Check if a profile picture is being uploaded
-        if ($request->hasFile('profile_picture')) {
-            // If the user already has a profile picture, delete the old one
-            if ($user->profile_picture) {
-                $oldImagePath = public_path('profile_pictures/' . $user->profile_picture);
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath); // Delete the old image from the public directory
-                }
-            }
+        // Only update fields that have changed
+        $user->update($request->only(['date_of_birth', 'phone_number', 'address', 'gender', 'status']));
 
-            // Store the new profile picture in the public directory
-            $filename = $user->id . '_' . time() . '.' . $request->profile_picture->extension();
-            $request->profile_picture->move(public_path('profile_pictures'), $filename);
-
-            // Update the user with the new profile picture filename
-            $user->profile_picture = $filename;
-        }
-
-        // Update the other user fields
-        $user->update([
-            'date_of_birth' => $request->date_of_birth,
-            'phone_number'  => $request->phone_number,
-            'address'       => $request->address,
-            'gender'        => $request->gender,
-            'status'        => $request->status, // Update the status field
-        ]);
-
-        // Redirect back with a success message
         notify()->success('Profile updated successfully!');
         return redirect()->back()->with('status', 'Profile updated successfully!');
+    }
+
+    public function profileupdateDoctorPicture(Request $request)
+    {
+
+        $request->validate([
+            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        // Delete old image if exists
+        if ($user->profile_picture) {
+            Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
+        }
+
+        // Generate a secure filename
+        $filename = $user->id . '_' . time() . '.' . $request->profile_picture->extension();
+
+        // Store in storage/app/public/profile_pictures
+        $request->profile_picture->storeAs('profile_pictures', $filename, 'public');
+
+        // Update user profile picture
+        $user->profile_picture = $filename;
+        $user->save();
+
+        notify()->success('Profile picture updated successfully!');
+        return redirect()->back()->with('status', 'Profile picture updated successfully!');
     }
 
     public function securitydoctorSettings()

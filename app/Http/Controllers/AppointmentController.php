@@ -22,30 +22,34 @@ use Illuminate\Support\Str; // Import the Str class
 class AppointmentController extends Controller
 {
     public function appointment(Request $request)
-{
-    $users = User::where('type', 2)
-        ->where('status', 'active')
-        ->get();
+    {
+        $users = User::where('type', 2)
+            ->where('status', 'active')
+            ->get();
 
-    // Get search query
-    $search = trim($request->input('search'));
+        // Get search query
+        $search = trim($request->input('search'));
 
-    // Query appointments with search functionality
-    $appointments = Appointment::where(function ($query) use ($search) {
-        if ($search) {
-            $query->where('first_name', 'like', '%' . $search . '%')
-                ->orWhere('last_name', 'like', '%' . $search . '%')
-                ->orWhere('doctor', 'like', '%' . $search . '%')
-                ->orWhere('visit_type', 'like', '%' . $search . '%')
-                ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%$search%"]); // Search full name
-        }
-    })
-        ->paginate(10);
+        // Get the selected number of records per page (default to 10)
+        $perPage = $request->input('records_per_page', 10);
 
-    $totalAppointments = Appointment::count();
+        // Query appointments with search functionality
+        $appointments = Appointment::where(function ($query) use ($search) {
+            if ($search) {
+                $query->where('first_name', 'like', '%' . $search . '%')
+                    ->orWhere('last_name', 'like', '%' . $search . '%')
+                    ->orWhere('doctor', 'like', '%' . $search . '%')
+                    ->orWhere('visit_type', 'like', '%' . $search . '%')
+                    ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%$search%"]); // Search full name
+            }
+        })
+            ->paginate($perPage); // Apply dynamic pagination
 
-    return view('appointment.totalAppointment', compact('appointments', 'totalAppointments', 'search', 'users'));
-}
+        $totalAppointments = Appointment::count();
+
+        return view('appointment.totalAppointment', compact('appointments', 'totalAppointments', 'search', 'users', 'perPage'));
+    }
+
 
 
     public function appointmentSave(Request $request)

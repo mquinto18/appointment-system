@@ -165,6 +165,11 @@
                                             <i class="fa-solid fa-plus" style="color: #ffffff;"></i>
                                         </button>
                                     </div> -->
+                                    <div class="font-medium flex text-[14px] justify-center items-center gap-1 border-[1px] my-2 px-2 rounded-full py-2 text-center w-[200px] 
+            {{ empty($appointment->descriptions) ? 'bg-red-100 border-red-700 text-red-700' : 'bg-green-100 border-green-700 text-green-700' }}">
+                                        <i class="fa-solid fa-circle fa-2xs"></i>
+                                        {{ empty($appointment->descriptions) ? 'NOT PAID' : 'PAID' }}
+                                    </div>
                                     <thead>
                                         <div class="flex justify-center items-center">
                                             <div class="p-2">
@@ -213,7 +218,7 @@
 
                                             <td style="width: 15%;" class='mb-2'>
                                                 <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    name="amount[]" value="{{ json_decode($appointment->amount)[0] ?? '0'}}" disabled>
+                                                    name="amount[]" value="{{ json_decode($appointment->amount)[0] ?? '0'}}" readonly>
                                             </td>
                                         </tr>
 
@@ -230,7 +235,7 @@
 
                                             <td style="width: 15%;" class='mb-2'>
                                                 <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    name="amount[]" value="300" disabled>
+                                                    name="amount[]" value="300" readonly>
                                             </td>
                                         </tr>
                                         @endif

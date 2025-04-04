@@ -91,28 +91,28 @@
                             <div class="relative">
                                 <!-- Dropdown Toggle -->
                                 <i class="fa-solid fa-ellipsis-vertical cursor-pointer" id="dropdownMenuButton" onclick="toggleDropdown(this)"></i>
-                                
-                                
+
+
                                 <!-- Dropdown Menu -->
                                 <ul class="dropdown-menu absolute right-0 z-10 text-left bg-white shadow-lg rounded-lg w-40 hidden">
                                     <!-- Edit Option -->
-                                    <li>
+                                    <!-- <li>
                                         @if ($appointment->status === 'pending')
-                                            <a href="{{ route('appointments.userEdit', $appointment->id) }}" class="block px-4 py-2 hover:bg-gray-100">
-                                                <i class="fa-regular fa-pen-to-square mr-2 text-gray-600"></i>
-                                                Edit
-                                            </a>
+                                        <a href="{{ route('appointments.userEdit', $appointment->id) }}" class="block px-4 py-2 hover:bg-gray-100">
+                                            <i class="fa-regular fa-pen-to-square mr-2 text-gray-600"></i>
+                                            Edit
+                                        </a>
                                         @else
-                                            <span class="block px-4 py-2 text-gray-400 cursor-not-allowed opacity-50">
-                                                <i class="fa-regular fa-pen-to-square mr-2 text-gray-400"></i>
-                                                Edit
-                                            </span>
+                                        <span class="block px-4 py-2 text-gray-400 cursor-not-allowed opacity-50">
+                                            <i class="fa-regular fa-pen-to-square mr-2 text-gray-400"></i>
+                                            Edit
+                                        </span>
                                         @endif
-                                    </li>
+                                    </li> -->
                                     <!-- View Option -->
                                     <li>
-                                        <a href="#" 
-                                        onclick="openViewModal(
+                                        <a href="#"
+                                            onclick="openViewModal(
                                             '{{ $appointment->transaction_number }}', 
                                             '{{ $appointment->first_name }} {{ $appointment->last_name }}', 
                                             '{{ $appointment->doctor }}', 
@@ -125,8 +125,8 @@
                                             '{{ $appointment->contact_number }}', 
                                             '{{ $appointment->email_address }}', 
                                             '{{ $appointment->complete_address }}'
-                                        )" 
-                                        class="block px-4 py-2 bg-white hover:bg-gray-200">
+                                        )"
+                                            class="block px-4 py-2 bg-white hover:bg-gray-200">
                                             <i class="fa-regular fa-eye mr-2 text-gray-600"></i>
                                             View
                                         </a>
@@ -145,13 +145,13 @@
                                     </li>
                                 </ul>
 
-                                
+
                             </div>
 
 
-                            
+
                         </div>
-                        
+
                     </div>
 
                     <!-- Appointment Details -->
@@ -185,25 +185,30 @@
                     <div class="mt-6 flex">
                         @if(strtolower($appointment->status) === 'cancelled')
                         <!-- Show the Delete button if the appointment is cancelled -->
-                        <!-- <button type="button" onclick="toggleDeleteModal(true, {{ $appointment->id }})" class="w-full h-12 bg-[#F2F2F2] hover:bg-gray-300 text-black font-semibold transition duration-200">
-                            Delete
-                        </button> -->
                         @elseif(strtolower($appointment->status) === 'rejected')
                         <!-- Show both Cancel and Reschedule buttons if the appointment is rejected -->
-                        <button type="button" class="w-1/2 h-12 bg-[#F2F2F2] border  font-semibold flex items-center justify-center hover:bg-gray-300 text-black transition duration-200" onclick="toggleModal(true, {{ $appointment->id }})">
+                        <button type="button" class="w-1/2 h-12 bg-[#F2F2F2] border font-semibold flex items-center justify-center hover:bg-gray-300 text-black transition duration-200" onclick="toggleModal(true, {{ $appointment->id }})">
                             Cancel
                         </button>
-                        <form method="GET" action="" class="w-1/2">
+                        <form method="GET" action="{{ route('appointments.userEdit', $appointment->id) }}" class="w-1/2">
                             @csrf
-                            <button type="button" 
-                                class="w-full h-12 bg-[#F2F2F2] font-semibold hover:bg-gray-300 text-black transition duration-200"
-                                onclick="toggleRescheduleModal(true, {{ $appointment->id }}, '{{ $appointment->appointment_date }}', '{{ $appointment->appointment_time }}')">
+                            <button type="submit" class="w-full h-12 bg-[#F2F2F2] font-semibold hover:bg-gray-300 text-black transition duration-200">
+                                Reschedule
+                            </button>
+                        </form>
+                        @elseif(strtolower($appointment->status) === 'pending')
+                        <!-- Show both Cancel and Reschedule buttons if the appointment is pending -->
+                        <button type="button" class="w-1/2 h-12 bg-[#F2F2F2] border font-semibold flex items-center justify-center hover:bg-gray-300 text-black transition duration-200" onclick="toggleModal(true, {{ $appointment->id }})">
+                            Cancel
+                        </button>
+                        <form method="GET" action="{{ route('appointments.userEdit', $appointment->id) }}" class="w-1/2">
+                            @csrf
+                            <button type="submit" class="w-full h-12 bg-[#F2F2F2] font-semibold hover:bg-gray-300 text-black transition duration-200">
                                 Reschedule
                             </button>
                         </form>
                         @elseif(strtolower($appointment->status) === 'completed')
                         <!-- Show the Rate button if the appointment is completed -->
-                        <!-- Show both Rate and Delete buttons if the appointment is completed -->
                         <div class="{{ $appointment->additional === 'Medical Certificate' ? 'w-1/2' : 'w-full' }}">
                             <form method="GET" action="" class="w-full">
                                 @csrf
@@ -228,24 +233,22 @@
                         </div>
                         @endif
 
-
-
                         @else
-                        <!-- Show the Cancel button if the appointment is not cancelled, rejected, or completed -->
-                        <button type="button" class="w-full h-12 bg-[#F2F2F2] border text-black font-semibold flex items-center justify-center hover:bg-gray-300  transition duration-200" onclick="toggleModal(true, {{ $appointment->id }})">
+                        <!-- Show the Cancel button if the appointment is not cancelled, rejected, completed, or pending -->
+                        <button type="button" class="w-full h-12 bg-[#F2F2F2] border text-black font-semibold flex items-center justify-center hover:bg-gray-300 transition duration-200" onclick="toggleModal(true, {{ $appointment->id }})">
                             Cancel
                         </button>
                         @endif
 
                         @if(strtolower($appointment->status) === 'approved')
-                        <!-- Form to trigger the modal -->
+                        <!-- Form to trigger the QR Code modal -->
                         <button type="button" class="w-full h-12 bg-[#F2F2F2] cursor-pointer border text-black font-semibold hover:bg-gray-300 transition duration-200"
-                                onclick="showQRCodeModal({{ $appointment->id }}, '{{ $appointment->first_name }} {{ $appointment->last_name }}', '{{ $appointment->visit_type }}', '{{ $appointment->appointment_date }}', '{{ $appointment->complete_address }}')">
+                            onclick="showQRCodeModal({{ $appointment->id }}, '{{ $appointment->first_name }} {{ $appointment->last_name }}', '{{ $appointment->visit_type }}', '{{ $appointment->appointment_date }}', '{{ $appointment->complete_address }}')">
                             View QR
                         </button>
                         @endif
-
                     </div>
+
                 </div>
                 @endforeach
                 @endif
@@ -314,34 +317,34 @@
         <div class="modal-content text-center">
             <div class="modal-body">
                 <h5 class="text-[24px] font-bold mb-3 mt-8">Your appointment has been Rescheduled to</h5>
-                
+
                 <form id="rescheduleAppointmentForm" method="POST" action="{{ route('appointments.reschedule', ':id') }}">
                     @csrf
-              
+
                     <!-- Date and Time Input Fields -->
                     <div class="flex justify-between mb-6 px-12 py-8">
                         <div class="w-[48%]">
                             <label for="appointment_date" class="block text-left text-sm font-semibold text-gray-500 mb-1">Date</label>
-                            <input type="date" id="appointment_date" name="appointment_date" 
-                                value="" 
+                            <input type="date" id="appointment_date" name="appointment_date"
+                                value=""
                                 class="block w-full text-gray-600 font-medium bg-gray-100 rounded-md p-3 border border-gray-300 focus:outline-none" readonly>
                         </div>
                         <div class="w-[48%]">
                             <label for="appointment_time" class="block text-left text-sm font-semibold text-gray-500 mb-1">Time</label>
-                            <input type="time" id="appointment_time" name="appointment_time" 
-                                value="" 
+                            <input type="time" id="appointment_time" name="appointment_time"
+                                value=""
                                 class="block w-full text-gray-600 font-medium bg-gray-100 rounded-md p-3 border border-gray-300 focus:outline-none" readonly>
                         </div>
                     </div>
 
                     <!-- Buttons -->
                     <div class="flex border-t border-gray-200">
-                        <button type="button" 
-                            class="w-1/2 py-4 bg-[#F2F2F2] font-semibold border-r hover:bg-gray-300 rounded-bl-md border-gray-200" 
+                        <button type="button"
+                            class="w-1/2 py-4 bg-[#F2F2F2] font-semibold border-r hover:bg-gray-300 rounded-bl-md border-gray-200"
                             onclick="toggleRescheduleModal(false)">
                             Cancel
                         </button>
-                        <button type="submit" 
+                        <button type="submit"
                             class="w-1/2  py-4 bg-[#F2F2F2] font-semibold hover:bg-gray-300 rounded-br-md">
                             Confirm
                         </button>
@@ -524,33 +527,32 @@
 
 
 <script>
+    function toggleRescheduleModal(show, appointmentId = null, appointmentDate = null, appointmentTime = null) {
+        const rescheduleModal = document.getElementById('rescheduleModal');
+        const formAction = `{{ route('appointments.reschedule', ':id') }}`.replace(':id', appointmentId);
+        const rescheduleForm = document.getElementById('rescheduleAppointmentForm');
 
-function toggleRescheduleModal(show, appointmentId = null, appointmentDate = null, appointmentTime = null) {
-    const rescheduleModal = document.getElementById('rescheduleModal');
-    const formAction = `{{ route('appointments.reschedule', ':id') }}`.replace(':id', appointmentId);
-    const rescheduleForm = document.getElementById('rescheduleAppointmentForm');
+        // Set the form action
+        if (appointmentId) {
+            rescheduleForm.action = formAction;
+        }
 
-    // Set the form action
-    if (appointmentId) {
-        rescheduleForm.action = formAction;
+        // Set the date and time in the modal
+        document.getElementById('appointment_date').value = appointmentDate || '';
+        document.getElementById('appointment_time').value = appointmentTime || '';
+
+        // Show or hide the modal
+        if (show) {
+            rescheduleModal.classList.remove('opacity-0', 'pointer-events-none');
+            rescheduleModal.classList.add('opacity-100');
+        } else {
+            rescheduleModal.classList.add('opacity-0', 'pointer-events-none');
+            rescheduleModal.classList.remove('opacity-100');
+        }
     }
 
-    // Set the date and time in the modal
-    document.getElementById('appointment_date').value = appointmentDate || '';
-    document.getElementById('appointment_time').value = appointmentTime || '';
 
-    // Show or hide the modal
-    if (show) {
-        rescheduleModal.classList.remove('opacity-0', 'pointer-events-none');
-        rescheduleModal.classList.add('opacity-100');
-    } else {
-        rescheduleModal.classList.add('opacity-0', 'pointer-events-none');
-        rescheduleModal.classList.remove('opacity-100');
-    }
-}
-
-
-function disableRateButton() {
+    function disableRateButton() {
         document.getElementById('submitRateButton').disabled = true;
         document.getElementById('submitRateButton').textContent = 'Submitting...';
     }
@@ -597,33 +599,33 @@ function disableRateButton() {
 
     // Show the modal and load the QR code dynamically via AJAX
     function showQRCodeModal(appointmentId, name, visitType, appointmentDate, appointmentAddress) {
-    // Show the modal
-    toggleQRCodeModal(true);
+        // Show the modal
+        toggleQRCodeModal(true);
 
-    // Set dynamic content in modal
-    document.getElementById('appointmentName').textContent = name;
-    document.getElementById('visitType').textContent = visitType;
-    document.getElementById('appointmentDate').textContent = appointmentDate;
-    document.getElementById('appointmentTime').textContent = appointmentAddress;
+        // Set dynamic content in modal
+        document.getElementById('appointmentName').textContent = name;
+        document.getElementById('visitType').textContent = visitType;
+        document.getElementById('appointmentDate').textContent = appointmentDate;
+        document.getElementById('appointmentTime').textContent = appointmentAddress;
 
-    // Dynamically update form action with appointmentId
-    var form = document.getElementById('qrCodeForm');
-    form.action = "{{ route('appointments.downloadQRPdf', ':id') }}".replace(':id', appointmentId);
+        // Dynamically update form action with appointmentId
+        var form = document.getElementById('qrCodeForm');
+        form.action = "{{ route('appointments.downloadQRPdf', ':id') }}".replace(':id', appointmentId);
 
-    // Fetch and display the QR code
-    fetch(`/dashboard/appointment/appointment-qrcode/${appointmentId}`)
-        .then(response => response.blob())
-        .then(imageBlob => {
-            const imageUrl = URL.createObjectURL(imageBlob);
-            document.getElementById('qrCodeImage').innerHTML = `<img src="${imageUrl}" alt="QR Code" class="mx-auto w-[200px]" />`;
+        // Fetch and display the QR code
+        fetch(`/dashboard/appointment/appointment-qrcode/${appointmentId}`)
+            .then(response => response.blob())
+            .then(imageBlob => {
+                const imageUrl = URL.createObjectURL(imageBlob);
+                document.getElementById('qrCodeImage').innerHTML = `<img src="${imageUrl}" alt="QR Code" class="mx-auto w-[200px]" />`;
 
-            // Set QR code data to hidden input for PDF download
-            document.getElementById('qrCodeData').value = imageUrl; // Or base64 string if needed
-        })
-        .catch(error => {
-            console.error("Error fetching QR code:", error);
-        });
-}
+                // Set QR code data to hidden input for PDF download
+                document.getElementById('qrCodeData').value = imageUrl; // Or base64 string if needed
+            })
+            .catch(error => {
+                console.error("Error fetching QR code:", error);
+            });
+    }
 
 
 
@@ -719,84 +721,84 @@ function disableRateButton() {
 
 
     function toggleDropdown(button) {
-    // Get the dropdown menu element (next sibling)
-    const dropdownMenu = button.nextElementSibling;
-
-    // Toggle visibility of the dropdown menu
-    if (dropdownMenu.classList.contains('hidden')) {
-        dropdownMenu.classList.remove('hidden');
-    } else {
-        dropdownMenu.classList.add('hidden');
-    }
-}
-
-// Close dropdown if clicked outside
-document.addEventListener('click', function (event) {
-    const dropdownButtons = document.querySelectorAll('#dropdownMenuButton');
-    dropdownButtons.forEach((button) => {
+        // Get the dropdown menu element (next sibling)
         const dropdownMenu = button.nextElementSibling;
-        if (dropdownMenu && !button.contains(event.target) && !dropdownMenu.contains(event.target)) {
+
+        // Toggle visibility of the dropdown menu
+        if (dropdownMenu.classList.contains('hidden')) {
+            dropdownMenu.classList.remove('hidden');
+        } else {
             dropdownMenu.classList.add('hidden');
         }
-    });
-});
-
-
-function openDeleteModal(appointmentId, fullName) {
-    // Update the modal text with the appointment details
-    const modalText = `Are you sure you want to delete ${fullName}'s appointment? Once deleted, it cannot be recovered.`;
-    document.querySelector('#deleteModal .modal-body p').textContent = modalText;
-
-    // Set the form action URL dynamically
-    const formAction = document.querySelector('#deleteAppointmentForm');
-    formAction.action = formAction.action.replace(':id', appointmentId);
-
-    // Show the modal
-    toggleDeleteModal(true);
-}
-
-function toggleDeleteModal(show) {
-    const modal = document.getElementById('deleteModal');
-    if (show) {
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        modal.classList.add('opacity-100', 'pointer-events-auto');
-    } else {
-        modal.classList.remove('opacity-100', 'pointer-events-auto');
-        modal.classList.add('opacity-0', 'pointer-events-none');
     }
-}
+
+    // Close dropdown if clicked outside
+    document.addEventListener('click', function(event) {
+        const dropdownButtons = document.querySelectorAll('#dropdownMenuButton');
+        dropdownButtons.forEach((button) => {
+            const dropdownMenu = button.nextElementSibling;
+            if (dropdownMenu && !button.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.add('hidden');
+            }
+        });
+    });
 
 
-function openViewModal(transactionNumber, patientName, doctorName, appointmentDates, appointmentTimes, visitTypes, additionalInfo, dob, gender, contactNumber, email, complete_address) {
-    // Populate the modal fields with the appointment details
-    document.getElementById('transactionNumber').value = transactionNumber;
-    document.getElementById('patientName').value = patientName;
-    document.getElementById('doctorName').value = doctorName;
-    document.getElementById('appointmentDates').value = appointmentDates;
-    document.getElementById('appointmentTimes').value = appointmentTimes;
-    document.getElementById('visitTypes').value = visitTypes;
-    document.getElementById('additionalInfo').value = additionalInfo;
-    document.getElementById('dob').value = dob;
-    document.getElementById('gender').value = gender;
-    document.getElementById('contactNumber').value = contactNumber;
-    document.getElementById('email').value = email;
-    document.getElementById('complete_address').value = complete_address;
+    function openDeleteModal(appointmentId, fullName) {
+        // Update the modal text with the appointment details
+        const modalText = `Are you sure you want to delete ${fullName}'s appointment? Once deleted, it cannot be recovered.`;
+        document.querySelector('#deleteModal .modal-body p').textContent = modalText;
 
-    // Show the modal
-    const modal = document.getElementById('viewModal');
-    modal.classList.remove('hidden');
-}
+        // Set the form action URL dynamically
+        const formAction = document.querySelector('#deleteAppointmentForm');
+        formAction.action = formAction.action.replace(':id', appointmentId);
 
-function closeViewModal() {
-    const modal = document.getElementById('viewModal');
-    modal.classList.add('hidden');
-}
+        // Show the modal
+        toggleDeleteModal(true);
+    }
 
-window.onclick = function(event) {
-    const modal = document.getElementById('viewModal');
-    if (event.target === modal) {
+    function toggleDeleteModal(show) {
+        const modal = document.getElementById('deleteModal');
+        if (show) {
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100', 'pointer-events-auto');
+        } else {
+            modal.classList.remove('opacity-100', 'pointer-events-auto');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+    }
+
+
+    function openViewModal(transactionNumber, patientName, doctorName, appointmentDates, appointmentTimes, visitTypes, additionalInfo, dob, gender, contactNumber, email, complete_address) {
+        // Populate the modal fields with the appointment details
+        document.getElementById('transactionNumber').value = transactionNumber;
+        document.getElementById('patientName').value = patientName;
+        document.getElementById('doctorName').value = doctorName;
+        document.getElementById('appointmentDates').value = appointmentDates;
+        document.getElementById('appointmentTimes').value = appointmentTimes;
+        document.getElementById('visitTypes').value = visitTypes;
+        document.getElementById('additionalInfo').value = additionalInfo;
+        document.getElementById('dob').value = dob;
+        document.getElementById('gender').value = gender;
+        document.getElementById('contactNumber').value = contactNumber;
+        document.getElementById('email').value = email;
+        document.getElementById('complete_address').value = complete_address;
+
+        // Show the modal
+        const modal = document.getElementById('viewModal');
+        modal.classList.remove('hidden');
+    }
+
+    function closeViewModal() {
+        const modal = document.getElementById('viewModal');
         modal.classList.add('hidden');
     }
-}
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('viewModal');
+        if (event.target === modal) {
+            modal.classList.add('hidden');
+        }
+    }
 </script>
 @endsection

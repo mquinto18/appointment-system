@@ -50,7 +50,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('forgotPassword', 'forgotPassword')->name('forgotPassword');
     Route::post('register', 'registerSave')->name('register.save');
     Route::get('/authentication', 'authentication')->name('authentication');
-    Route::post('/verify-pin', 'verifyPin')->name('verify.pin');    
+    Route::post('/verify-pin', 'verifyPin')->name('verify.pin');
     Route::post('/forgot-password', 'sendResetLink')->name('password.email');
     Route::post('/reset-password', 'updatePassword')->name('password.update');
     Route::get('/reset-password/{token}', 'showResetForm')->name('password.reset');
@@ -60,7 +60,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('login', 'login')->name('login');
     Route::get('otp', 'otp')->name('otp');
     Route::post('login', 'loginAction')->name('login.action');
-    
+
     // Logout route (typically a POST request)
     Route::post('logout', 'logout')->name('logout');
 });
@@ -72,7 +72,8 @@ Route::middleware(['auth', 'doctor'])->group(function () {
     Route::get('doctor/appointment/today', [DoctorController::class, 'todayAppointment'])->name('todayAppointment');
     Route::delete('doctor/appointments/delete/{id}', [DoctorController::class, 'appointmentdoctorDelete'])->name('appointments.doctoDestroy');
     Route::get('doctor/profile', [DoctorController::class, 'profiledoctorSettings'])->name('doctorProfile.settings');
-    Route::put('doctor/profile', [DoctorController::class, 'profiledoctorUpdate'])->name('doctorProfile.update');
+    Route::put('doctor/profile-update', [DoctorController::class, 'profiledoctorUpdate'])->name('doctorProfile.update');
+    Route::post('/profile/update-picture-doctor', [DoctorController::class, 'profileupdateDoctorPicture'])->name('profile.updateDoctor_picture');
     Route::get('doctor/security', [DoctorController::class, 'securitydoctorSettings'])->name('doctorSecurity.settings');
     Route::put('doctor/update', [DoctorController::class, 'securitydoctorUpdate'])->name('doctorSecurity.update');
     Route::put('doctor/profile/security/update', [DoctorController::class, 'changeuserPassword'])->name('doctorchangePassword.update');
@@ -82,8 +83,6 @@ Route::middleware(['auth', 'doctor'])->group(function () {
     Route::get('doctor/appointments/follow-up/{id}', [DoctorController::class, 'appointmentdoctorFollowUp'])->name('appointments.doctorfollowUp');
     Route::put('doctor/followup/update/{id}', [DoctorController::class, 'appointmentdoctorFollowUpSave'])->name('appointments.doctorfollowUpPost');
     Route::get('/doctor/monthly-slots', [DoctorSlotController::class, 'getMonthlySlotsDoctor']);
-
-
 });
 Route::middleware(['auth', 'cashier'])->group(function () {
     Route::get('cashier/home', [CashierController::class, 'cashierIndex'])->name('cashier/home');
@@ -135,8 +134,8 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::put('user/profile/security/update', [HomeController::class, 'changeuserPassword'])->name('userchangePassword.update');
     Route::delete('user/profile/security/delete', [HomeController::class, 'accountDelete'])->name('userAccount.delete');
     Route::post('user/dashboard/contactSend', [HomeController::class, 'contactSend'])->name('appointment.contactSend');
-    
-    
+
+    Route::post('/profile/update-picture-User', [HomeController::class, 'updateProfilePictureuser'])->name('profile.updateuser_picture');
 });
 
 // Admin dashboard (protected with middleware)
@@ -144,7 +143,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/home', [HomeController::class, 'adminIndex'])->name('admin/home');
     Route::get('admin/profile', [HomeController::class, 'profileSettings'])->name('profile.settings');
     Route::put('admin/profile', [ProfileController::class, 'profileUpdate'])->name('profile.update');
-    Route::post('/profile/update-picture', [ProfileController::class, 'profileUpdate'])->name('profile.update_picture');
+    Route::post('/profile/update-picture', [ProfileController::class, 'updateProfilePicture'])->name('profile.update_picture');
+
     Route::get('admin/security', [HomeController::class, 'securitySettings'])->name('security.settings');
     Route::put('profile/update', [ProfileController::class, 'securityUpdate'])->name('security.update');
     Route::put('profile/security/update', [ProfileController::class, 'changePassword'])->name('changePassword.update');
@@ -171,7 +171,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('admin/cashierAcc/update/{id}', [CashierController::class, 'cashierUpdate'])->name('cashier.update');
 
     Route::get('admin/reports', [ReportsController::class, 'reports'])->name('reports');
-    
+
 
     Route::get('admin/appointment', [AppointmentController::class, 'appointment'])->name('appointment');
     Route::post('admin/appointment/save', [AppointmentController::class, 'appointmentSave'])->name('appointment.save');
@@ -181,16 +181,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('admin/appointment/completed/{id}', [AppointmentController::class, 'completed'])->name('appointments.complete');
     // route for rejected
     Route::post('admin/appointment/rejected/{id}', [AppointmentController::class, 'rejected'])->name('appointments.reject');
-    
+
 
     Route::get('admin/appointments/pending', [AppointmentController::class, 'pending'])->name('appointments.pending');
     Route::get('admin/appointments/approved', [AppointmentController::class, 'approved'])->name('appointments.approved');
     Route::get('admin/appointments/completed', [AppointmentController::class, 'completedAppoint'])->name('appointments.completed');
-    Route::get('admin/appointments/rejected', [AppointmentController::class, 'rejectedAppoint'])->name('appointments.rejected');
+    Route::get('admin/appointments/rejected', [AppointmentController::class, 'rejdAppoint'])->name('appointments.rejected');
     Route::get('admin/appointments/canceled', [AppointmentController::class, 'canceledAppoint'])->name('appointments.canceled');
 
     Route::get('admin/appointments/edit/{id}', [AppointmentController::class, 'appointmentEdit'])->name('appointments.edit');
-   
+
     Route::get('admin/appointments/follow-up/{id}', [AppointmentController::class, 'appointmentFollowUp'])->name('appointments.followUp');
     Route::put('admin/appointments/follow-up/save/{id}', [AppointmentController::class, 'appointmentFollowUpSave'])->name('appointments.followUpPost');
     Route::put('admin/appointments/update/{id}', [AppointmentController::class, 'appointmentUpdate'])->name('appointments.update');
@@ -213,4 +213,4 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/prescription/generate/{id}', [PrescriptionController::class, 'printPrescription'])->name('prescription.generate');
 
     Route::get('/admin/monthly-slots', [AdminSlotController::class, 'getMonthlySlotsAdmin']);
-}); 
+});

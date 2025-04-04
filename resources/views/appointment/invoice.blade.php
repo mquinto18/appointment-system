@@ -28,6 +28,7 @@
                     <input type="text" name="search" value="{{ request('search') }}" class="border border-gray-300 p-2 rounded" placeholder="Search by patient, doctor or visit type">
                     <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Search</button>
                 </form>
+
             </div>
         </div>
 

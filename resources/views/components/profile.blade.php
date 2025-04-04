@@ -15,10 +15,10 @@
             <h1 class="font-bold mb-4">Profile Picture</h1>
             <div>
                 <div class="flex">
-                    <div class="border text-center border-[#5EA7E6] text-[#5EA7E6] rounded-full h-30 w-30 flex justify-center items-center  overflow-hidden">
+                    <div class="border text-center border-[#5EA7E6] text-[#5EA7E6] rounded-full h-30 w-30 flex justify-center items-center overflow-hidden">
                         <!-- Show Profile Picture if Exists, Otherwise Show Initials -->
                         @if(Auth::user()->profile_picture)
-                        <img src="{{ asset('profile_pictures/' . Auth::user()->profile_picture) }}" alt="Profile Picture" class="h-24 w-24 object-cover rounded-full">
+                        <img src="{{ asset('storage/profile_pictures/' . Auth::user()->profile_picture) }}" alt="Profile Picture" class="h-24 w-24 object-cover rounded-full">
                         @else
                         <div class='text-[28px]'>
                             {{ strtoupper(substr(explode(' ', Auth::user()->name)[0], 0, 1)) }}{{ strtoupper(substr(explode(' ', Auth::user()->name)[1] ?? '', 0, 1)) }}
@@ -26,6 +26,7 @@
                         @endif
                     </div>
                 </div>
+
                 <!-- Image Upload Form -->
                 <form action="{{ route('profile.update_picture') }}" method="POST" enctype="multipart/form-data" class="mt-4">
                     @csrf

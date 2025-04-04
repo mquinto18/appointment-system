@@ -141,6 +141,7 @@ class CashierController extends Controller
     public function invoiceCashier(Request $request)
     {
         $search = $request->input('search');
+        $recordsPerPage = $request->input('records_per_page', 10); // Default to 10 records per page
 
         // Query appointments with search functionality
         $appointments = Appointment::where('status', 'completed') // Only retrieve completed appointments
@@ -149,19 +150,22 @@ class CashierController extends Controller
                 $query->where(function ($subQuery) use ($search) {
                     $subQuery->where('first_name', 'like', '%' . $search . '%')
                         ->orWhere('last_name', 'like', '%' . $search . '%')
+                        ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]) // Search whole name
                         ->orWhere('doctor', 'like', '%' . $search . '%')
                         ->orWhere('visit_type', 'like', '%' . $search . '%');
                 });
             })
             ->orderBy('appointment_date', 'desc') // Sort by latest appointment date
             ->orderBy('appointment_time', 'desc') // Sort by latest appointment time
-            ->paginate(10); // Pagination with 10 rows per page
+            ->paginate($recordsPerPage); // Dynamic pagination
 
         $totalAppointments = Appointment::where('status', 'completed')->count(); // Count total number of completed appointments
 
-        // Pass the appointments data and total count to the view
-        return view('appointment.cashierinvoice', compact('appointments', 'totalAppointments', 'search'));
+        // Pass the data to the view
+        return view('appointment.cashierinvoice', compact('appointments', 'totalAppointments', 'search', 'recordsPerPage'));
     }
+
+
 
 
     public function cashierinvoicePrint($id)
@@ -364,16 +368,18 @@ class CashierController extends Controller
         return response()->download($filePath)->deleteFileAfterSend(true);
     }
 
-    public function cashierEdit($id){
+    public function cashierEdit($id)
+    {
         $user = User::findOrFail($id);
-    
+
         // Pass the admin details to the view
         return view('components.cashierEdit', compact('user'));
     }
 
-    public function cashierUpdate(Request $request, $id){
+    public function cashierUpdate(Request $request, $id)
+    {
         $user = User::findOrFail($id);
-    
+
         // Validate the incoming request data
         $request->validate([
             'name' => 'required|string|max:255',
@@ -383,12 +389,12 @@ class CashierController extends Controller
             'gender' => 'nullable|string',
             'address' => 'nullable|string',
         ]);
-    
+
         // Update the admin details
         $user->update($request->all());
-    
+
         // Redirect back with success message
         notify()->success('Cashier updated successfully!');
-        return redirect()->route('cashier')->with('success', 'User updated successfully.'); 
+        return redirect()->route('cashier')->with('success', 'User updated successfully.');
     }
 }

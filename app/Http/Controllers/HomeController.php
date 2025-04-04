@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Mail\ContactMessage;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str; // Import the Str class
 
 class HomeController extends Controller
@@ -30,6 +31,35 @@ class HomeController extends Controller
         ];
 
         return view('home', compact('images'));
+    }
+
+    public function updateProfilePictureuser(Request $request)
+    {
+        
+        $request->validate([
+            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        // Delete old image if exists
+        if ($user->profile_picture) {
+            Storage::disk('public')->delete('profile_pictures/' . $user->profile_picture);
+        }
+
+        // Generate a secure filename
+        $filename = $user->id . '_' . time() . '.' . $request->profile_picture->extension();
+
+        // Store in storage/app/public/profile_pictures
+        $request->profile_picture->storeAs('profile_pictures', $filename, 'public');
+
+        // Update user profile picture
+        $user->profile_picture = $filename;
+        $user->save();
+
+        notify()->success('Profile picture updated successfully!');
+        return redirect()->back()->with('status', 'Profile picture updated successfully!');
     }
 
 

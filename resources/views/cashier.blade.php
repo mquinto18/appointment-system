@@ -82,14 +82,14 @@
                 <canvas id="statusChart" class="" style="max-width: 400px; max-height: 400px;"></canvas>
             </div>
         </div>
-        <div class='bg-white w-full px-4 py-6 rounded-lg shadow-xl'>
+        <!-- <div class='bg-white w-full px-4 py-6 rounded-lg shadow-xl'>
             <div class='font-medium border-b py-3'>
                 Patients Review
             </div>
             <div class="flex justify-center items-center h-[400px]">
                 <canvas id="ratingChart" class="w-full h-full"></canvas>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <div class='bg-white w-full mt-5 px-4 rounded-lg shadow-xl'>
