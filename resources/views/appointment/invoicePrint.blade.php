@@ -216,14 +216,14 @@
                                         <tr>
                                             <td style="width: 33%;" class='pr-6 mb-2'>
                                                 <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    name="descriptions[]" value="{{ $description }}">
+                                                    name="descriptions[]" value="{{ $description }}" readonly>
                                             </td>
                                             <td style="width: 15%;" class='mb-2'>
-                                                <input type="number" name="qty[]" value="{{ $quantities[$index] }}" min="1" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                <input type="number" name="qty[]" value="{{ $quantities[$index] }}" min="1" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500" readonly>
                                             </td>
                                             <td style="width: 15%;" class='mb-2'>
                                                 <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    name="amount[]" value="{{ $amounts[$index] }}">
+                                                    name="amount[]" value="{{ $amounts[$index] }}" readonly>
                                             </td>
                                         </tr>
                                         @endforeach

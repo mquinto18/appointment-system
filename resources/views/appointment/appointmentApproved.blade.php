@@ -127,20 +127,50 @@
                                 </form>
 
                                 <!-- Reject Action -->
-                                <form action="{{ route('appointments.reject', $appointment->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="relative group cursor-pointer"
+                                <button type="button" class="relative group cursor-pointer" onclick="toggleRescheduleModal(true)">
+                                    <div class="bg-white py-1 px-2 border border-[#0074CB] rounded-md 
+        @if($appointment->status === 'rejected' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif"
                                         @if($appointment->status === 'rejected' || $appointment->status === 'completed') disabled @endif>
-                                        <div class='bg-white py-1 px-2 border border-[#0074CB] rounded-md 
-                    @if($appointment->status === ' rejected' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif'>
-                                            <i class="fa-solid fa-thumbs-down" style="color: #d02525;"></i>
+                                        <i class="fa-solid fa-thumbs-down" style="color: #d02525;"></i>
+                                    </div>
+                                    <!-- Tooltip for Reject -->
+                                    <span class="absolute bottom-full mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
+                                        Reject
+                                    </span>
+                                </button>
+
+                                <!-- Reschedule Modal -->
+                                <div id="rescheduleModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden z-50">
+                                    <div class="modal-dialog bg-white rounded-lg w-[90%] sm:w-[650px] shadow-lg">
+                                        <div class="modal-content text-center p-6">
+                                            <h5 class="text-[24px] font-bold mb-3">Reschedule Appointment</h5>
+                                            <form id="rescheduleAppointmentForm" method="POST" action="{{ route('appointments.reject', $appointment->id) }}">
+                                                @csrf
+                                                <!-- Date and Time Input Fields -->
+                                                <div class="flex justify-between mb-6 px-4 py-4">
+                                                    <div class="w-[48%]">
+                                                        <label for="appointment_date" class="block text-left text-sm font-semibold text-gray-500 mb-1">Date</label>
+                                                        <input type="date" id="appointment_date" name="appointment_date" class="block w-full text-gray-600 font-medium bg-white rounded-md p-3 border border-gray-300 focus:outline-none">
+                                                    </div>
+                                                    <div class="w-[48%]">
+                                                        <label for="appointment_time" class="block text-left text-sm font-semibold text-gray-500 mb-1">Time</label>
+                                                        <input type="time" id="appointment_time" name="appointment_time" class="block w-full text-gray-600 font-medium bg-white rounded-md p-3 border border-gray-300 focus:outline-none">
+                                                    </div>
+                                                </div>
+
+                                                <!-- Buttons -->
+                                                <div class="flex border-t border-gray-200">
+                                                    <button type="button" class="w-1/2 py-3 bg-gray-300 font-semibold border-r border-gray-200 hover:bg-gray-400 rounded-bl-md" onclick="toggleRescheduleModal(false)">
+                                                        Cancel
+                                                    </button>
+                                                    <button type="submit" class="w-1/2 py-3 bg-[#0074CB] text-white font-semibold hover:bg-[#005ea6] rounded-br-md">
+                                                        Confirm Reschedule
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
-                                        <!-- Tooltip for Reject -->
-                                        <span class="absolute bottom-full mb-2 hidden text-xs text-white bg-gray-800 p-1 rounded group-hover:block">
-                                            Reject
-                                        </span>
-                                    </button>
-                                </form>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                         <td class="cursor-pointer relative">
@@ -447,6 +477,14 @@
         </div>
     </div>
     <script>
+        function toggleRescheduleModal(show) {
+            const modal = document.getElementById("rescheduleModal");
+            if (show) {
+                modal.classList.remove("hidden");
+            } else {
+                modal.classList.add("hidden");
+            }
+        }
         function openViewModal(appointment) {
             document.getElementById('viewTransactionNumber').value = appointment.transaction_number;
             document.getElementById('viewPatientName').value = appointment.first_name + ' ' + appointment.last_name;

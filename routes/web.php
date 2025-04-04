@@ -154,7 +154,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post("admin/adminAcc/save", [AdminController::class, 'adminSave'])->name('admin.save');
     Route::delete('admin/adminAcc/destroy/{id}', [AdminController::class, 'adminDestroy'])->name('admin.delete');
     Route::get('admin/adminAcc/edit{id}', [AdminController::class, 'adminEdit'])->name('admin.edit');
-    Route::put('admin/adminAcc/update{id}', [AdminController::class, 'adminUpdate'])->name('admin.update');
+    Route::put('admin/adminAcc/update{id}', [AdminController::class, 'admi  nUpdate'])->name('admin.update');
     Route::get('admin/userAcc', [UserController::class, 'userAcc'])->name('user');
     Route::post('admin/userAcc/save', [UserController::class, 'userSave'])->name('user.save');
     Route::get('admin/userAcc/edit/{id}', [UserController::class, 'userEdit'])->name('user.edit');
@@ -186,7 +186,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/appointments/pending', [AppointmentController::class, 'pending'])->name('appointments.pending');
     Route::get('admin/appointments/approved', [AppointmentController::class, 'approved'])->name('appointments.approved');
     Route::get('admin/appointments/completed', [AppointmentController::class, 'completedAppoint'])->name('appointments.completed');
-    Route::get('admin/appointments/rejected', [AppointmentController::class, 'rejdAppoint'])->name('appointments.rejected');
+    Route::get('admin/appointments/rejected', [AppointmentController::class, 'rejectedAppoint'])->name('appointments.rejected');
     Route::get('admin/appointments/canceled', [AppointmentController::class, 'canceledAppoint'])->name('appointments.canceled');
 
     Route::get('admin/appointments/edit/{id}', [AppointmentController::class, 'appointmentEdit'])->name('appointments.edit');

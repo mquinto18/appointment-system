@@ -63,6 +63,21 @@
                     <label for="adminAddressEdit" class="form-label">Address</label>
                     <textarea class="form-control" id="adminAddressEdit" name="address" rows="3">{{ $admin->address }}</textarea>
                 </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Status</label>
+                    <div class='flex gap-4'>
+                        <label>
+                            <input type="radio" name="status" value="active" {{ $admin->status == 'active' ? 'checked' : '' }}>
+                            <span>Active</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="status" value="inactive" {{ $admin->status == 'inactive' ? 'checked' : '' }}>
+                            <span>Inactive</span>
+                        </label>
+                    </div>
+                </div>
+
             </div>
 
             <div class='flex justify-end mt-5'>

@@ -26,13 +26,13 @@ class AppointmentController extends Controller
         $users = User::where('type', 2)
             ->where('status', 'active')
             ->get();
-
+    
         // Get search query
         $search = trim($request->input('search'));
-
+    
         // Get the selected number of records per page (default to 10)
         $perPage = $request->input('records_per_page', 10);
-
+    
         // Query appointments with search functionality
         $appointments = Appointment::where(function ($query) use ($search) {
             if ($search) {
@@ -43,12 +43,14 @@ class AppointmentController extends Controller
                     ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%$search%"]); // Search full name
             }
         })
-            ->paginate($perPage); // Apply dynamic pagination
-
+        ->orderBy('created_at', 'desc') // Order by latest created_at
+        ->paginate($perPage); // Apply dynamic pagination
+    
         $totalAppointments = Appointment::count();
-
+    
         return view('appointment.totalAppointment', compact('appointments', 'totalAppointments', 'search', 'users', 'perPage'));
     }
+    
 
 
 

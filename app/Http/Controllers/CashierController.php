@@ -388,6 +388,7 @@ class CashierController extends Controller
             'date_of_birth' => 'nullable|date',
             'gender' => 'nullable|string',
             'address' => 'nullable|string',
+            'status'  => 'required|in:active,inactive',
         ]);
 
         // Update the admin details
