@@ -144,13 +144,12 @@ class CashierController extends Controller
         $recordsPerPage = $request->input('records_per_page', 10); // Default to 10 records per page
 
         // Query appointments with search functionality
-        $appointments = Appointment::where('status', ['approved', 'completed']) // Only retrieve completed appointments
+        $appointments = Appointment::whereIn('status', ['approved', 'completed']) // Correct way to check multiple statuses
             ->when($search, function ($query) use ($search) {
-                // Apply search criteria only to the completed appointments
                 $query->where(function ($subQuery) use ($search) {
                     $subQuery->where('first_name', 'like', '%' . $search . '%')
                         ->orWhere('last_name', 'like', '%' . $search . '%')
-                        ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]) // Search whole name
+                        ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"]) // Search full name
                         ->orWhere('doctor', 'like', '%' . $search . '%')
                         ->orWhere('visit_type', 'like', '%' . $search . '%');
                 });
@@ -159,11 +158,11 @@ class CashierController extends Controller
             ->orderBy('appointment_time', 'desc') // Sort by latest appointment time
             ->paginate($recordsPerPage); // Dynamic pagination
 
-        $totalAppointments = Appointment::where('status', 'completed')->count(); // Count total number of completed appointments
+        $totalAppointments = Appointment::whereIn('status', ['approved', 'completed'])->count(); // Count both statuses
 
-        // Pass the data to the view
         return view('appointment.cashierinvoice', compact('appointments', 'totalAppointments', 'search', 'recordsPerPage'));
     }
+
 
 
 

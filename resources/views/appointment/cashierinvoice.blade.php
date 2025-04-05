@@ -11,7 +11,7 @@
 
 <div class='mx-10 -mt-16'>
     <div class='flex justify-between mb-2'>
-        <span class='text-[20px] text-white font-medium'>All Completed | {{ $totalAppointments }}</span>
+        <span class='text-[20px] text-white font-medium'>All Appointment | {{ $totalAppointments }}</span>
     </div>
 
     <div class='bg-white w-full rounded-lg shadow-md p-8'>
