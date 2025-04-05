@@ -215,7 +215,7 @@ class DoctorController extends Controller
             $recordsPerPage = 10;
         }
 
-        // Query appointments with filters
+        // Query appointments with filters, ordering by created_at to show the latest created appointments
         $appointments = Appointment::where('doctor', $doctorName)
             ->when($date, function ($query) use ($date) {
                 return $query->whereDate('appointment_date', $date);
@@ -226,7 +226,9 @@ class DoctorController extends Controller
                         ->orWhere('visit_type', 'like', '%' . $search . '%');
                 });
             })
-            ->paginate($recordsPerPage)->appends(['search' => $search, 'date' => $date, 'records_per_page' => $recordsPerPage]);
+            ->orderBy('created_at', 'desc') // Order by created_at to get the latest created appointments first
+            ->paginate($recordsPerPage)
+            ->appends(['search' => $search, 'date' => $date, 'records_per_page' => $recordsPerPage]);
 
         // Total appointments count with filters
         $totalAppointments = Appointment::where('doctor', $doctorName)
@@ -249,8 +251,6 @@ class DoctorController extends Controller
             'recordsPerPage'
         ));
     }
-
-
 
 
     public function todayAppointment(Request $request)

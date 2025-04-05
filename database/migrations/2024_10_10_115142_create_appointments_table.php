@@ -17,17 +17,17 @@ return new class extends Migration
                 $table->string('transaction_number')->unique(); // Unique transaction number
                 $table->string('first_name'); // Patient's first name
                 $table->string('last_name'); // Patient's last name
-                $table->date('date_of_birth'); // Patient's date of birth
+                $table->date('date_of_birth')->nullable(); // Patient's date of birth
                 $table->date('appointment_date'); // Appointment date
                 $table->time('appointment_time'); // Appointment time
                 $table->string('visit_type'); // Type of visit (e.g., consultation, follow-up)
                 $table->text('additional')->nullable(); // Additional details, optional
-                $table->string('doctor'); // Doctor's name
-                $table->enum('gender', ['male', 'female', 'other']); // Gender
+                $table->string('doctor')->nullable(); // Doctor's name
+                $table->enum('gender', ['male', 'female', 'other'])->nullable(); // Gender
                 $table->string('marital_status')->nullable(); // Marital status, optional
-                $table->string('contact_number'); // Contact number
-                $table->string('email_address'); // Email address
-                $table->text('complete_address'); // Complete address
+                $table->string('contact_number')->nullable(); // Contact number
+                $table->string('email_address')->nullable(); // Email address
+                $table->text('complete_address')->nullable(); // Complete address
                 $table->json('amount')->nullable();
                 $table->decimal('discount', 5, 2)->default(0);
                 $table->enum('status', ['pending', 'approved', 'completed', 'rejected', 'cancelled'])->default('pending'); // Appointment status

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AppointmentApprovedMail; // Import your mailable class
 use App\Mail\AppointmentCompletedMail; // Import your mailable class
+use App\Mail\AppointmentFollowUpMail;
 use App\Mail\AppointmentRejectedMail; // Import your mailable class
 use App\Models\AppointmentSlot;
 use Carbon\Carbon;
@@ -26,13 +27,13 @@ class AppointmentController extends Controller
         $users = User::where('type', 2)
             ->where('status', 'active')
             ->get();
-    
+
         // Get search query
         $search = trim($request->input('search'));
-    
+
         // Get the selected number of records per page (default to 10)
         $perPage = $request->input('records_per_page', 10);
-    
+
         // Query appointments with search functionality
         $appointments = Appointment::where(function ($query) use ($search) {
             if ($search) {
@@ -43,14 +44,14 @@ class AppointmentController extends Controller
                     ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%$search%"]); // Search full name
             }
         })
-        ->orderBy('created_at', 'desc') // Order by latest created_at
-        ->paginate($perPage); // Apply dynamic pagination
-    
+            ->orderBy('created_at', 'desc') // Order by latest created_at
+            ->paginate($perPage); // Apply dynamic pagination
+
         $totalAppointments = Appointment::count();
-    
+
         return view('appointment.totalAppointment', compact('appointments', 'totalAppointments', 'search', 'users', 'perPage'));
     }
-    
+
 
 
 
@@ -251,62 +252,64 @@ class AppointmentController extends Controller
         return view('appointment.followUp', compact('appointment'));
     }
 
-    public function appointmentFollowUpSave(Request $request, $id)
-    {
-        // Validate the input data
-        $validatedData = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'visit_type' => 'required|string',
-            'mobile_number' => 'required|string|max:15', // Matching form input
-            'email_address' => 'required|email|max:255',
-            'selected_date' => 'required|date', // Ensure the selected_date is provided and valid
-            'appointment_time' => 'required|string|in:09:00 AM,09:30 AM,10:00 AM,10:30 AM,11:00 AM,11:30 AM', // Validate appointment time
-        ]);
+    public function appointmentFollowUpStore(Request $request, $id)
+{
+    // Validate the input data
+    $validatedData = $request->validate([
+        'first_name' => 'required|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'visit_type' => 'required|string',
+        'mobile_number' => 'required|string|max:15',
+        'email_address' => 'required|email|max:255',
+        'selected_date' => 'required|date',
+        'appointment_time' => 'required|string|in:09:00 AM,09:30 AM,10:00 AM,10:30 AM,11:00 AM,11:30 AM',
+        'doctor' => 'nullable|string|max:255',
+    ]);
 
-        // Convert the appointment time to the correct format for storage
-        $validatedData['appointment_time'] = Carbon::createFromFormat('h:i A', $validatedData['appointment_time'])->format('H:i:s');
+    // Convert the appointment time to the correct format for storage
+    $validatedData['appointment_time'] = Carbon::createFromFormat('h:i A', $validatedData['appointment_time'])->format('H:i:s');
 
-        // Find the appointment by ID
-        $appointment = Appointment::findOrFail($id);
+    // Find the existing appointment to get the user_id
+    $originalAppointment = Appointment::findOrFail($id);
 
-        // Store the old appointment date
-        $oldDate = $appointment->appointment_date;
+    // Generate a unique transaction number starting with TRX-
+    $transactionNumber = 'TRX-' . strtoupper(uniqid());
 
-        // Update the appointment with the validated data
-        $appointment->update([
-            'appointment_date' => $validatedData['selected_date'],
-            'first_name' => $validatedData['first_name'],
-            'last_name' => $validatedData['last_name'],
-            'visit_type' => $validatedData['visit_type'],
-            'contact_number' => $validatedData['mobile_number'],
-            'email_address' => $validatedData['email_address'],
-            'appointment_time' => $validatedData['appointment_time'],
-            'status' => 'approved',
-            'follow_up' => 1,
-        ]);
+    // Create a new appointment as a follow-up
+    $newAppointment = Appointment::create([
+        'user_id' => $originalAppointment->user_id, // Keep the same user
+        'appointment_date' => $validatedData['selected_date'],
+        'first_name' => $validatedData['first_name'],
+        'last_name' => $validatedData['last_name'],
+        'visit_type' => $validatedData['visit_type'],
+        'contact_number' => $validatedData['mobile_number'],
+        'email_address' => $validatedData['email_address'],
+        'appointment_time' => $validatedData['appointment_time'],
+        'status' => 'approved', // Set status to Follow up
+        'follow_up' => 1,
+        'transaction_number' => $transactionNumber, // Set the transaction number
+        'doctor' => $request->input('doctor'),  // Set doctor
+    ]);
 
-        // Adjust the booked_slots if the date has changed
-        if ($oldDate !== $request->selected_date) {
-            // Decrement booked_slots for the old date
-            $oldSlot = AppointmentSlot::where('appointment_date', $oldDate)->first();
-            if ($oldSlot) {
-                $oldSlot->decrement('booked_slots');
-            }
+    // Handle the appointment slots (increment booked slots for the selected date)
+    $newSlot = AppointmentSlot::firstOrCreate(
+        ['appointment_date' => $validatedData['selected_date']],
+        [
+            'total_slots' => 4,
+            'time' => $validatedData['appointment_time'] // Assuming `appointment_time` is in the request
+        ]
+    );
+    $newSlot->increment('booked_slots');
 
-            // Increment booked_slots for the new date
-            $newSlot = AppointmentSlot::firstOrCreate(
-                ['appointment_date' => $request->selected_date],
-                ['total_slots' => 4] // Ensure default total slots are set
-            );
-            $newSlot->increment('booked_slots');
-        }
+    // Send the follow-up email to the user
+    Mail::to($newAppointment->email_address)->send(new AppointmentFollowUpMail($newAppointment));
 
-        // Return success notification and redirect back
-        notify()->success('Appointment Follow-up successfully!');
-        return redirect()->route('appointment') // Adjust this route if needed
-            ->with('success', 'Appointment Follow-up successfully!');
-    }
+    // Return success notification and redirect back
+    notify()->success('Follow-up appointment created and email sent successfully!');
+    return redirect()->route('appointment')
+        ->with('success', 'Follow-up appointment created successfully!');
+}
+
 
     public function appointmentUpdate(Request $request, $id)
     {

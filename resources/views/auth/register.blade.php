@@ -87,7 +87,7 @@
                 <div class="relative">
                     <input type="password" name="password" id="password" placeholder="Password" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="" pattern="(?=.*[A-Z])(?=.*\d).{8,}" title="Password must be at least 8 characters long and include at least one uppercase letter and one number.">
                     <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600 dark:text-gray-300">
-                        👁️
+                    <i class='fa-solid fa-eye-slash'></i>
                     </button>
                     @error('password')
                     <span class="text-red-600">{{ $message }}</span>
@@ -98,7 +98,7 @@
                 <div class="relative">
                     <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirm password" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
                     <button type="button" id="toggleConfirmPassword" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-600 dark:text-gray-300">
-                        👁️
+                        <i class='fa-solid fa-eye-slash'></i>
                     </button>
                     @error('password_confirmation')
                     <span class="text-red-600">{{ $message }}</span>
@@ -143,10 +143,10 @@
         toggleButton.addEventListener("click", function () {
             if (inputField.type === "password") {
                 inputField.type = "text";
-                this.textContent = "🙈"; // Change icon to closed eye
+                this.innerHTML = "<i class='fa-solid fa-eye'></i>"; // Change icon to closed eye
             } else {
                 inputField.type = "password";
-                this.textContent = "👁️"; // Change back to open eye
+                this.innerHTML = "<i class='fa-solid fa-eye-slash'></i>"; // Change back to open eye
             }
         });
     }

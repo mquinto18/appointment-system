@@ -12,6 +12,7 @@ class AppointmentSlot extends Model
 
     protected $fillable = [
         'appointment_date',
+        'time',
         'total_slots',
         'booked_slots',
     ];

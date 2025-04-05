@@ -192,7 +192,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/appointments/edit/{id}', [AppointmentController::class, 'appointmentEdit'])->name('appointments.edit');
 
     Route::get('admin/appointments/follow-up/{id}', [AppointmentController::class, 'appointmentFollowUp'])->name('appointments.followUp');
-    Route::put('admin/appointments/follow-up/save/{id}', [AppointmentController::class, 'appointmentFollowUpSave'])->name('appointments.followUpPost');
+    Route::post('admin/appointments/follow-up/save/{id}', [AppointmentController::class, 'appointmentFollowUpStore'])->name('appointments.followUpPost');
     Route::put('admin/appointments/update/{id}', [AppointmentController::class, 'appointmentUpdate'])->name('appointments.update');
     Route::delete('admin/appointments/delete/{id}', [AppointmentController::class, 'appointmentDelete'])->name('appointments.destroy');
 

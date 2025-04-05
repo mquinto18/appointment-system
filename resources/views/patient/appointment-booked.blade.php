@@ -44,6 +44,12 @@
                     </div>
                     <span>Cancelled</span>
                 </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-yellow-400 text-white w-6 h-6 rounded-full flex items-center justify-center">
+                        FC
+                    </div>
+                    <span>Follow-up Checkup</span>
+                </div>
             </div>
 
             <div class="mt-16 grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-4">
@@ -54,105 +60,89 @@
                 @else
                 @foreach ($appointments as $appointment)
                 <div class="max-w-[1000px] shadow-md">
-                    <div class="flex justify-between bg-[#F2F2F2] px-5 py-7">
-                        <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-circle-user text-[35px]" style="color: #0074cb;"></i>
-                            <div class="flex flex-col">
-                                <span class="text-[18px] font-bold">{{ $appointment->first_name }} {{ $appointment->last_name }}</span>
-                                <span class="text-[13px]">{{ \Carbon\Carbon::parse($appointment->created_at)->format('F j, Y') }}</span>
-                            </div>
-                        </div>
+                <div class="flex justify-between bg-[#F2F2F2] px-5 py-7">
+    <div class="flex items-center gap-3">
+        <i class="fa-solid fa-circle-user text-[35px]" style="color: #0074cb;"></i>
+        <div class="flex flex-col">
+            <span class="text-[18px] font-bold">{{ $appointment->first_name }} {{ $appointment->last_name }}</span>
+            <span class="text-[13px]">{{ \Carbon\Carbon::parse($appointment->created_at)->format('F j, Y') }}</span>
+        </div>
+    </div>
 
-                        <!-- Status Indicator -->
-                        @php
-                        $status = strtoupper(substr($appointment->status, 0, 2)); // Get the first letter of the status
-                        $bgColor = '';
+    <!-- Status Indicator -->
+    @php
+        $status = strtoupper(substr($appointment->status, 0, 2)); // Get the first letter of the status
+        $bgColor = '';
+        $statusLabel = $status;
 
-                        // Determine the background color based on the status
-                        if ($status === 'PE') {
-                        $bgColor = 'bg-yellow-500'; // Pending
-                        } elseif ($status === 'AP') {
-                        $bgColor = 'bg-green-600'; // Approved
-                        } elseif ($status === 'CO') {
-                        $bgColor = 'bg-blue-600'; // Completed
-                        } elseif ($status === 'RE') {
-                        $bgColor = 'bg-red-600'; // Rejected
-                        } elseif ($status === 'CA') {
-                        $bgColor = 'bg-red-400'; // Cancelled
-                        } else {
-                        $bgColor = 'bg-gray-500'; // Default color for unknown status
-                        }
-                        @endphp
+        // Determine the background color and label based on the follow_up or status
+        if ($appointment->follow_up == 1) {
+            $bgColor = 'bg-yellow-400'; // Follow-up
+            $statusLabel = 'FC'; // Follow-up label
+        } elseif ($status === 'PE') {
+            $bgColor = 'bg-orange-500'; // Pending
+        } elseif ($status === 'AP') {
+            $bgColor = 'bg-green-600'; // Approved
+        } elseif ($status === 'CO') {
+            $bgColor = 'bg-blue-600'; // Completed
+        } elseif ($status === 'RE') {
+            $bgColor = 'bg-red-600'; // Rejected
+        } elseif ($status === 'CA') {
+            $bgColor = 'bg-red-400'; // Cancelled
+        } else {
+            $bgColor = 'bg-gray-500'; // Default color for unknown status
+        }
+    @endphp
 
-                        <div class="flex justify-center items-center gap-3">
-                            <div class="{{ $bgColor }} text-white w-8 h-8 rounded-full flex items-center justify-center">
-                                {{ $status }}
-                            </div>
-                            <div class="relative">
-                                <!-- Dropdown Toggle -->
-                                <i class="fa-solid fa-ellipsis-vertical cursor-pointer" id="dropdownMenuButton" onclick="toggleDropdown(this)"></i>
+    <div class="flex justify-center items-center gap-3">
+        <div class="{{ $bgColor }} text-white w-8 h-8 rounded-full flex items-center justify-center">
+            {{ $statusLabel }}
+        </div>
+        <div class="relative">
+            <!-- Dropdown Toggle -->
+            <i class="fa-solid fa-ellipsis-vertical cursor-pointer" id="dropdownMenuButton" onclick="toggleDropdown(this)"></i>
 
+            <!-- Dropdown Menu -->
+            <ul class="dropdown-menu absolute right-0 z-10 text-left bg-white shadow-lg rounded-lg w-40 hidden">
+                <!-- View Option -->
+                <li>
+                    <a href="#"
+                        onclick="openViewModal(
+                        '{{ $appointment->transaction_number }}', 
+                        '{{ $appointment->first_name }} {{ $appointment->last_name }}', 
+                        '{{ $appointment->doctor }}', 
+                        '{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}', 
+                        '{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}', 
+                        '{{ $appointment->visit_type }}', 
+                        '{{ $appointment->additional ?? 'N/A' }}', 
+                        '{{ $appointment->date_of_birth }}', 
+                        '{{ $appointment->gender }}', 
+                        '{{ $appointment->contact_number }}', 
+                        '{{ $appointment->email_address }}', 
+                        '{{ $appointment->complete_address }}'
+                    )"
+                        class="block px-4 py-2 bg-white hover:bg-gray-200">
+                        <i class="fa-regular fa-eye mr-2 text-gray-600"></i>
+                        View
+                    </a>
+                </li>
 
-                                <!-- Dropdown Menu -->
-                                <ul class="dropdown-menu absolute right-0 z-10 text-left bg-white shadow-lg rounded-lg w-40 hidden">
-                                    <!-- Edit Option -->
-                                    <!-- <li>
-                                        @if ($appointment->status === 'pending')
-                                        <a href="{{ route('appointments.userEdit', $appointment->id) }}" class="block px-4 py-2 hover:bg-gray-100">
-                                            <i class="fa-regular fa-pen-to-square mr-2 text-gray-600"></i>
-                                            Edit
-                                        </a>
-                                        @else
-                                        <span class="block px-4 py-2 text-gray-400 cursor-not-allowed opacity-50">
-                                            <i class="fa-regular fa-pen-to-square mr-2 text-gray-400"></i>
-                                            Edit
-                                        </span>
-                                        @endif
-                                    </li> -->
-                                    <!-- View Option -->
-                                    <li>
-                                        <a href="#"
-                                            onclick="openViewModal(
-                                            '{{ $appointment->transaction_number }}', 
-                                            '{{ $appointment->first_name }} {{ $appointment->last_name }}', 
-                                            '{{ $appointment->doctor }}', 
-                                            '{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}', 
-                                            '{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}', 
-                                            '{{ $appointment->visit_type }}', 
-                                            '{{ $appointment->additional ?? 'N/A' }}', 
-                                            '{{ $appointment->date_of_birth }}', 
-                                            '{{ $appointment->gender }}', 
-                                            '{{ $appointment->contact_number }}', 
-                                            '{{ $appointment->email_address }}', 
-                                            '{{ $appointment->complete_address }}'
-                                        )"
-                                            class="block px-4 py-2 bg-white hover:bg-gray-200">
-                                            <i class="fa-regular fa-eye mr-2 text-gray-600"></i>
-                                            View
-                                        </a>
-                                    </li>
+                <!-- Delete Option -->
+                <li>
+                    <form action="#" method="POST" class="block px-4 py-2 hover:bg-gray-100" onsubmit="return false;">
+                        @csrf
+                        @method('DELETE')
+                        <i class="fa-regular fa-trash-can mr-2 text-gray-600"></i>
+                        <button type="button" onclick="openDeleteModal('{{ $appointment->id }}', '{{ $appointment->first_name }} {{ $appointment->last_name }}')" class="text-left">
+                            Delete
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
-                                    <!-- Delete Option -->
-                                    <li>
-                                        <form action="#" method="POST" class="block px-4 py-2 hover:bg-gray-100" onsubmit="return false;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <i class="fa-regular fa-trash-can mr-2 text-gray-600"></i>
-                                            <button type="button" onclick="openDeleteModal('{{ $appointment->id }}', '{{ $appointment->first_name }} {{ $appointment->last_name }}')" class="text-left">
-                                                Delete
-                                            </button>
-                                        </form>
-                                    </li>
-                                </ul>
-
-
-                            </div>
-
-
-
-                        </div>
-
-                    </div>
 
                     <!-- Appointment Details -->
                     <div class="flex flex-col px-5 my-4 text-[13px]">

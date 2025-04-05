@@ -131,7 +131,6 @@
                                 </form>
 
                                 <!-- Reject Action -->
-                                <!-- Reject Action -->
                                 <button type="button" class="relative group cursor-pointer" onclick="toggleRescheduleModal(true)">
                                     <div class="bg-white py-1 px-2 border border-[#0074CB] rounded-md 
         @if($appointment->status === 'rejected' || $appointment->status === 'completed') cursor-not-allowed opacity-50 @endif"

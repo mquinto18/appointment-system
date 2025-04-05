@@ -23,7 +23,6 @@
         <div class="">
             <form action="{{ route('appointments.followUpPost', $appointment->id) }}" method="POST">
                 @csrf
-                @method('PUT') <!-- Indicate that this is a PUT request for updating -->
 
                 <div class="flex flex-col lg:flex-row gap-8 mt-5">
                     <!-- Calendar Section -->
@@ -73,6 +72,10 @@
                                 <input type="text" id="visit_type" name="visit_type" class="w-full border border-gray-300 rounded-md px-3 py-2" value="{{ $appointment->visit_type }}">
                             </div>
                             <div>
+                                <label for="visit_type" class="font-medium">Doctor</label>
+                                <input type="text" id="doctor" name="doctor" class="w-full border border-gray-300 rounded-md px-3 py-2" value="{{ $appointment->doctor }}">
+                            </div>
+                            <div>
                                 <label for="mobile_number" class="font-medium">Mobile Number</label>
                                 <input type="text" id="mobile_number" name="mobile_number" class="w-full border border-gray-300 rounded-md px-3 py-2" value="{{ $appointment->contact_number }}">
                             </div>
@@ -82,7 +85,7 @@
                             </div>
                         </div>
                         <div class="mt-6">
-                            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium px-5 py-3 rounded-md">Update</button>
+                            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium px-5 py-3 rounded-md">Submit</button>
                         </div>
                     </div>
                 </div>

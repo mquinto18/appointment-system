@@ -19,25 +19,25 @@
                         <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
                         <input type="text" name="first_name" id="first_name"
                             value="{{ $patientDetails['first_name'] ?? '' }}"
-                            class="mt-1 block w-full rounded-md border border-gray-300 p-2" disabled>
+                            class="mt-1 block w-full rounded-md border border-gray-300 p-2" readonly>
                     </div>
                     <div>
                         <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
                         <input type="text" name="last_name" id="last_name"
                             value="{{ $patientDetails['last_name'] ?? '' }}"
-                            class="mt-1 block w-full rounded-md border border-gray-300 p-2" disabled>
+                            class="mt-1 block w-full rounded-md border border-gray-300 p-2" readonly>
                     </div>
                     <div>
                         <label for="visit_type" class="block text-sm font-medium text-gray-700 mb-2">Visit Type</label>
                         <input type="text" name="visit_type" id="visit_type"
                             value="{{ $patientDetails['visit_type'] ?? '' }}"
-                            class="mt-1 block w-full rounded-md border border-gray-300 p-2" disabled>
+                            class="mt-1 block w-full rounded-md border border-gray-300 p-2" readonly>
                     </div>
                     <div>
                         <label for="additional" class="block text-sm font-medium text-gray-700 mb-2">Additional (Medical Certificate)</label>
                         <input type="text" name="additional" id="additional"
                             value="{{ $patientDetails['medical_certificate'] ?? '' }}"
-                            class="mt-1 block w-full rounded-md border border-gray-300 p-2" disabled>
+                            class="mt-1 block w-full rounded-md border border-gray-300 p-2" readonly>
                     </div>
                 </div>
 
@@ -49,13 +49,13 @@
                         <label for="scheduled_date" class="block text-sm font-medium text-gray-700 mb-2">Date</label>
                         <input type="date" name="scheduled_date" id="scheduled_date"
                             value="{{ $date ?? '' }}"
-                            class="mt-1 block w-full rounded-md border border-gray-300 p-2" disabled>
+                            class="mt-1 block w-full rounded-md border border-gray-300 p-2" readonly>
                     </div>
                     <div>
                         <label for="scheduled_time" class="block text-sm font-medium text-gray-700 mb-2">Time</label>
                         <input type="time" name="scheduled_time" id="scheduled_time"
                             value="{{ $time ? \Carbon\Carbon::createFromFormat('g:i A', $time)->format('H:i') : '' }}"
-                            class="mt-1 block w-full rounded-md border border-gray-300 p-2" disabled>
+                            class="mt-1 block w-full rounded-md border border-gray-300 p-2" readonly>
                     </div>
                 </div>
         </div>
@@ -98,6 +98,8 @@
         const modal = document.getElementById('confirmationModal');
         modal.classList.add('hidden'); // Hide the modal on close
     });
+
+    
 </script>
 
 @endsection

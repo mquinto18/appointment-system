@@ -286,10 +286,19 @@ class HomeController extends Controller
     $appointmentDate = $patientDetails['appointment_date'];
 
     // Find the slot for the specified appointment date
+    $appointmentTime = Carbon::createFromFormat('g:i A', $patientDetails['appointment_time'])->format('H:i:s');
+
     $slot = AppointmentSlot::firstOrCreate(
-            ['appointment_date' => $appointmentDate],
-            ['total_slots' => 4] // Ensure there are always 2 total slots
+        [
+            'appointment_date' => $appointmentDate,
+            'time' => $appointmentTime, // Match by date and time
+        ],
+        [
+            'total_slots' => 4,
+            'booked_slots' => 0,
+        ]
     );
+    
 
     // Check if there are available slots
     if ($slot->booked_slots < $slot->total_slots) {
@@ -602,10 +611,10 @@ public function appointmentBooked()
     public function aboutMore() {
 
         $images = [
-            asset('images/pic1.jpg'),
-            asset('images/pic2.jpg'),
-            asset('images/pic3.jpg'),
-            asset('images/pic3.jpg'),
+            asset('images/clinic1.jpg'),
+            asset('images/clinic2.jpg'),
+            asset('images/clinic3.jpg'),
+            asset('images/clinic4.jpg'),
         ];
 
         return view('appointment.aboutMore', compact('images'));
