@@ -20,7 +20,7 @@ class CashierController extends Controller
     {
         $totalUsers = User::count();
         $totalAppointment = Appointment::count();
-        $appointments = Appointment::where('status', 'completed')->paginate(5);
+        $appointments = Appointment::where('status', 'approved')->paginate(5);
         $appointmentsAll = Appointment::all();
         $totalAmount = 0;
         $totalCompleted = Appointment::where('status', 'completed')->count();
@@ -29,7 +29,7 @@ class CashierController extends Controller
         $today = \Carbon\Carbon::today();
 
         // Fetch only completed appointments updated today
-        $completedAppointments = Appointment::where('status', 'completed')
+        $completedAppointments = Appointment::where('status', 'approved')
             ->whereDate('updated_at', $today) // Filter by today's date
             ->orderBy('updated_at', 'desc')
             ->get();
@@ -144,7 +144,7 @@ class CashierController extends Controller
         $recordsPerPage = $request->input('records_per_page', 10); // Default to 10 records per page
 
         // Query appointments with search functionality
-        $appointments = Appointment::where('status', 'completed') // Only retrieve completed appointments
+        $appointments = Appointment::where('status', 'approved') // Only retrieve completed appointments
             ->when($search, function ($query) use ($search) {
                 // Apply search criteria only to the completed appointments
                 $query->where(function ($subQuery) use ($search) {
