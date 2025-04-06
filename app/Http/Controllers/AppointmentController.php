@@ -122,32 +122,32 @@ class AppointmentController extends Controller
         ];
         Mail::to($appointment->email_address)->send(new AppointmentApprovedMail($details));
 
-        // Send SMS using Twilio (Fetching credentials from .env file)
-        $sid    = env('TWILIO_SID');
-        $token  = env('TWILIO_AUTH_TOKEN');
-        $from   = env('TWILIO_PHONE_NUMBER'); // Your Twilio phone number
-        $to     = $appointment->contact_number; // Assuming this is stored in the appointment record
+        // // Send SMS using Twilio (Fetching credentials from .env file)
+        // $sid    = env('TWILIO_SID');
+        // $token  = env('TWILIO_AUTH_TOKEN');
+        // $from   = env('TWILIO_PHONE_NUMBER'); // Your Twilio phone number
+        // $to     = $appointment->contact_number; // Assuming this is stored in the appointment record
 
-        $client = new Client($sid, $token);
+        // $client = new Client($sid, $token);
 
-        // SMS content
-        $messageContent = "Hi " . $appointment->first_name . ",\n" .
-            "Your appointment on " . $appointment->appointment_date . " at " . $appointment->appointment_time .
-            " has been approved.\n Please arrive 10-15 minutes early. If you need to reschedule, kindly update your scheduled appointment on your Online Portal at least 24 hours in advance. \n For inquiries, contact us at 09123456789. \n Thank you!";
+        // // SMS content
+        // $messageContent = "Hi " . $appointment->first_name . ",\n" .
+        //     "Your appointment on " . $appointment->appointment_date . " at " . $appointment->appointment_time .
+        //     " has been approved.\n Please arrive 10-15 minutes early. If you need to reschedule, kindly update your scheduled appointment on your Online Portal at least 24 hours in advance. \n For inquiries, contact us at 09123456789. \n Thank you!";
 
-        try {
-            // Sending the SMS
-            $client->messages->create(
-                $to, // To phone number
-                [
-                    'from' => $from, // From phone number (your Twilio number)
-                    'body' => $messageContent // SMS message content
-                ]
-            );
-        } catch (Exception $e) {
-            // Handle any errors (e.g., invalid phone number)
-            \Log::error('Error sending SMS: ' . $e->getMessage());
-        }
+        // try {
+        //     // Sending the SMS
+        //     $client->messages->create(
+        //         $to, // To phone number
+        //         [
+        //             'from' => $from, // From phone number (your Twilio number)
+        //             'body' => $messageContent // SMS message content
+        //         ]
+        //     );
+        // } catch (Exception $e) {
+        //     // Handle any errors (e.g., invalid phone number)
+        //     \Log::error('Error sending SMS: ' . $e->getMessage());
+        // }
 
         // Notify success in the system
         notify()->success('Appointment approved!');
@@ -172,33 +172,33 @@ class AppointmentController extends Controller
 
         Mail::to($appointment->email_address)->send(new AppointmentCompletedMail($details));
 
-        // Send SMS using Twilio (Fetching credentials from .env file)
-        $sid    = env('TWILIO_SID');
-        $token  = env('TWILIO_AUTH_TOKEN');
-        $from   = env('TWILIO_PHONE_NUMBER'); // Your Twilio phone number
-        $to     = $appointment->contact_number; // Assuming this is stored in the appointment record
+        // // Send SMS using Twilio (Fetching credentials from .env file)
+        // $sid    = env('TWILIO_SID');
+        // $token  = env('TWILIO_AUTH_TOKEN');
+        // $from   = env('TWILIO_PHONE_NUMBER'); // Your Twilio phone number
+        // $to     = $appointment->contact_number; // Assuming this is stored in the appointment record
 
-        $client = new Client($sid, $token);
+        // $client = new Client($sid, $token);
 
-        // SMS content
-        $messageContent = "Hi " . $appointment->first_name . ",\n" .
-            "Your appointment on " . $appointment->appointment_date . " at " . $appointment->appointment_time .
-            " has been successfully completed.\n We appreciate your time and trust in our services. If you have any feedback or need further assistance, feel free to contact us at 09123456789. \n Thank you!";
+        // // SMS content
+        // $messageContent = "Hi " . $appointment->first_name . ",\n" .
+        //     "Your appointment on " . $appointment->appointment_date . " at " . $appointment->appointment_time .
+        //     " has been successfully completed.\n We appreciate your time and trust in our services. If you have any feedback or need further assistance, feel free to contact us at 09123456789. \n Thank you!";
 
 
-        try {
-            // Sending the SMS
-            $client->messages->create(
-                $to, // To phone number
-                [
-                    'from' => $from, // From phone number (your Twilio number)
-                    'body' => $messageContent // SMS message content
-                ]
-            );
-        } catch (Exception $e) {
-            // Handle any errors (e.g., invalid phone number)
-            \Log::error('Error sending SMS: ' . $e->getMessage());
-        }
+        // try {
+        //     // Sending the SMS
+        //     $client->messages->create(
+        //         $to, // To phone number
+        //         [
+        //             'from' => $from, // From phone number (your Twilio number)
+        //             'body' => $messageContent // SMS message content
+        //         ]
+        //     );
+        // } catch (Exception $e) {
+        //     // Handle any errors (e.g., invalid phone number)
+        //     \Log::error('Error sending SMS: ' . $e->getMessage());
+        // }
 
         notify()->success('Appointment completed!');
         return redirect()->back()->with('success', 'Appointment completed successfully.');
