@@ -294,7 +294,7 @@ class HomeController extends Controller
             'time' => $appointmentTime, // Match by date and time
         ],
         [
-            'total_slots' => 4,
+            'total_slots' => 12,
             'booked_slots' => 0,
         ]
     );
