@@ -120,6 +120,7 @@ class AppointmentController extends Controller
             'doctor' => $appointment->doctor,
             'status' => 'approved'
         ];
+
         Mail::to($appointment->email_address)->send(new AppointmentApprovedMail($details));
 
         // Send SMS using Twilio (Fetching credentials from .env file)
@@ -253,62 +254,62 @@ class AppointmentController extends Controller
     }
 
     public function appointmentFollowUpStore(Request $request, $id)
-{
-    // Validate the input data
-    $validatedData = $request->validate([
-        'first_name' => 'required|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'visit_type' => 'required|string',
-        'mobile_number' => 'required|string|max:15',
-        'email_address' => 'required|email|max:255',
-        'selected_date' => 'required|date',
-        'appointment_time' => 'required|string|in:09:00 AM,09:30 AM,10:00 AM,10:30 AM,11:00 AM,11:30 AM',
-        'doctor' => 'nullable|string|max:255',
-    ]);
+    {
+        // Validate the input data
+        $validatedData = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'visit_type' => 'required|string',
+            'mobile_number' => 'required|string|max:15',
+            'email_address' => 'required|email|max:255',
+            'selected_date' => 'required|date',
+            'appointment_time' => 'required|string|in:09:00 AM,09:30 AM,10:00 AM,10:30 AM,11:00 AM,11:30 AM',
+            'doctor' => 'nullable|string|max:255',
+        ]);
 
-    // Convert the appointment time to the correct format for storage
-    $validatedData['appointment_time'] = Carbon::createFromFormat('h:i A', $validatedData['appointment_time'])->format('H:i:s');
+        // Convert the appointment time to the correct format for storage
+        $validatedData['appointment_time'] = Carbon::createFromFormat('h:i A', $validatedData['appointment_time'])->format('H:i:s');
 
-    // Find the existing appointment to get the user_id
-    $originalAppointment = Appointment::findOrFail($id);
+        // Find the existing appointment to get the user_id
+        $originalAppointment = Appointment::findOrFail($id);
 
-    // Generate a unique transaction number starting with TRX-
-    $transactionNumber = 'TRX-' . strtoupper(uniqid());
+        // Generate a unique transaction number starting with TRX-
+        $transactionNumber = 'TRX-' . strtoupper(uniqid());
 
-    // Create a new appointment as a follow-up
-    $newAppointment = Appointment::create([
-        'user_id' => $originalAppointment->user_id, // Keep the same user
-        'appointment_date' => $validatedData['selected_date'],
-        'first_name' => $validatedData['first_name'],
-        'last_name' => $validatedData['last_name'],
-        'visit_type' => $validatedData['visit_type'],
-        'contact_number' => $validatedData['mobile_number'],
-        'email_address' => $validatedData['email_address'],
-        'appointment_time' => $validatedData['appointment_time'],
-        'status' => 'approved', // Set status to Follow up
-        'follow_up' => 1,
-        'transaction_number' => $transactionNumber, // Set the transaction number
-        'doctor' => $request->input('doctor'),  // Set doctor
-    ]);
+        // Create a new appointment as a follow-up
+        $newAppointment = Appointment::create([
+            'user_id' => $originalAppointment->user_id, // Keep the same user
+            'appointment_date' => $validatedData['selected_date'],
+            'first_name' => $validatedData['first_name'],
+            'last_name' => $validatedData['last_name'],
+            'visit_type' => $validatedData['visit_type'],
+            'contact_number' => $validatedData['mobile_number'],
+            'email_address' => $validatedData['email_address'],
+            'appointment_time' => $validatedData['appointment_time'],
+            'status' => 'approved', // Set status to Follow up
+            'follow_up' => 1,
+            'transaction_number' => $transactionNumber, // Set the transaction number
+            'doctor' => $request->input('doctor'),  // Set doctor
+        ]);
 
-    // Handle the appointment slots (increment booked slots for the selected date)
-    $newSlot = AppointmentSlot::firstOrCreate(
-        ['appointment_date' => $validatedData['selected_date']],
-        [
-            'total_slots' => 4,
-            'time' => $validatedData['appointment_time'] // Assuming `appointment_time` is in the request
-        ]
-    );
-    $newSlot->increment('booked_slots');
+        // Handle the appointment slots (increment booked slots for the selected date)
+        $newSlot = AppointmentSlot::firstOrCreate(
+            ['appointment_date' => $validatedData['selected_date']],
+            [
+                'total_slots' => 4,
+                'time' => $validatedData['appointment_time'] // Assuming `appointment_time` is in the request
+            ]
+        );
+        $newSlot->increment('booked_slots');
 
-    // Send the follow-up email to the user
-    Mail::to($newAppointment->email_address)->send(new AppointmentFollowUpMail($newAppointment));
+        // Send the follow-up email to the user
+        Mail::to($newAppointment->email_address)->send(new AppointmentFollowUpMail($newAppointment));
 
-    // Return success notification and redirect back
-    notify()->success('Follow-up appointment created and email sent successfully!');
-    return redirect()->route('appointment')
-        ->with('success', 'Follow-up appointment created successfully!');
-}
+        // Return success notification and redirect back
+        notify()->success('Follow-up appointment created and email sent successfully!');
+        return redirect()->route('appointment')
+            ->with('success', 'Follow-up appointment created successfully!');
+    }
 
 
     public function appointmentUpdate(Request $request, $id)
