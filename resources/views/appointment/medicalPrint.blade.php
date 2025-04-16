@@ -123,7 +123,7 @@
               <strong>Date of Consultation:</strong> {{ $appointment_date }}
               </td>
               <td style="padding: 5px;">
-              <strong>Time of Consultation:</strong> {{ $appointment_time }}
+              <strong>Time of Consultation:</strong> {{ \Carbon\Carbon::parse($appointment_time)->format('g:i A') }}
               </td>
             </tr>
             <tr>
@@ -155,6 +155,7 @@
     <p class="text0button">This is to certify that the above-named patient was evaluated with the following findings.</p>
 
     <div class="info">
+        <strong>Notes:</strong> <br>{{ $notes }}<br>
         <strong>Diagnosis:</strong> <br>{{ $diagnosis }}<br>
         <strong>Remarks:</strong><br>
     </div>

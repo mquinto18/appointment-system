@@ -17,26 +17,26 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- First Name and Last Name -->
                     <div>
-                        <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                        <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First Name  <span class="text-red-500">*</span></label>
                         <input type="text" name="first_name" id="first_name" class="mt-1 block w-full rounded-md border border-gray-300 p-2"
                             placeholder="Enter your first name" required>
                     </div>
 
                     <div>
-                        <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                        <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last Name  <span class="text-red-500">*</span></label>
                         <input type="text" name="last_name" id="last_name" class="mt-1 block w-full rounded-md border border-gray-300 p-2"
                             placeholder="Enter your last name" required>
                     </div>
 
                     <!-- Email and Mobile Number -->
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email  <span class="text-red-500">*</span></label>
                         <input type="email" name="email" id="email" class="mt-1 block w-full rounded-md border border-gray-300 p-2"
                             placeholder="example@email.com" required>
                     </div>
 
                     <div>
-                        <label for="mobile_number" class="block text-sm font-medium text-gray-700 mb-2">Mobile Number</label>
+                        <label for="mobile_number" class="block text-sm font-medium text-gray-700 mb-2">Mobile Number  <span class="text-red-500">*</span></label>
                         <div class="flex items-center">
                             <span class="px-3 py-2 bg-gray-200 border border-gray-300 rounded-l-md text-gray-700">+63</span>
                             <input type="text" name="mobile_number" id="mobile_number"
@@ -50,7 +50,7 @@
 
                     <!-- Address -->
                     <div class="col-span-2">
-                        <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                        <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Address  <span class="text-red-500">*</span></label>
                         <input type="text" name="address" id="address" class="mt-1 block w-full rounded-md border border-gray-300 p-2"
                             placeholder="Enter your full address" required>
                     </div>
@@ -77,7 +77,7 @@
 
                     <!-- Visit Type (Full Width) -->
                     <div class="col-span-2">
-                        <label for="visit_type" class="block text-sm font-medium text-gray-700 mb-2">Visit Type</label>
+                        <label for="visit_type" class="block text-sm font-medium text-gray-700 mb-2">Visit Type  <span class="text-red-500">*</span></label>
                         <div id="visit_type" class="grid grid-cols-2 lg:grid-cols-3 gap-4">
                             <button type="button"
                                 class="block w-full rounded-md border border-gray-300 p-4 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"

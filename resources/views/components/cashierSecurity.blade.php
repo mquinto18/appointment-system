@@ -111,7 +111,7 @@
         </div>
 
 
-        <div class='mt-5'>
+        <!-- <div class='mt-5'>
             <form method="POST" action="{{ route('cashierAccount.delete') }}" onsubmit="return confirm('Are you sure you want to delete your account?');">
                 @csrf
                 @method('DELETE')
@@ -123,7 +123,7 @@
                     <button type="submit" class="bg-[#EF2626] text-white font-medium px-5 py-2 rounded-md">Delete Account</button>
                 </div>
             </form>
-        </div>
+        </div> -->
 
     </div>
 </div>

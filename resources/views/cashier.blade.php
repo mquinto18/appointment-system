@@ -15,20 +15,14 @@
 
 <div class='mx-10 -mt-20'>
     <div class='grid grid-cols-4 gap-3'>
-        <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
+        <!-- <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
             <div class='flex justify-between'>
                 <h1 class='font-medium text-[18px]'>Total Users</h1>
                 <i class="fa-solid fa-user text-[50px]" style="color: #0074cb;"></i>
             </div>
-            <h1 class='font-bold text-[40px]'>{{ $totalUsers }}</h1> <!-- Display total users here -->
-
-            <!-- <div class="flex justify-end">
-                <a href="{{ route('user') }}">
-                 <i class="fa-solid fa-angles-right text-[30px]"></i>
-                </a>
-            </div> -->
-        </div>
-        <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
+            <h1 class='font-bold text-[40px]'>{{ $totalUsers }}</h1> 
+        </div> -->
+        <!-- <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
             <div class='flex justify-between'>
                 <h1 class='font-medium text-[18px]'>Total Appointments</h1>
                 <i class="fa-regular fa-calendar-days text-[50px]" style="color: #0074cb;"></i>
@@ -36,21 +30,15 @@
             <h1 class='font-bold text-[40px]'>{{ $totalAppointment }}</h1>
 
           
-        </div>
-        <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
+        </div> -->
+        <!-- <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
             <div class='flex justify-between'>
                 <h1 class='font-medium text-[18px]'>Total Completed</h1>
                 <i class="fa-solid fa-check-to-slot text-[50px]" style="color: #0074cb;"></i>
             </div>
             <h1 class='font-bold text-[40px]'>{{ $totalCompleted }}</h1>
-
-            <!-- <div class="flex justify-end">
-                <a href="{{ route('appointments.completed') }}">
-                 <i class="fa-solid fa-angles-right text-[30px]"></i>
-                </a>
-            </div> -->
-        </div>
-        <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
+        </div> -->
+        <!-- <div class='bg-white shadow-md  px-6 py-4 rounded-md'>
             <div class='flex justify-between'>
                 <h1 class='font-medium text-[18px]'>Total Earning</h1>
                 <i class="fa-solid fa-peso-sign text-[50px]" style="color: #0074cb;"></i>
@@ -62,15 +50,17 @@
                  <i class="fa-solid fa-angles-right text-[30px]"></i>
                 </a>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <div class='flex gap-3 mt-3'>
         <!-- Earnings Line Chart -->
         <div class='bg-white w-full px-4 py-6 rounded-lg shadow-xl'>
-            <div class='font-medium border-b py-3'>
-                Total Earnings Over Time
+            <div class='font-medium border-b py-3 flex justify-between items-center'>
+                Total Earnings Over Time 
+                <h1 class='font-bold text-[24px]'>₱{{ $totalAmount }}</h1>
             </div>
+           
             <canvas id="earningsChart" style="max-width: 600px; max-height: 400px;"></canvas>
         </div>
 

@@ -187,13 +187,31 @@
                                             </div>
                                             <div class="p-2">
                                                 <span class="font-bold">Add Discount</span>
-                                                <select name="discount" class="mt-2 w-80 border border-gray-300 rounded-lg p-2">
-                                                    <option value="" {{ isset($appointment) && $appointment->discount == 0 ? 'selected' : '' }}>0%</option>
-                                                    <option value="50" {{ isset($appointment) && $appointment->discount == 50 ? 'selected' : '' }}>50%</option>
-                                                    <option value="40" {{ isset($appointment) && $appointment->discount == 40 ? 'selected' : '' }}>40%</option>
-                                                    <option value="30" {{ isset($appointment) && $appointment->discount == 30 ? 'selected' : '' }}>30%</option>
-                                                    <option value="20" {{ isset($appointment) && $appointment->discount == 20 ? 'selected' : '' }}>20%</option>
-                                                    <option value="10" {{ isset($appointment) && $appointment->discount == 10 ? 'selected' : '' }}>10%</option>
+                                                <select name="discount" id="discountSelect" class="mt-2 w-80 border border-gray-300 rounded-lg p-2">
+                                                    <option value="0"
+                                                        {{ (old('discount') ?? $appointment->discount ?? ($appointment->id_type == 'PWD' || $appointment->id_type == 'Senior Citizen' ? 20 : 0)) == 0 ? 'selected' : '' }}>
+                                                        0%
+                                                    </option>
+                                                    <option value="50"
+                                                        {{ (old('discount') ?? $appointment->discount ?? ($appointment->id_type == 'PWD' || $appointment->id_type == 'Senior Citizen' ? 20 : 0)) == 50 ? 'selected' : '' }}>
+                                                        50%
+                                                    </option>
+                                                    <option value="40"
+                                                        {{ (old('discount') ?? $appointment->discount ?? ($appointment->id_type == 'PWD' || $appointment->id_type == 'Senior Citizen' ? 20 : 0)) == 40 ? 'selected' : '' }}>
+                                                        40%
+                                                    </option>
+                                                    <option value="30"
+                                                        {{ (old('discount') ?? $appointment->discount ?? ($appointment->id_type == 'PWD' || $appointment->id_type == 'Senior Citizen' ? 20 : 0)) == 30 ? 'selected' : '' }}>
+                                                        30%
+                                                    </option>
+                                                    <option value="20"
+                                                        {{ (old('discount') ?? $appointment->discount ?? ($appointment->id_type == 'PWD' || $appointment->id_type == 'Senior Citizen' ? 20 : 0)) == 20 ? 'selected' : '' }}>
+                                                        20%
+                                                    </option>
+                                                    <option value="10"
+                                                        {{ (old('discount') ?? $appointment->discount ?? ($appointment->id_type == 'PWD' || $appointment->id_type == 'Senior Citizen' ? 20 : 0)) == 10 ? 'selected' : '' }}>
+                                                        10%
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -287,4 +305,22 @@
                                 });
                             });
                         </script> -->
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const idTypeSelect = document.getElementById('idType');
+                                const discountSelect = document.getElementById('discountSelect');
+
+                                idTypeSelect.addEventListener('change', function() {
+                                    const selectedId = idTypeSelect.value;
+
+                                    // Automatically set 20% discount for PWD or Senior Citizen
+                                    if (selectedId === 'PWD' || selectedId === 'Senior Citizen') {
+                                        discountSelect.value = '20';
+                                    } else {
+                                        discountSelect.value = ''; // reset to 0% if no special ID
+                                    }
+                                });
+                            });
+                        </script>
+
                         @endsection

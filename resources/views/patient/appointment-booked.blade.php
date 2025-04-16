@@ -60,54 +60,54 @@
                 @else
                 @foreach ($appointments as $appointment)
                 <div class="max-w-[1000px] shadow-md">
-                <div class="flex justify-between bg-[#F2F2F2] px-5 py-7">
-    <div class="flex items-center gap-3">
-        <i class="fa-solid fa-circle-user text-[35px]" style="color: #0074cb;"></i>
-        <div class="flex flex-col">
-            <span class="text-[18px] font-bold">{{ $appointment->first_name }} {{ $appointment->last_name }}</span>
-            <span class="text-[13px]">{{ \Carbon\Carbon::parse($appointment->created_at)->format('F j, Y') }}</span>
-        </div>
-    </div>
+                    <div class="flex justify-between bg-[#F2F2F2] px-5 py-7">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-circle-user text-[35px]" style="color: #0074cb;"></i>
+                            <div class="flex flex-col">
+                                <span class="text-[18px] font-bold">{{ $appointment->first_name }} {{ $appointment->last_name }}</span>
+                                <span class="text-[13px]">{{ \Carbon\Carbon::parse($appointment->created_at)->format('F j, Y') }}</span>
+                            </div>
+                        </div>
 
-    <!-- Status Indicator -->
-    @php
-        $status = strtoupper(substr($appointment->status, 0, 2)); // Get the first letter of the status
-        $bgColor = '';
-        $statusLabel = $status;
+                        <!-- Status Indicator -->
+                        @php
+                        $status = strtoupper(substr($appointment->status, 0, 2)); // Get the first letter of the status
+                        $bgColor = '';
+                        $statusLabel = $status;
 
-        // Determine the background color and label based on the follow_up or status
-        if ($appointment->follow_up == 1) {
-            $bgColor = 'bg-yellow-400'; // Follow-up
-            $statusLabel = 'FC'; // Follow-up label
-        } elseif ($status === 'PE') {
-            $bgColor = 'bg-orange-500'; // Pending
-        } elseif ($status === 'AP') {
-            $bgColor = 'bg-green-600'; // Approved
-        } elseif ($status === 'CO') {
-            $bgColor = 'bg-blue-600'; // Completed
-        } elseif ($status === 'RE') {
-            $bgColor = 'bg-red-600'; // Rejected
-        } elseif ($status === 'CA') {
-            $bgColor = 'bg-red-400'; // Cancelled
-        } else {
-            $bgColor = 'bg-gray-500'; // Default color for unknown status
-        }
-    @endphp
+                        // Determine the background color and label based on the follow_up or status
+                        if ($appointment->follow_up == 1) {
+                        $bgColor = 'bg-yellow-400'; // Follow-up
+                        $statusLabel = 'FC'; // Follow-up label
+                        } elseif ($status === 'PE') {
+                        $bgColor = 'bg-orange-500'; // Pending
+                        } elseif ($status === 'AP') {
+                        $bgColor = 'bg-green-600'; // Approved
+                        } elseif ($status === 'CO') {
+                        $bgColor = 'bg-blue-600'; // Completed
+                        } elseif ($status === 'RE') {
+                        $bgColor = 'bg-red-600'; // Rejected
+                        } elseif ($status === 'CA') {
+                        $bgColor = 'bg-red-400'; // Cancelled
+                        } else {
+                        $bgColor = 'bg-gray-500'; // Default color for unknown status
+                        }
+                        @endphp
 
-    <div class="flex justify-center items-center gap-3">
-        <div class="{{ $bgColor }} text-white w-8 h-8 rounded-full flex items-center justify-center">
-            {{ $statusLabel }}
-        </div>
-        <div class="relative">
-            <!-- Dropdown Toggle -->
-            <i class="fa-solid fa-ellipsis-vertical cursor-pointer" id="dropdownMenuButton" onclick="toggleDropdown(this)"></i>
+                        <div class="flex justify-center items-center gap-3">
+                            <div class="{{ $bgColor }} text-white w-8 h-8 rounded-full flex items-center justify-center">
+                                {{ $statusLabel }}
+                            </div>
+                            <div class="relative">
+                                <!-- Dropdown Toggle -->
+                                <i class="fa-solid fa-ellipsis-vertical cursor-pointer" id="dropdownMenuButton" onclick="toggleDropdown(this)"></i>
 
-            <!-- Dropdown Menu -->
-            <ul class="dropdown-menu absolute right-0 z-10 text-left bg-white shadow-lg rounded-lg w-40 hidden">
-                <!-- View Option -->
-                <li>
-                    <a href="#"
-                        onclick="openViewModal(
+                                <!-- Dropdown Menu -->
+                                <ul class="dropdown-menu absolute right-0 z-10 text-left bg-white shadow-lg rounded-lg w-40 hidden">
+                                    <!-- View Option -->
+                                    <li>
+                                        <a href="#"
+                                            onclick="openViewModal(
                         '{{ $appointment->transaction_number }}', 
                         '{{ $appointment->first_name }} {{ $appointment->last_name }}', 
                         '{{ $appointment->doctor }}', 
@@ -121,27 +121,27 @@
                         '{{ $appointment->email_address }}', 
                         '{{ $appointment->complete_address }}'
                     )"
-                        class="block px-4 py-2 bg-white hover:bg-gray-200">
-                        <i class="fa-regular fa-eye mr-2 text-gray-600"></i>
-                        View
-                    </a>
-                </li>
+                                            class="block px-4 py-2 bg-white hover:bg-gray-200">
+                                            <i class="fa-regular fa-eye mr-2 text-gray-600"></i>
+                                            View
+                                        </a>
+                                    </li>
 
-                <!-- Delete Option -->
-                <li>
-                    <form action="#" method="POST" class="block px-4 py-2 hover:bg-gray-100" onsubmit="return false;">
-                        @csrf
-                        @method('DELETE')
-                        <i class="fa-regular fa-trash-can mr-2 text-gray-600"></i>
-                        <button type="button" onclick="openDeleteModal('{{ $appointment->id }}', '{{ $appointment->first_name }} {{ $appointment->last_name }}')" class="text-left">
-                            Delete
-                        </button>
-                    </form>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
+                                    <!-- Delete Option -->
+                                    <li>
+                                        <form action="#" method="POST" class="block px-4 py-2 hover:bg-gray-100" onsubmit="return false;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <i class="fa-regular fa-trash-can mr-2 text-gray-600"></i>
+                                            <button type="button" onclick="openDeleteModal('{{ $appointment->id }}', '{{ $appointment->first_name }} {{ $appointment->last_name }}')" class="text-left">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
 
 
                     <!-- Appointment Details -->
@@ -149,21 +149,21 @@
                         <div class="grid grid-cols-2 gap-3">
                             <div class="flex flex-col gap-3">
                                 <div class="flex items-center gap-2 relative">
-                                    <span class="w-3 h-3 border-2 border-[#9747FF] rounded-full inline-block relative z-10"></span>
+                                    <span class="w-3 h-3 border-2 border-black rounded-full inline-block relative z-10"></span>
                                     <span class="text-gray-700 font-normal">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</span>
                                 </div>
                                 <div class="flex items-center gap-2 relative">
-                                    <span class="w-3 h-3 border-2 border-[#07CC62] rounded-full inline-block relative z-10"></span>
+                                    <span class="w-3 h-3 border-2 border-black rounded-full inline-block relative z-10"></span>
                                     <span class="text-gray-700 font-normal">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</span>
                                 </div>
                             </div>
                             <div class="flex flex-col gap-3 relative">
                                 <div class="flex items-center gap-2 ">
-                                    <span class="w-3 h-3 border-2 border-[#0074C8] rounded-full inline-block relative z-10"></span>
+                                    <span class="w-3 h-3 border-2 border-black rounded-full inline-block relative z-10"></span>
                                     <span class="text-gray-700 font-normal">{{ $appointment->visit_type }}</span>
                                 </div>
                                 <div class="flex items-center gap-2 relative">
-                                    <span class="w-3 h-3 border-2 border-[#FD9D2D] rounded-full inline-block relative z-10"></span>
+                                    <span class="w-3 h-3 border-2 border-black rounded-full inline-block relative z-10"></span>
                                     <span class="text-gray-700 font-normal">Dr. {{ $appointment->doctor }}</span>
                                 </div>
                             </div>
@@ -413,25 +413,25 @@
                 <h5 class="text-[25px] font-bold mb-5">Appointment Completed!</h5>
                 <p class="text-gray-600 mb-4">How satisfied are you with our service?</p>
                 <div class="flex gap-2 justify-between">
-                    <button type="button" id="star-5" class="star-button focus:outline-none flex flex-col items-center" onclick="selectRating(5)">
+                    <button type="button" id="star-1" class="star-button focus:outline-none flex flex-col items-center" onclick="selectRating(1)">
                         <i class="fa fa-star fa-3x"></i> <!-- Increased the size here -->
-                        <p class="text-sm mt-2">Very Satisfied</p>
-                    </button>
-                    <button type="button" id="star-4" class="star-button focus:outline-none flex flex-col items-center" onclick="selectRating(4)">
-                        <i class="fa fa-star fa-3x"></i> <!-- Increased the size here -->
-                        <p class="text-sm mt-2">Satisfied</p>
-                    </button>
-                    <button type="button" id="star-3" class="star-button focus:outline-none flex flex-col items-center" onclick="selectRating(3)">
-                        <i class="fa fa-star fa-3x"></i> <!-- Increased the size here -->
-                        <p class="text-sm mt-2">Neutral</p>
+                        <p class="text-sm mt-2">Very Unsatisfied</p>
                     </button>
                     <button type="button" id="star-2" class="star-button focus:outline-none flex flex-col items-center" onclick="selectRating(2)">
                         <i class="fa fa-star fa-3x"></i> <!-- Increased the size here -->
                         <p class="text-sm mt-2">Unsatisfied</p>
                     </button>
-                    <button type="button" id="star-1" class="star-button focus:outline-none flex flex-col items-center" onclick="selectRating(1)">
+                    <button type="button" id="star-3" class="star-button focus:outline-none flex flex-col items-center" onclick="selectRating(3)">
                         <i class="fa fa-star fa-3x"></i> <!-- Increased the size here -->
-                        <p class="text-sm mt-2">Very Unsatisfied</p>
+                        <p class="text-sm mt-2">Neutral</p>
+                    </button>
+                    <button type="button" id="star-4" class="star-button focus:outline-none flex flex-col items-center" onclick="selectRating(4)">
+                        <i class="fa fa-star fa-3x"></i> <!-- Increased the size here -->
+                        <p class="text-sm mt-2">Satisfied</p>
+                    </button>
+                    <button type="button" id="star-5" class="star-button focus:outline-none flex flex-col items-center" onclick="selectRating(5)">
+                        <i class="fa fa-star fa-3x"></i> <!-- Increased the size here -->
+                        <p class="text-sm mt-2">Very Satisfied</p>
                     </button>
                 </div>
             </div>

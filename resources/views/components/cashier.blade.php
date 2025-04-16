@@ -115,14 +115,14 @@
                                     </div>
                                 </div>
                                 <!-- Delete Action -->
-                                <div class='relative group'>
+                                <!-- <div class='relative group'>
                                     <button type="button" class='bg-white py-1 px-2 border border-[#0074CB] rounded-md text-blue-600' onclick="openDeleteModal('{{ $user->name }}', '{{ route('admin.delete', $user->id) }}')">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                     <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-700 text-white text-xs rounded-md py-1 px-2">
                                         Delete
                                     </div>
-                                </div>
+                                </div> -->
                             </td>
                         </tr>
                         @endforeach

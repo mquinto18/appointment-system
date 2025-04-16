@@ -27,38 +27,38 @@
 
                 <div class="mb-4">
                     <label for="firstName" class="form-label font-medium text-gray-700 block mb-2">First Name</label>
-                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="firstName" name="first_name" value="{{ old('first_name', $appointment->first_name) }}" required>
+                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="firstName" name="first_name" value="{{ old('first_name', $appointment->first_name) }}" readonly>
                 </div>
 
                 <div class="mb-4">
                     <label for="lastName" class="form-label font-medium text-gray-700 block mb-2">Last Name</label>
-                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="lastName" name="last_name" value="{{ old('last_name', $appointment->last_name) }}" required>
+                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="lastName" name="last_name" value="{{ old('last_name', $appointment->last_name) }}" readonly>
                 </div>
 
                 <div class="mb-4">
                     <label for="dateOfBirth" class="form-label font-medium text-gray-700 block mb-2">Date of Birth</label>
-                    <input type="date" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="dateOfBirth" name="date_of_birth" value="{{ old('date_of_birth', $appointment->date_of_birth) }}" required>
+                    <input type="date" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="dateOfBirth" name="date_of_birth" value="{{ old('date_of_birth', $appointment->date_of_birth) }}" readonly>
                 </div>
 
                 <div class="mb-4">
                     <label for="appointmentDate" class="form-label font-medium text-gray-700 block mb-2">Appointment Date</label>
-                    <input type="date" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="appointmentDate" name="appointment_date" value="{{ old('appointment_date', $appointment->appointment_date) }}" required>
+                    <input type="date" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="appointmentDate" name="appointment_date" value="{{ old('appointment_date', $appointment->appointment_date) }}" readonly>
                 </div>
 
                 <div class="mb-4">
                     <label for="appointmentTime" class="form-label font-medium text-gray-700 block mb-2">Appointment Time</label>
-                    <input type="time" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="appointmentTime" name="appointment_time" value="{{ old('appointment_time', $appointment->appointment_time) }}" required>
+                    <input type="time" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="appointmentTime" name="appointment_time" value="{{ old('appointment_time', $appointment->appointment_time) }}" readonly>
                 </div>
 
                 <div class="mb-4">
                     <label for="visitType" class="form-label font-medium text-gray-700 block mb-2">Visit Type</label>
-                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="firstName" name="visit_type" value="{{ old('visit_type', $appointment->visit_type) }}" required>
+                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="firstName" name="visit_type" value="{{ old('visit_type', $appointment->visit_type) }}" readonly>
                 </div>
 
                 <div class="mb-4">
                     <label for="additional" class="form-label font-medium text-gray-700 block mb-2">Additional Information</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" id="medicalCertificate" name="additional" value="Medical Certificate" {{ old('additional', $appointment->additional) == 'Medical Certificate' ? 'checked' : '' }}>
+                        <input class="form-check-input" type="radio" id="medicalCertificate" name="additional" value="Medical Certificate" readonly  {{ old('additional', $appointment->additional) == 'Medical Certificate' ? 'checked' : '' }} >
                         <label class="form-check-label" for="medicalCertificate">Medical Certificate</label>
                     </div>
                 </div>
@@ -77,35 +77,22 @@
 
                 <div class="mb-4">
                     <label for="gender" class="form-label font-medium text-gray-700 block mb-2">Gender</label>
-                    <select class="form-select block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="gender" name="gender" required>
-                        <option value="Male" {{ old('gender', $appointment->gender) == 'Male' ? 'selected' : '' }}>Male</option>
-                        <option value="Female" {{ old('gender', $appointment->gender) == 'Female' ? 'selected' : '' }}>Female</option>
-                        <option value="Other" {{ old('gender', $appointment->gender) == 'Other' ? 'selected' : '' }}>Other</option>
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label for="maritalStatus" class="form-label font-medium text-gray-700 block mb-2">Marital Status</label>
-                    <select class="form-select block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="maritalStatus" name="marital_status" required>
-                        <option value="Single" {{ old('marital_status', $appointment->marital_status) == 'Single' ? 'selected' : '' }}>Single</option>
-                        <option value="Married" {{ old('marital_status', $appointment->marital_status) == 'Married' ? 'selected' : '' }}>Married</option>
-                        <option value="Divorced" {{ old('marital_status', $appointment->marital_status) == 'Divorced' ? 'selected' : '' }}>Divorced</option>
-                    </select>
+                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="contactNumber" name="contact_number" value="{{ old('contact_number', $appointment->gender) }}" readonly>
                 </div>
 
                 <div class="mb-4">
                     <label for="contactNumber" class="form-label font-medium text-gray-700 block mb-2">Contact Number</label>
-                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="contactNumber" name="contact_number" value="{{ old('contact_number', $appointment->contact_number) }}" required>
+                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="contactNumber" name="contact_number" value="{{ old('contact_number', $appointment->contact_number) }}" readonly>
                 </div>
 
                 <div class="mb-4">
                     <label for="emailAddress" class="form-label font-medium text-gray-700 block mb-2">Email Address</label>
-                    <input type="email" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="emailAddress" name="email_address" value="{{ old('email_address', $appointment->email_address) }}" required>
+                    <input type="email" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="emailAddress" name="email_address" value="{{ old('email_address', $appointment->email_address) }}" readonly>
                 </div>
 
                 <div class="mb-4">
                     <label for="completeAddress" class="form-label font-medium text-gray-700 block mb-2">Complete Address</label>
-                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="completeAddress" name="complete_address" value="{{ old('complete_address', $appointment->complete_address) }}" required>
+                    <input type="text" class="form-control block w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="completeAddress" name="complete_address" value="{{ old('complete_address', $appointment->complete_address) }}" readonly>
                 </div>
 
                 <div class="col-span-1 md:col-span-3 mb-4">

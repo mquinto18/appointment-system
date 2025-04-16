@@ -178,17 +178,16 @@ class CashierController extends Controller
 
     public function cashierinvoiceSave(Request $request, $id)
     {
-
         $validatedData = $request->validate([
-            'id_number' => 'nullable|string|max:255',  // Allow ID number to be null
-            'id_type' => 'nullable|string|in:PWD,Senior Citizen', // Allow null ID type
+            'id_number' => 'nullable|string|max:255',
+            'id_type' => 'nullable|string|in:PWD,Senior Citizen',
             'amount' => 'required|array',
             'amount.*' => 'required|numeric',
             'descriptions' => 'required|array',
             'descriptions.*' => 'required|string',
             'qty' => 'required|array',
             'qty.*' => 'required|integer|min:1',
-            'discount' => 'nullable|integer|min:0|max:50', // Allow null discount
+            'discount' => 'nullable|integer|min:0|max:50',
         ]);
 
         // Find appointment
@@ -201,6 +200,9 @@ class CashierController extends Controller
         $appointment->qty = json_encode($validatedData['qty']);
         $appointment->discount = is_numeric($validatedData['discount']) ? (int) $validatedData['discount'] : 0;
 
+        // ✅ Set status to completed
+        $appointment->status = 'completed';
+
         $appointment->save();
 
         // Notify user and redirect
@@ -208,15 +210,16 @@ class CashierController extends Controller
         return redirect()->to("cashier/invoice/print/{$appointment->id}")->with('success', 'Invoice saved successfully.');
     }
 
+
     public function cashierprintInvoice($id)
     {
         $appointment = Appointment::findOrFail($id);
-
+    
         // Fetch the invoice details from the appointment
         $descriptions = json_decode($appointment->descriptions) ?? [];
         $quantities = json_decode($appointment->qty) ?? [];
         $amounts = json_decode($appointment->amount) ?? [];
-
+    
         // Fetch additional appointment details
         $transaction_number = $appointment->transaction_number;
         $first_name = $appointment->first_name;
@@ -227,14 +230,19 @@ class CashierController extends Controller
         $complete_address = $appointment->complete_address;
         $id_number = $appointment->id_number;
         $id_type = $appointment->id_type;
-
+    
         // Calculate the total amount
-        $totalAmount = array_sum($amounts);
-
+        $totalAmount = 0;
+        foreach ($amounts as $index => $amount) {
+            $qty = $quantities[$index] ?? 1;
+            $totalAmount += $amount * $qty;
+        }
+    
         // Apply discount if available
-        $discount = $appointment->discount ?? 0; // Get discount percentage, default is 0
-        $discountedAmount = $totalAmount - ($totalAmount * ($discount / 100));
-
+        $discount = $appointment->discount ?? 0;
+        $discountAmount = $totalAmount * ($discount / 100);
+        $discountedAmount = $totalAmount - $discountAmount;
+    
         // Pass the data to the view
         $pdf = Pdf::loadView('appointment.invoice-pdf', compact(
             'appointment',
@@ -250,14 +258,15 @@ class CashierController extends Controller
             'complete_address',
             'totalAmount',
             'discount',
+            'discountAmount',
+            'discountedAmount',
             'id_number',
-            'id_type',
-            'discountedAmount'
+            'id_type'
         ));
-
-        // Return the generated PDF as a download
+    
         return $pdf->download('invoice_' . $appointment->id . '.pdf');
     }
+    
 
     public function cashierprintReports($interval)
     {

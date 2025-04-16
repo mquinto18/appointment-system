@@ -50,9 +50,9 @@
                         <th class="py-3 px-4 border-b">Patient Name</th>
                         <th class="py-3 px-4 border-b">Visit Type</th>
                         <th class="py-3 px-4 border-b">Doctor</th>
-                        <th class="py-3 px-4 border-b">Appointment Date</th>
-                        <th class="py-3 px-4 border-b">Appointment Time</th>
-                        <th class="py-3 px-4 border-b">Status</th>
+                        <!-- <th class="py-3 px-4 border-b">Appointment Date</th>
+                        <th class="py-3 px-4 border-b">Appointment Time</th> -->
+                        <th class="py-3 px-4 border-b">Payment Status</th>
                         <th class="py-3 px-4 border-b">Actions</th>
 
                     </tr>
@@ -64,10 +64,10 @@
                         <td class="py-3 px-4 border-b">{{ $appointment->first_name }} {{ $appointment->last_name }}</td>
                         <td class="py-3 px-4 border-b">{{ $appointment->visit_type }}</td>
                         <td class="py-3 px-4 border-b">{{ $appointment->doctor }}</td>
-                        <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
-                        <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}</td>
-                        <td class="py-3 px-4 border-b">
-                            <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
+                        <!-- <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
+                        <td class="py-3 px-4 border-b">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('h:i A') }}</td> -->
+                        <td class="py-3 border-b flex justify-center">
+                            <!-- <div class="font-medium flex text-[12px] justify-center items-center gap-1 border-[1px] px-2 rounded-full text-center 
                                     @if($appointment->status === 'pending') bg-orange-100 border-orange-700 
                                     @elseif($appointment->status === 'approved') bg-green-100 border-green-700 
                                     @elseif($appointment->status === 'rejected') bg-red-100 border-red-700 
@@ -78,7 +78,12 @@
                                     @elseif($appointment->status === 'rejected') style="color: #e53e3e"
                                     @elseif($appointment->status === 'completed') style="color: #3182ce" @endif></i>
                                 {{ strtoupper($appointment->status) }}
-                            </div>
+                            </div> -->
+                            <div class="font-medium flex text-[14px] justify-center  items-center gap-1 border-[1px] px-2 rounded-full py-2 text-center w-[200px] 
+            {{ empty($appointment->descriptions) ? 'bg-red-100 border-red-700 text-red-700' : 'bg-green-100 border-green-700 text-green-700' }}">
+                                        <i class="fa-solid fa-circle fa-2xs"></i>
+                                        {{ empty($appointment->descriptions) ? 'NOT PAID' : 'PAID' }}
+                                    </div>
                         </td>
                         <td class="py-3 px-4  gap-5 border-b">
                             <div class='flex justify-center items-center gap-3'>

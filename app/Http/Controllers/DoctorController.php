@@ -20,7 +20,8 @@ class DoctorController extends Controller
 
     public function doctorIndex()
     {
-        $totalUsers = User::count();
+        $totalUsers = Appointment::whereDate('appointment_date', now()->toDateString())->count();
+
         $totalAppointment = Appointment::count();
 
         // Get the current logged-in doctor's name
@@ -408,19 +409,6 @@ class DoctorController extends Controller
     public function appointmentDoctorUpdate(Request $request, $id)
     {
         $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'date_of_birth' => 'required|date',
-            'appointment_date' => 'required|date',
-            'appointment_time' => 'required',
-            'visit_type' => 'required|string',
-            'additional' => 'nullable|string|max:255',
-            'doctor' => 'required|string',
-            'gender' => 'required|string',
-            'marital_status' => 'required|string',
-            'contact_number' => 'required|string|max:15',
-            'email_address' => 'required|email|max:255',
-            'complete_address' => 'required|string|max:255',
             'notes' => 'nullable|string',
             'diagnosis' => 'nullable|string',
         ]);

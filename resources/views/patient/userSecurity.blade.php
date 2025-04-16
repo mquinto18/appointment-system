@@ -86,7 +86,7 @@
                 </form>
             </div>
 
-            <!-- Delete Account -->
+            <!-- Delete Account
             <div class='mt-5'>
                 <form method="POST" action="{{ route('userAccount.delete') }}" onsubmit="return confirm('Are you sure you want to delete your account?');">
                     @csrf  
@@ -102,7 +102,7 @@
                         </button>
                     </div>
                 </form>
-            </div>
+            </div> -->
         </div>
     </div>
 @endsection

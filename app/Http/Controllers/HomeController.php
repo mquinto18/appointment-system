@@ -291,7 +291,6 @@ class HomeController extends Controller
     $slot = AppointmentSlot::firstOrCreate(
         [
             'appointment_date' => $appointmentDate,
-            'time' => $appointmentTime, // Match by date and time
         ],
         [
             'total_slots' => 12,
@@ -348,16 +347,16 @@ class HomeController extends Controller
 
 
 
-public function appointmentBooked()
-{
-    // Retrieve the currently authenticated user's appointments, sorted by appointment_date and appointment_time in descending order
-    $appointments = Appointment::where('user_id', auth()->id())
-        ->orderBy('appointment_date', 'desc') // Sort by latest appointment date
-        ->orderBy('appointment_time', 'desc') // Sort by latest appointment time
-        ->get();
+    public function appointmentBooked()
+    {
+        // Retrieve the currently authenticated user's appointments, sorted by appointment_date and appointment_time in descending order
+        $appointments = Appointment::where('user_id', auth()->id())
+            ->orderBy('appointment_date', 'desc') // Sort by latest appointment date
+            ->orderBy('appointment_time', 'desc') // Sort by latest appointment time
+            ->get();
 
-    return view('patient.appointment-booked', compact('appointments'));
-}
+        return view('patient.appointment-booked', compact('appointments'));
+    }
 
 
     public function appointmentCancel($id)

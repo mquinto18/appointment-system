@@ -51,6 +51,7 @@ class MedicalController extends Controller
             'gender' => $appointment->gender,
             'address' => $appointment->complete_address,
             'diagnosis' => $appointment->diagnosis,
+            'notes' => $appointment->notes,
         ];
     
         // Load the view and generate the PDF
@@ -78,6 +79,7 @@ class MedicalController extends Controller
             'gender' => $appointment->gender,
             'address' => $appointment->complete_address,
             'diagnosis' => $appointment->diagnosis,
+            'notes' => $appointment->notes,
         ];
     
         // Load the view and generate the PDF
